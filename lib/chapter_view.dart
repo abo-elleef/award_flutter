@@ -43,8 +43,9 @@ class _ChapterViewState extends State<ChapterView> {
         textDirection: TextDirection.rtl, // set this property
         child: Scaffold(
             appBar: AppBar(
-              title: Text("الفصول"),
-              backgroundColor: Colors.green,
+                title: Text("الفصول"),
+                backgroundColor: Colors.green,
+                titleTextStyle: TextStyle(color: Colors.white)
             ),
             body: DecoratedBox(
                 position: DecorationPosition.background,

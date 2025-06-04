@@ -23,7 +23,7 @@ class WerdDetailsState extends State<WerdDetails> {
   String name;
   int index;
   String department;
-  late double fontSize = 20;
+  late double fontSize = 24;
   // late int textColor = 0xff3a863d;
   late int textColor = 0xff444444;
   late String desc = "";
@@ -163,6 +163,7 @@ class WerdDetailsState extends State<WerdDetails> {
         appBar: AppBar(
           title: Text(name),
           backgroundColor: Colors.green,
+            titleTextStyle: TextStyle(color: Colors.white)
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,

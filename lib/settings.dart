@@ -15,7 +15,7 @@ class Settings extends StatefulWidget {
 }
 
 class SettingsState extends State<Settings> {
-  late double fontSize = 20;
+  late double fontSize = 24;
   late int textColor = 0xff3a863d;
   SettingsState();
   void fetchUserPreferences () async {

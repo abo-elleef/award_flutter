@@ -87,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
                 title: Text(widget.title),
                 backgroundColor: Colors.green,
+                titleTextStyle: TextStyle(color: Colors.white)
               // actions: <Widget>[
                 //   IconButton(
                 //     icon: const Icon(Icons.settings),

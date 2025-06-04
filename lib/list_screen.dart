@@ -25,7 +25,7 @@ class ListPage extends StatefulWidget {
 class ListPageState extends State<ListPage> {
   String name;
   int index;
-  late double fontSize = 20;
+  late double fontSize = 24;
   late int textColor = 0xff3a863d;
   ListPageState(this.name, this.index);
   List poems = [];
@@ -150,6 +150,7 @@ class ListPageState extends State<ListPage> {
         appBar: AppBar(
           title: Text(name),
           backgroundColor: Colors.green,
+            titleTextStyle: TextStyle(color: Colors.white)
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,

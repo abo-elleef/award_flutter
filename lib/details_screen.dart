@@ -23,7 +23,7 @@ class DetailsState extends State<Details> {
   String name;
   int index;
   String department;
-  late double fontSize = 20;
+  late double fontSize = 24;
   late int textColor = 0xff3a863d;
   DetailsState(this.name, this.index, this.department);
   List lines = [];
@@ -212,8 +212,9 @@ class DetailsState extends State<Details> {
         textDirection: TextDirection.rtl, // set this property
         child: Scaffold(
         appBar: AppBar(
-          title: Text(name),
-          backgroundColor: Colors.green,
+            title: Text(name),
+            backgroundColor: Colors.green,
+            titleTextStyle: TextStyle(color: Colors.white)
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,
