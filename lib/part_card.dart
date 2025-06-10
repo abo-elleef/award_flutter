@@ -25,9 +25,8 @@ class PartCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 20, left: 16.0, right: 16.0),
-                  padding: EdgeInsets.only(bottom: 20),
-                  child: Image.asset("assets/book.png", width: 16),
+                  margin: EdgeInsets.only(top: 10, bottom: 10, left: 16.0, right: 16.0),
+                  child: Image.asset("assets/book.png", width: this.fontSize - 4),
                 ),
                 Expanded(
                   child: Text(
