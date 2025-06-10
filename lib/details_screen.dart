@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'award.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class Details extends StatefulWidget {
   final String name;
   final String department;
@@ -32,11 +32,11 @@ class DetailsState extends State<Details> {
   }
 
   void fetchUserPreferences () async {
-    // SharedPreferences pref = await SharedPreferences.getInstance();
-    // setState(() {
-    //   fontSize = pref.getDouble('fontSize') ?? fontSize;
-    //   textColor = pref.getInt('textColor') ?? textColor;
-    // });
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      fontSize = pref.getDouble('fontSize') ?? fontSize;
+      textColor = pref.getInt('textColor') ?? textColor;
+    });
   }
   Future<void> _showMyDialog(text) async {
     return showDialog<void>(
@@ -152,6 +152,7 @@ class DetailsState extends State<Details> {
                   children: <Widget>[
                     Expanded(
                         child: Container(
+                          padding: const EdgeInsets.only(bottom: 20.0),
                           // width: double.infinity,
                           child: Text(
                             entry[1],

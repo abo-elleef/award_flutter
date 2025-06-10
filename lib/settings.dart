@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'award.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   late double fontSize;
@@ -19,21 +19,21 @@ class SettingsState extends State<Settings> {
   late int textColor = 0xff3a863d;
   SettingsState();
   void fetchUserPreferences () async {
-    // SharedPreferences _pref = await SharedPreferences.getInstance();
-    // setState(() {
-    //   this.fontSize = _pref.getDouble('fontSize') ?? this.fontSize;
-    //   this.textColor = _pref.getInt('textColor') ?? this.textColor;
-    // });
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    setState(() {
+      this.fontSize = _pref.getDouble('fontSize') ?? this.fontSize;
+      this.textColor = _pref.getInt('textColor') ?? this.textColor;
+    });
   }
 
   void setFontSize (value) async {
-    // SharedPreferences _pref = await SharedPreferences.getInstance();
-    // _pref.setDouble('fontSize', value);
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    _pref.setDouble('fontSize', value);
   }
 
   void setTextColor (value) async {
-    // SharedPreferences _pref = await SharedPreferences.getInstance();
-    // _pref.setInt('textColor', value);
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    _pref.setInt('textColor', value);
   }
 
 
@@ -52,6 +52,8 @@ class SettingsState extends State<Settings> {
         child: Scaffold(
         appBar: AppBar(
           title: Text('الاعدادات'),
+          backgroundColor: Colors.green,
+          titleTextStyle: TextStyle(color: Colors.white)
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,
@@ -78,6 +80,7 @@ class SettingsState extends State<Settings> {
                           max: 36,
                           min: 14,
                           divisions: 11,
+                          activeColor: Color(this.textColor),
                           label: this.fontSize.toString(),
                           onChanged: (double value) {
                             setState(() {

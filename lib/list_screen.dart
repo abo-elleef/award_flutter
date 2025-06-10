@@ -9,7 +9,7 @@ import './werd_details_screen.dart';
 import 'package:http/http.dart' as http;
 import 'award.dart';
 import './part_card.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class ListPage extends StatefulWidget {
   final String name;
   final int index;
@@ -26,16 +26,16 @@ class ListPageState extends State<ListPage> {
   String name;
   int index;
   late double fontSize = 24;
-  late int textColor = 0xff3a863d;
+  late int textColor = 0xFF000000;
   ListPageState(this.name, this.index);
   List poems = [];
 
   void fetchUserPreferences () async {
-    // SharedPreferences pref = await SharedPreferences.getInstance();
-    // setState(() {
-    //   fontSize = pref.getDouble('fontSize') ?? fontSize;
-    //   textColor = pref.getInt('textColor') ?? textColor;
-    // });
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      fontSize = pref.getDouble('fontSize') ?? fontSize;
+      textColor = pref.getInt('textColor') ?? textColor;
+    });
   }
 
   void fetchData() async {
@@ -84,7 +84,7 @@ class ListPageState extends State<ListPage> {
                               })
                             );
                           },
-                          child: PartCard(title: entry.value['name'].toString())
+                          child: PartCard(title: entry.value['name'].toString(), fontSize: fontSize, textColor: textColor)
                         )
                     )
                   ),

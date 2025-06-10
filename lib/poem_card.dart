@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 
 class PoemCard extends StatelessWidget {
-  PoemCard({required this.title, this.desc = ''});
+  PoemCard({required this.title, this.desc = '', this.fontSize = 24, this.textColor = 0xff444444 });
 
   final String title;
   final String desc;
+  final double fontSize;
+  // late int textColor = 0xff3a863d;
+  final int textColor;
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +31,8 @@ class PoemCard extends StatelessWidget {
                   child: Text(
                     title,
                     style: TextStyle(
-                      fontSize: 24,
-                      color: Color(0xff3a863d),
+                      fontSize: fontSize,
+                      color: Color(textColor),
                     ),
                   ),
                 )

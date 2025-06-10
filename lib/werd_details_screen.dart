@@ -5,7 +5,7 @@ import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'award.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 class WerdDetails extends StatefulWidget {
   final String name;
   final String department;
@@ -34,11 +34,11 @@ class WerdDetailsState extends State<WerdDetails> {
   }
 
   void fetchUserPreferences () async {
-    // SharedPreferences pref = await SharedPreferences.getInstance();
-    // setState(() {
-    //   fontSize = pref.getDouble('fontSize') ?? fontSize;
-    //   textColor = pref.getInt('textColor') ?? textColor;
-    // });
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      fontSize = pref.getDouble('fontSize') ?? fontSize;
+      textColor = pref.getInt('textColor') ?? textColor;
+    });
   }
   void fetchData() async {
     // try {
@@ -87,6 +87,7 @@ class WerdDetailsState extends State<WerdDetails> {
                   children: <Widget>[
                     Expanded(
                         child: Container(
+                          padding: const EdgeInsets.only(bottom: 15.0),
                           // width: double.infinity,
                           child: Text(
                             entry,
@@ -94,22 +95,19 @@ class WerdDetailsState extends State<WerdDetails> {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: fontSize,
+                              height: 2,
                               color:  Color(textColor),
                             ),
                           ),
                         )
                     )
-                    // Text((entry.key+ 1).toString(), TODO: uncomment this
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //   ),
-                    // )
-                    // issue when deployed to store
                     // Positioned(
-                    //     bottom: 20,
-                    //     left: 10,
+                    //     bottom: 10,
+                    //     left: 5,
+                    //     width: 20,
+                    //     height: 20,
                     //     child: Text(
-                    //       (pagesList.indexOf(page) + 1).toString(),
+                    //       (lines.indexOf(entry) + 1).toString() + " \\ " + lines.length.toString(),
                     //       style: const TextStyle(
                     //         fontSize: 12,
                     //       ),
@@ -120,7 +118,6 @@ class WerdDetailsState extends State<WerdDetails> {
               ]
             )
             );
-
         }).toList();
   }
   Widget _desciptionWidget(){

@@ -1,6 +1,6 @@
-// import 'package:awrad/settings.dart';
+import './settings.dart';
 import 'package:flutter/material.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
 
 import './details_screen.dart';
@@ -62,6 +62,7 @@ class _MyHomePageState extends State<MyHomePage> {
   savePref() async {
     // SharedPreferences _pref = await SharedPreferences.getInstance();
     // _pref.setString('textColor', 'ff0000');
+    // _pref.setDouble('fontSize', 48);
   }
 
   // Wideget _tile(String title) =>
@@ -87,19 +88,20 @@ class _MyHomePageState extends State<MyHomePage> {
             appBar: AppBar(
                 title: Text(widget.title),
                 backgroundColor: Colors.green,
-                titleTextStyle: TextStyle(color: Colors.white)
-              // actions: <Widget>[
-                //   IconButton(
-                //     icon: const Icon(Icons.settings),
-                //     tooltip: 'Settings',
-                //     onPressed: () {
-                //       Navigator.push(
-                //         context,
-                //         MaterialPageRoute(builder: (context) => Settings()),
-                //       );
-                //     },
-                //   )
-                // ]
+                titleTextStyle: TextStyle(color: Colors.white),
+                actions: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.settings),
+                      color: Colors.white,
+                      tooltip: 'Settings',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Settings()),
+                        );
+                      },
+                    )
+                  ]
             ),
             body: DecoratedBox(
               position: DecorationPosition.background,
