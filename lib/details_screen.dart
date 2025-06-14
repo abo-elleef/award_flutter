@@ -9,23 +9,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 class Details extends StatefulWidget {
   final String name;
   final String department;
+  final int chapterIndex;
   final int index;
   late double fontSize;
   late int textColor;
-  Details(this.name, this.index, this.department);
+  Details(this.name, this.index, this.department, this.chapterIndex);
   @override
   State<StatefulWidget> createState() {
-    return DetailsState(name, index, department);
+    return DetailsState(name, index, department, chapterIndex);
   }
 }
 
 class DetailsState extends State<Details> {
   String name;
   int index;
+  int chapterIndex = -1;
   String department;
   late double fontSize = 24;
   late int textColor = 0xff3a863d;
-  DetailsState(this.name, this.index, this.department);
+  DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
@@ -84,14 +86,22 @@ class DetailsState extends State<Details> {
     //   }
     //
     // } on Exception catch(_){
-      var temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
-        return chapter["lines"].map((line){
+      var temp ;
+      if(chapterIndex >= 0){
+        temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
           return line["body"];
+        })];
+      }else{
+        temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+          return chapter["lines"].map((line){
+            return line["body"];
+          });
         });
-      });
+      }
       setState(() {
         temp.forEach((e) => lines.addAll(e));
       });
+
     // }
 
   }

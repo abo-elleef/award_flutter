@@ -4,23 +4,26 @@ import 'chapter_card.dart';
 import 'details_screen.dart';
 
 class ChapterView extends StatefulWidget {
-  var body;
+  final body;
+  final department;
 
-  ChapterView(this.body);
+  ChapterView(this.body, this.department);
 
   @override
-  _ChapterViewState createState() => _ChapterViewState(body);
+  _ChapterViewState createState() => _ChapterViewState(body, department);
 }
 
 class _ChapterViewState extends State<ChapterView> {
-  _ChapterViewState(this.poem);
+  _ChapterViewState(this.poem, this.department);
 
   var poem;
+  var department;
 
-  void openDetailsPage(BuildContext ctx, int chapter_index) {
+  void openDetailsPage(BuildContext ctx, int chapterIndex) {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
 //      return Details(poem, lines, links);
-      return Details(poem['id'], chapter_index, '');
+//       return Details(poem['id'], chapterIndex, '');
+      return Details(poem['chapters'][chapterIndex]['name'], poem['id'], this.department, chapterIndex);
     }));
   }
 

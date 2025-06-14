@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:awrad3/chapter_view.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
@@ -11,23 +12,23 @@ import 'award.dart';
 import './part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class ListPage extends StatefulWidget {
-  final String name;
+  final String departmentName;
   final int index;
   late double fontSize;
   late int textColor;
-  ListPage(this.name, this.index);
+  ListPage(this.departmentName, this.index);
   @override
   State<StatefulWidget> createState() {
-    return ListPageState(name, index);
+    return ListPageState(departmentName, index);
   }
 }
 
 class ListPageState extends State<ListPage> {
-  String name;
+  String departmentName;
   int index;
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-  ListPageState(this.name, this.index);
+  ListPageState(this.departmentName, this.index);
   List poems = [];
 
   void fetchUserPreferences () async {
@@ -54,7 +55,7 @@ class ListPageState extends State<ListPage> {
     //   }
     // } on Exception catch(_){
     setState(() {
-      poems = offlineStore[this.name]!;
+      poems = offlineStore[this.departmentName]!;
     });
     // }
   }
@@ -76,10 +77,15 @@ class ListPageState extends State<ListPage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(builder: (context) {
-                                if (name == "الأوراد" || name == 'دلائل الخيرات'){
-                                  return WerdDetails(entry.value['name'].toString(), 1, name);
+                                if (departmentName == "الأوراد" || departmentName == 'دلائل الخيرات'){
+                                  return WerdDetails(entry.value['name'].toString(), 1, departmentName);
                                 }else{
-                                  return Details(entry.value['name'].toString(), entry.value['id'], name);
+                                  if (entry.value['chapters'].length > 1){
+                                    return ChapterView(entry.value, departmentName);
+                                  }else{
+                                    return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
+                                  }
+
                                 }
                               })
                             );
@@ -148,7 +154,7 @@ class ListPageState extends State<ListPage> {
         textDirection: TextDirection.rtl, // set this property
         child: Scaffold(
         appBar: AppBar(
-          title: Text(name),
+          title: Text(departmentName),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),
