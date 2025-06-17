@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
                                     );
                                   },
-                                  child: PartCard(title: name)
+                                  child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
                               );
                             }).toList(),
                           )

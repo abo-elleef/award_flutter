@@ -26,7 +26,8 @@ class DetailsState extends State<Details> {
   int chapterIndex = -1;
   String department;
   late double fontSize = 24;
-  late int textColor = 0xff3a863d;
+  // late int textColor = 0xff3a863d;
+  late int textColor = 0xFF000000;
   DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
   List range (int start, int size){
@@ -113,15 +114,16 @@ class DetailsState extends State<Details> {
     fetchData();
   }
   List<Widget> _buildList() {
-        return lines.map((entry){
+
+        return lines.asMap().entries.map((entry){
           return Container(
               decoration: const BoxDecoration(
                   // color: Color.fromRGBO(255, 255, 255, 0.8),
                   color: Color(0xffe1ffe1),
                   borderRadius: BorderRadius.all(Radius.circular(15))),
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),
+              padding: const EdgeInsets.only(top: 0, bottom: 8, left: 16.0, right: 16.0),
               margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.0),
-            child: Column(
+              child: Column(
               children: <Widget>[
                 Row(textDirection: TextDirection.rtl,
                   children: <Widget>[
@@ -129,7 +131,7 @@ class DetailsState extends State<Details> {
                         child: Container(
                           // width: double.infinity,
                           child: Text(
-                            entry[0],
+                            entry.value[0],
                             softWrap: true,
                             textAlign: TextAlign.right,
                             style: TextStyle(
@@ -140,32 +142,15 @@ class DetailsState extends State<Details> {
                           ),
                         )
                     )
-                    // Text((entry.key+ 1).toString(), TODO: uncomment this
-                    //   style: const TextStyle(
-                    //     fontSize: 12,
-                    //   ),
-                    // )
-                    // issue when deployed to store
-                    // Positioned(
-                    //     bottom: 20,
-                    //     left: 10,
-                    //     child: Text(
-                    //       (pagesList.indexOf(page) + 1).toString(),
-                    //       style: const TextStyle(
-                    //         fontSize: 12,
-                    //       ),
-                    //     )
-                    // )
                   ],
                 ),
                 Row(textDirection: TextDirection.rtl,
                   children: <Widget>[
                     Expanded(
                         child: Container(
-                          padding: const EdgeInsets.only(bottom: 20.0),
                           // width: double.infinity,
                           child: Text(
-                            entry[1],
+                            entry.value[1],
                             softWrap: true,
                             textAlign: TextAlign.left,
                             style: TextStyle(
@@ -177,6 +162,14 @@ class DetailsState extends State<Details> {
                         )
                     )
                   ],
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally
+                    children: <Widget>[
+                      Text(
+                          (entry.key + 1).toString() +" / "+ lines.length.toString(),
+                      )
+                    ]
                 )
               ]
             )

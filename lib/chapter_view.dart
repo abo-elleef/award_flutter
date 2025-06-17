@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'chapter_card.dart';
+import 'part_card.dart';
 import 'details_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ChapterView extends StatefulWidget {
   final body;
   final department;
+  late double fontSize;
+  late int textColor;
 
   ChapterView(this.body, this.department);
 
@@ -18,6 +22,16 @@ class _ChapterViewState extends State<ChapterView> {
 
   var poem;
   var department;
+  late double fontSize = 24;
+  late int textColor = 0xFF000000;
+
+  void fetchUserPreferences () async {
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    setState(() {
+      fontSize = pref.getDouble('fontSize') ?? fontSize;
+      textColor = pref.getInt('textColor') ?? textColor;
+    });
+  }
 
   void openDetailsPage(BuildContext ctx, int chapterIndex) {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
@@ -25,6 +39,12 @@ class _ChapterViewState extends State<ChapterView> {
 //       return Details(poem['id'], chapterIndex, '');
       return Details(poem['chapters'][chapterIndex]['name'], poem['id'], this.department, chapterIndex);
     }));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserPreferences();
   }
 
   List<Widget> buildChapters() {
@@ -35,7 +55,8 @@ class _ChapterViewState extends State<ChapterView> {
           onTap: () {
             openDetailsPage(context, index);
           },
-          child: ChapterCard(title: chapter["name"])));
+          // child: ChapterCard(title: chapter["name"])));
+          child: PartCard(title: chapter["name"].toString(), index: index, listSize: chapters.length, fontSize: fontSize, textColor: textColor)));
     });
     return items;
   }

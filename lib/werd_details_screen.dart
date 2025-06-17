@@ -73,7 +73,7 @@ class WerdDetailsState extends State<WerdDetails> {
     fetchData();
   }
   List<Widget> _buildList() {
-        return lines.map((entry){
+        return lines.asMap().entries.map((entry){
           return Container(
               decoration: const BoxDecoration(
                   color: Color(0xffe1ffe1),
@@ -90,7 +90,7 @@ class WerdDetailsState extends State<WerdDetails> {
                           padding: const EdgeInsets.only(bottom: 15.0),
                           // width: double.infinity,
                           child: Text(
-                            entry,
+                            entry.value,
                             softWrap: true,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -114,6 +114,14 @@ class WerdDetailsState extends State<WerdDetails> {
                     //     )
                     // )
                   ],
+                ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally
+                    children: <Widget>[
+                      Text(
+                        (entry.key + 1).toString() +" / "+ lines.length.toString(),
+                      )
+                    ]
                 )
               ]
             )

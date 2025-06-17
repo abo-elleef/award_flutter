@@ -1,7 +1,9 @@
+import 'package:awrad3/part_card.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'award.dart';
+import 'part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
@@ -16,7 +18,8 @@ class Settings extends StatefulWidget {
 
 class SettingsState extends State<Settings> {
   late double fontSize = 24;
-  late int textColor = 0xff3a863d;
+  // late int textColor = 0xff3a863d;
+  late int textColor = 0xFF000000;
   SettingsState();
   void fetchUserPreferences () async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -67,50 +70,32 @@ class SettingsState extends State<Settings> {
                 width: MediaQuery.of(context).size.width - 16,
                 child: SingleChildScrollView(
                   child: Column(
-                    children: [Row(
-                      children:[
-                        Text('حجم الخط',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color:  Color(this.textColor),
-                          )
-                        ),
-                        Slider(
-                          value: this.fontSize,
-                          max: 36,
-                          min: 14,
-                          divisions: 11,
-                          activeColor: Color(this.textColor),
-                          label: this.fontSize.toString(),
-                          onChanged: (double value) {
-                            setState(() {
-                              this.fontSize = value;
-                              setFontSize(value);
-                            });
-                          },
-                        )
-                      ]
-                    ),
+                    children: [
                       Row(
-                        children: [
-                          Expanded(
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromRGBO(255, 255, 255, 0.8),
-                                    borderRadius: BorderRadius.all(Radius.circular(15))),
-                                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16.0),
-                                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.0),
-                                child:Text(
-                                  'لا إله إلا الله',
-                                  softWrap: true,
-                                  style: TextStyle(
-                                    fontSize: this.fontSize,
-                                    color:  Color(this.textColor),
-                                  ),
-                                ),
-                              )
+                        children:[
+                          Text('حجم الخط',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color:  Color(this.textColor),
+                            )
+                          ),
+                          Slider(
+                            value: this.fontSize,
+                            max: 36,
+                            min: 14,
+                            divisions: 11,
+                            activeColor: Color(0xff3a863d),
+                            label: this.fontSize.toString(),
+                            onChanged: (double value) {
+                              setState(() {
+                                this.fontSize = value;
+                                setFontSize(value);
+                              });
+                            },
                           )
-                      ],)
+                        ]
+                      ),
+                      PartCard(title: 'لا إله إلا الله', index: 1, listSize: 6, fontSize: this.fontSize, textColor: this.textColor)
                     ]
                   ),
                 )

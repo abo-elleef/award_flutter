@@ -67,51 +67,51 @@ class ListPageState extends State<ListPage> {
   }
   List<Widget> _buildList() {
         return poems.asMap().entries.map((entry){
-          return Row(
+          return Column(
+            children: <Widget>[
+              Row(
                 textDirection: TextDirection.rtl,
                 children: <Widget>[
                   Expanded(
                       child: Container(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                if (departmentName == "الأوراد" || departmentName == 'دلائل الخيرات'){
-                                  return WerdDetails(entry.value['name'].toString(), 1, departmentName);
-                                }else{
-                                  if (entry.value['chapters'].length > 1){
-                                    return ChapterView(entry.value, departmentName);
-                                  }else{
-                                    return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
-                                  }
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) {
+                                      if (departmentName == "الأوراد" || departmentName == 'دلائل الخيرات'){
+                                        return WerdDetails(entry.value['name'].toString(), 1, departmentName);
+                                      }else{
+                                        if (entry.value['chapters'].length > 1){
+                                          return ChapterView(entry.value, departmentName);
+                                        }else{
+                                          return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
+                                        }
 
-                                }
-                              })
-                            );
-                          },
-                          child: PartCard(title: entry.value['name'].toString(), fontSize: fontSize, textColor: textColor)
-                        )
-                    )
+                                      }
+                                    })
+                                );
+                              },
+                              child: PartCard(title: entry.value['name'].toString(), index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
+                          )
+                      )
                   ),
-                 // Text((entry.key+ 1).toString(),
-                 //   style: const TextStyle(
-                 //     fontSize: 12,
-                 //   ),
-                 // )
-                  // issue when deployed to store
-                  // Positioned(
-                  //     bottom: 20,
-                  //     left: 10,
-                  //     child: Text(
-                  //       (pagesList.indexOf(page) + 1).toString(),
-                  //       style: const TextStyle(
-                  //         fontSize: 12,
-                  //       ),
-                  //     )
-                  // )
                 ],
-              );
+              ),
+              // issue when deployed to store
+              // Positioned(
+              //     bottom: 20,
+              //     left: 10,
+              //     child: Text(
+              //       (pagesList.indexOf(page) + 1).toString(),
+              //       style: const TextStyle(
+              //         fontSize: 12,
+              //       ),
+              //     )
+              // )
+            ]
+          );
+
         }).toList();
     
   }
