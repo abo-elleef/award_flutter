@@ -129,6 +129,7 @@ class DetailsState extends State<Details> {
                   children: <Widget>[
                     Expanded(
                         child: Container(
+                          margin: const EdgeInsets.only(top: 10),
                           // width: double.infinity,
                           child: Text(
                             entry.value[0],
@@ -148,6 +149,7 @@ class DetailsState extends State<Details> {
                   children: <Widget>[
                     Expanded(
                         child: Container(
+                          margin: const EdgeInsets.only(top: 25, bottom: 10),
                           // width: double.infinity,
                           child: Text(
                             entry.value[1],
