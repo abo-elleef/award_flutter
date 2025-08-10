@@ -1,13 +1,18 @@
+import 'dart:async';
+
 import './settings.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
-
 import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  unawaited(MobileAds.instance.initialize());
+
   runApp(const MyApp());
 }
 
@@ -57,6 +62,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  BannerAd? _bannerAd;
   var names = ApiEndPoints.keys.toList();
 
   savePref() async {
@@ -80,6 +86,27 @@ class _MyHomePageState extends State<MyHomePage> {
   //     );
   //   },
   // );
+  @override
+  void initState() {
+
+    // TODO: Load a banner ad
+    BannerAd(
+    adUnitId: "ca-app-pub-2772630944180636/8443670141",
+    request: AdRequest(),
+    size: AdSize.banner,
+    listener: BannerAdListener(
+    onAdLoaded: (ad) {
+    setState(() {
+    _bannerAd = ad as BannerAd;
+    });
+    },
+    onAdFailedToLoad: (ad, err) {
+    print('Failed to load a banner ad: ${err.message}');
+    ad.dispose();
+    },
+    ),
+    ).load();
+    }
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -112,6 +139,17 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  // TODO: Display a banner when ready
+                  if (_bannerAd != null)
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: Container(
+                        width: _bannerAd!.size.width.toDouble(),
+                        height: _bannerAd!.size.height.toDouble(),
+                        child: AdWidget(ad: _bannerAd!),
+                      ),
+                    ),
+
                   Container(
                       height: MediaQuery.of(context).size.height - 100,
                       child: SingleChildScrollView(
@@ -126,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   },
                                   child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
                               );
-                            }).toList(),
+                            }).toList()
                           )
                       )
                   ),
