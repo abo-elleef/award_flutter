@@ -1,9 +1,7 @@
 import './settings.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
 
-import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 
@@ -112,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
+                  SizedBox(
                       height: MediaQuery.of(context).size.height - 100,
                       child: SingleChildScrollView(
                           child: Column(

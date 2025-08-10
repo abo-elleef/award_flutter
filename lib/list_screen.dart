@@ -1,13 +1,8 @@
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:awrad3/chapter_view.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
-import 'dart:io' show Platform;
 import './details_screen.dart';
 import './werd_details_screen.dart';
-import 'package:http/http.dart' as http;
 import 'award.dart';
 import './part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,7 +11,7 @@ class ListPage extends StatefulWidget {
   final int index;
   late double fontSize;
   late int textColor;
-  ListPage(this.departmentName, this.index);
+  ListPage(this.departmentName, this.index, {super.key});
   @override
   State<StatefulWidget> createState() {
     return ListPageState(departmentName, index);
@@ -55,7 +50,7 @@ class ListPageState extends State<ListPage> {
     //   }
     // } on Exception catch(_){
     setState(() {
-      poems = offlineStore[this.departmentName]!;
+      poems = offlineStore[departmentName]!;
     });
     // }
   }
@@ -116,7 +111,7 @@ class ListPageState extends State<ListPage> {
     
   }
   Widget _desciptionWidget(){
-    if(AwardSource[index]!["desc"] != null){
+    if(AwardSource[index]["desc"] != null){
       return Container(
         padding: const EdgeInsets.only(
           bottom: 1, // Space between underline and text
@@ -128,7 +123,7 @@ class ListPageState extends State<ListPage> {
             ))
         ),
         child: Text(
-          AwardSource[index]!["desc"].toString(),
+          AwardSource[index]["desc"].toString(),
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -165,7 +160,7 @@ class ListPageState extends State<ListPage> {
           image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
         ),
         child: Center(
-          child: Container(
+          child: SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width,
               child: SingleChildScrollView(

@@ -1,15 +1,11 @@
 import 'package:awrad3/part_card.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
-import 'dart:io' show Platform;
-import 'award.dart';
-import 'part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Settings extends StatefulWidget {
   late double fontSize;
   late int textColor;
-  Settings();
+  Settings({super.key});
   @override
   State<StatefulWidget> createState() {
     return SettingsState();
@@ -22,21 +18,21 @@ class SettingsState extends State<Settings> {
   late int textColor = 0xFF000000;
   SettingsState();
   void fetchUserPreferences () async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
+    SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      this.fontSize = _pref.getDouble('fontSize') ?? this.fontSize;
-      this.textColor = _pref.getInt('textColor') ?? this.textColor;
+      fontSize = pref.getDouble('fontSize') ?? fontSize;
+      textColor = pref.getInt('textColor') ?? textColor;
     });
   }
 
   void setFontSize (value) async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    _pref.setDouble('fontSize', value);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setDouble('fontSize', value);
   }
 
   void setTextColor (value) async {
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    _pref.setInt('textColor', value);
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    pref.setInt('textColor', value);
   }
 
 
@@ -65,7 +61,7 @@ class SettingsState extends State<Settings> {
             image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
         ),
         child: Center(
-              child: Container(
+              child: SizedBox(
                 height: MediaQuery.of(context).size.height - 100,
                 width: MediaQuery.of(context).size.width - 16,
                 child: SingleChildScrollView(
@@ -76,26 +72,26 @@ class SettingsState extends State<Settings> {
                           Text('حجم الخط',
                             style: TextStyle(
                               fontSize: 20,
-                              color:  Color(this.textColor),
+                              color:  Color(textColor),
                             )
                           ),
                           Slider(
-                            value: this.fontSize,
+                            value: fontSize,
                             max: 36,
                             min: 14,
                             divisions: 11,
                             activeColor: Color(0xff3a863d),
-                            label: this.fontSize.toString(),
+                            label: fontSize.toString(),
                             onChanged: (double value) {
                               setState(() {
-                                this.fontSize = value;
+                                fontSize = value;
                                 setFontSize(value);
                               });
                             },
                           )
                         ]
                       ),
-                      PartCard(title: 'لا إله إلا الله', index: 1, listSize: 6, fontSize: this.fontSize, textColor: this.textColor)
+                      PartCard(title: 'لا إله إلا الله', index: 1, listSize: 6, fontSize: fontSize, textColor: textColor)
                     ]
                   ),
                 )

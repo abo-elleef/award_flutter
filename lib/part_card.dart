@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PartCard extends StatelessWidget {
-  PartCard({required this.title, required this.index, required this.listSize, this.fontSize = 28, this.textColor = 0xFF000000});
+  const PartCard({super.key, required this.title, required this.index, required this.listSize, this.fontSize = 28, this.textColor = 0xFF000000});
 
   final String title;
   final int index;
@@ -28,7 +28,7 @@ class PartCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  "("+(index+ 1).toString() + ")" ,
+                  "(${index+ 1})" ,
                   style: TextStyle(
                     fontSize: fontSize/1.5,
                     color: Color(0xff666666)

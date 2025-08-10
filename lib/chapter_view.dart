@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'chapter_card.dart';
 import 'part_card.dart';
 import 'details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,7 +10,7 @@ class ChapterView extends StatefulWidget {
   late double fontSize;
   late int textColor;
 
-  ChapterView(this.body, this.department);
+  ChapterView(this.body, this.department, {super.key});
 
   @override
   _ChapterViewState createState() => _ChapterViewState(body, department);
@@ -37,7 +36,7 @@ class _ChapterViewState extends State<ChapterView> {
     Navigator.of(ctx).push(MaterialPageRoute(builder: (_) {
 //      return Details(poem, lines, links);
 //       return Details(poem['id'], chapterIndex, '');
-      return Details(poem['chapters'][chapterIndex]['name'], poem['id'], this.department, chapterIndex);
+      return Details(poem['chapters'][chapterIndex]['name'], poem['id'], department, chapterIndex);
     }));
   }
 
