@@ -121,8 +121,8 @@ class DetailsState extends State<Details> {
                   // color: Color.fromRGBO(255, 255, 255, 0.8),
                   color: Color(0xffe1ffe1),
                   borderRadius: BorderRadius.all(Radius.circular(15))),
-              padding: const EdgeInsets.only(top: 0, bottom: 8, left: 16.0, right: 16.0),
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.0),
+              padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
               child: Column(
               children: <Widget>[
                 Row(textDirection: TextDirection.rtl,
