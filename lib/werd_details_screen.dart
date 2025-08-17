@@ -1,9 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
-import 'dart:io' show Platform;
-import 'package:http/http.dart' as http;
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class WerdDetails extends StatefulWidget {
@@ -12,7 +8,7 @@ class WerdDetails extends StatefulWidget {
   final int index;
   late double fontSize;
   late int textColor;
-  WerdDetails(this.name, this.index, this.department);
+  WerdDetails(this.name, this.index, this.department, {super.key});
   @override
   State<StatefulWidget> createState() {
     return WerdDetailsState(name, index, department);
@@ -58,9 +54,9 @@ class WerdDetailsState extends State<WerdDetails> {
     //     throw Exception('Failed to load album');
     //   }
     // } on Exception catch(_){
-    var json = (offlineStore[this.department]!.where( (item) => item['name'] == name.toString()).toList()[0]);
+    var json = (offlineStore[department]!.where( (item) => item['name'] == name.toString()).toList()[0]);
     setState(() {
-      lines = json?["textPages"] as List;
+      lines = json["textPages"] as List;
       desc = json['desc']!.toString();
     });
     // }
@@ -119,7 +115,7 @@ class WerdDetailsState extends State<WerdDetails> {
                     mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally
                     children: <Widget>[
                       Text(
-                        (entry.key + 1).toString() +" / "+ lines.length.toString(),
+                        "${entry.key + 1} / ${lines.length}",
                       )
                     ]
                 )
@@ -129,7 +125,7 @@ class WerdDetailsState extends State<WerdDetails> {
         }).toList();
   }
   Widget _desciptionWidget(){
-    if(desc.length != 0){
+    if(desc.isNotEmpty){
       return Container(
         padding: const EdgeInsets.only(
           bottom: 1, // Space between underline and text
@@ -177,7 +173,7 @@ class WerdDetailsState extends State<WerdDetails> {
           image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
         ),
         child: Center(
-          child: Container(
+          child: SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width - 16,
               child: SingleChildScrollView(

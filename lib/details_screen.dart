@@ -1,9 +1,5 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
-import 'dart:io' show Platform;
-import 'package:http/http.dart' as http;
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Details extends StatefulWidget {
@@ -13,7 +9,7 @@ class Details extends StatefulWidget {
   final int index;
   late double fontSize;
   late int textColor;
-  Details(this.name, this.index, this.department, this.chapterIndex);
+  Details(this.name, this.index, this.department, this.chapterIndex, {super.key});
   @override
   State<StatefulWidget> createState() {
     return DetailsState(name, index, department, chapterIndex);
@@ -87,20 +83,22 @@ class DetailsState extends State<Details> {
     //   }
     //
     // } on Exception catch(_){
-      var temp ;
+      Iterable temp ;
       if(chapterIndex >= 0){
-        temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
+        temp = [(offlineStore[department]!.where( (item) => item['id'] == index).toList()[0]["chapters"] as List)[chapterIndex]['lines'].map((line){
           return line["body"];
         })];
       }else{
-        temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+        temp = (offlineStore[department]!.where( (item) => item['id'] == index).toList()[0]["chapters"] as List).map((chapter){
           return chapter["lines"].map((line){
             return line["body"];
           });
         });
       }
       setState(() {
-        temp.forEach((e) => lines.addAll(e));
+        for (var e in temp) {
+          lines.addAll(e);
+        }
       });
 
     // }
@@ -169,7 +167,7 @@ class DetailsState extends State<Details> {
                     mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally
                     children: <Widget>[
                       Text(
-                          (entry.key + 1).toString() +" / "+ lines.length.toString(),
+                          "${entry.key + 1} / ${lines.length}",
                       )
                     ]
                 )
@@ -180,7 +178,7 @@ class DetailsState extends State<Details> {
         }).toList();
   }
   Widget _desciptionWidget(){
-    if(AwardSource[index]!["desc"] != null){
+    if(AwardSource[index]["desc"] != null){
       return Container(
         padding: const EdgeInsets.only(
           bottom: 1, // Space between underline and text
@@ -192,7 +190,7 @@ class DetailsState extends State<Details> {
             ))
         ),
         child: Text(
-          AwardSource[index]!["desc"].toString(),
+          AwardSource[index]["desc"].toString(),
           style: const TextStyle(
             fontSize: 16,
           ),
@@ -229,7 +227,7 @@ class DetailsState extends State<Details> {
           image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
         ),
         child: Center(
-          child: Container(
+          child: SizedBox(
               height: MediaQuery.of(context).size.height - 100,
               width: MediaQuery.of(context).size.width - 16,
               child: SingleChildScrollView(

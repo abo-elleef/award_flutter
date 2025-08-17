@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PoemCard extends StatelessWidget {
-  PoemCard({required this.title, this.desc = '', this.fontSize = 24, this.textColor = 0xff444444 });
+  const PoemCard({super.key, required this.title, this.desc = '', this.fontSize = 24, this.textColor = 0xff444444 });
 
   final String title;
   final String desc;

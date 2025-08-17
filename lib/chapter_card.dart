@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ChapterCard extends StatelessWidget {
-  ChapterCard({required this.title});
+  const ChapterCard({super.key, required this.title});
 
   final String title;
 
