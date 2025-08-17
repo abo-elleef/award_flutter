@@ -1,18 +1,16 @@
-import 'dart:async';
-
 import './settings.dart';
 import 'package:flutter/material.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'award.dart';
+
 import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  unawaited(MobileAds.instance.initialize());
-
+  MobileAds.instance.initialize();
   runApp(const MyApp());
 }
 
@@ -62,8 +60,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  BannerAd? _bannerAd;
   var names = ApiEndPoints.keys.toList();
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
+  }
+
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: _getBannerAdUnitId(),
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd?.load();
+  }
+
+  String _getBannerAdUnitId() {
+    // Replace these with your actual ad unit IDs
+    if (Theme.of(context).platform == TargetPlatform.android) {
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test ad unit ID for Android
+    } else if (Theme.of(context).platform == TargetPlatform.iOS) {
+      return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
+    }
+    return 'ca-app-pub-3940256099942544/6300978111'; // Default to Android test ID
+  }
 
   savePref() async {
     // SharedPreferences _pref = await SharedPreferences.getInstance();
@@ -86,27 +127,6 @@ class _MyHomePageState extends State<MyHomePage> {
   //     );
   //   },
   // );
-  @override
-  void initState() {
-
-    // TODO: Load a banner ad
-    BannerAd(
-    adUnitId: "ca-app-pub-2772630944180636/8443670141",
-    request: AdRequest(),
-    size: AdSize.banner,
-    listener: BannerAdListener(
-    onAdLoaded: (ad) {
-    setState(() {
-    _bannerAd = ad as BannerAd;
-    });
-    },
-    onAdFailedToLoad: (ad, err) {
-    print('Failed to load a banner ad: ${err.message}');
-    ad.dispose();
-    },
-    ),
-    ).load();
-    }
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -139,32 +159,30 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  // TODO: Display a banner when ready
-                  if (_bannerAd != null)
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        width: _bannerAd!.size.width.toDouble(),
-                        height: _bannerAd!.size.height.toDouble(),
-                        child: AdWidget(ad: _bannerAd!),
-                      ),
-                    ),
-
                   Container(
                       height: MediaQuery.of(context).size.height - 100,
                       child: SingleChildScrollView(
                           child: Column(
-                            children: names.map((name) {
-                              return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
-                                    );
-                                  },
-                                  child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
-                              );
-                            }).toList()
+                            children: [
+                              ...names.map((name) {
+                                return GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
+                                      );
+                                    },
+                                    child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
+                                );
+                              }).toList(),
+                              // Banner Ad at the end
+                              if (_isBannerAdReady)
+                                Container(
+                                  width: _bannerAd!.size.width.toDouble(),
+                                  height: _bannerAd!.size.height.toDouble(),
+                                  child: AdWidget(ad: _bannerAd!),
+                                ),
+                            ],
                           )
                       )
                   ),
