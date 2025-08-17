@@ -79,7 +79,7 @@ class ListPageState extends State<ListPage> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) {
-                                      if (departmentName == "الأوراد" || departmentName == 'دلائل الخيرات'){
+                                      if (["الأوراد", "دلائل الخيرات", "صلاوات النبي" ].contains(departmentName)){
                                         return WerdDetails(entry.value['name'].toString(), 1, departmentName);
                                       }else{
                                         if (entry.value['chapters'].length > 1){
