@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 class Details extends StatefulWidget {
@@ -30,6 +31,9 @@ class DetailsState extends State<Details> {
   late int textColor = 0xFF000000;
   DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
+  BannerAd? _bannerAd;
+  bool _isBannerAdReady = false;
+
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
   }
@@ -107,11 +111,48 @@ class DetailsState extends State<Details> {
 
   }
 
+  void _loadBannerAd() {
+    _bannerAd = BannerAd(
+      adUnitId: _getBannerAdUnitId(),
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (ad) {
+          setState(() {
+            _isBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (ad, error) {
+          ad.dispose();
+        },
+      ),
+    );
+
+    _bannerAd?.load();
+  }
+
+  String _getBannerAdUnitId() {
+    // Replace these with your actual ad unit IDs
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
+    }
+    return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+  }
+
   @override
   void initState() {
     super.initState();
     fetchUserPreferences();
     fetchData();
+    _loadBannerAd();
+  }
+
+  @override
+  void dispose() {
+    _bannerAd?.dispose();
+    super.dispose();
   }
   List<Widget> _buildList() {
 
@@ -205,6 +246,19 @@ class DetailsState extends State<Details> {
 
   }
 
+  Widget _add_banner_ads(){
+    if (_isBannerAdReady) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      );
+    }else{
+      return Container();
+    }
+  }
+
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     // pageDetails.add(_desciptionWidget());
@@ -229,18 +283,22 @@ class DetailsState extends State<Details> {
           image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
         ),
         child: Center(
-          child: Container(
-              height: MediaQuery.of(context).size.height - 100,
-              width: MediaQuery.of(context).size.width - 16,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: buildPageDetails(),
-                ),
+          child: Column(
+            children: [
+              _add_banner_ads(),
+              Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
+                    child: Column(
+                      children: buildPageDetails(),
+                      ),
+                    )
               )
-            )
-          )
+            ],
+          ),
         )
       )
+         )
     );
   }
 }
