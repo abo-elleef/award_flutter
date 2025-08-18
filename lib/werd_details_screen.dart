@@ -68,10 +68,12 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-2772630944180636/8443670141'; // Test ad unit ID for Android
+      // return 'ca-app-pub-3940256099942544/6300978111' // Test ad unit ID for Android
+      return 'ca-app-pub-2772630944180636/8443670141'; //  real ad unit ID for Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Default to Android test ID
     return 'ca-app-pub-2772630944180636/8443670141'; // Default to Android test ID
   }
 
@@ -172,12 +174,16 @@ class WerdDetailsState extends State<WerdDetails> {
         }).toList();
   }
   Widget _add_banner_ads(){
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-      width: _bannerAd!.size.width.toDouble(),
-      height: _bannerAd!.size.height.toDouble(),
-      child: AdWidget(ad: _bannerAd!),
-    );
+    if (_isBannerAdReady) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+        width: _bannerAd!.size.width.toDouble(),
+        height: _bannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bannerAd!),
+      );
+    }else{
+      return Container();
+    }
   }
   Widget _desciptionWidget(){
     if(desc.length != 0){
