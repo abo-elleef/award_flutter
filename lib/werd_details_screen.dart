@@ -74,7 +74,7 @@ class WerdDetailsState extends State<WerdDetails> {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
     // return 'ca-app-pub-3940256099942544/6300978111'; // Default to Android test ID
-    return 'ca-app-pub-2772630944180636/8443670141'; // Default to Android test ID
+    return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
   }
 
   void fetchData() async {
