@@ -107,33 +107,32 @@ class _MyHomePageState extends State<MyHomePage> {
               position: DecorationPosition.background,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                    image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
-              ),child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      height: MediaQuery.of(context).size.height - 100,
-                      child: SingleChildScrollView(
-                          child: Column(
-                            children: names.map((name) {
-                              return GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
-                                    );
-                                  },
-                                  child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
-                              );
-                            }).toList(),
-                          )
-                      )
-                  ),
-                ],
-              ),
-            ),
-            )
+                          image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
+                        ),child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Expanded(
+                                child: SingleChildScrollView(
+                                    child: Column(
+                                      children: names.map((name) {
+                                        return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
+                                              );
+                                            },
+                                            child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
+                                        );
+                                      }).toList(),
+                                    )
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                )
         )
     );
   }
