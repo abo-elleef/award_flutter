@@ -138,11 +138,11 @@ class DetailsState extends State<Details> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+      return 'ca-app-pub-2772630944180636/3185523871'; //  real ad unit ID for elburda Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+    return 'ca-app-pub-2772630944180636/3185523871'; // real ad unit ID for elburda Android
   }
 
   @override
