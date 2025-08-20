@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "741270284032",
-    "project_id": "awrad-httpsplaycomstorea",
-    "storage_bucket": "awrad-httpsplaycomstorea.firebasestorage.app"
+    "project_number": "402730850582",
+    "project_id": "comionicframeworkborda215096",
+    "storage_bucket": "comionicframeworkborda215096.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:741270284032:android:e793501bcd39b7d06eb5e5",
+        "mobilesdk_app_id": "1:402730850582:android:e67d821be750a473665837",
         "android_client_info": {
-          "package_name": "com.leef.awrad"
+          "package_name": "com.ionicframework.borda215096"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAL5O_HJTr3bz6psf14tvLLBFtqUf2gVWE"
+          "current_key": "AIzaSyD0_YK3dn4LSHL8Xw1gZbYpxoKrsGOe7r8"
         }
       ],
       "services": {
