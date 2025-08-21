@@ -123,9 +123,10 @@ class WerdDetailsState extends State<WerdDetails> {
               decoration: const BoxDecoration(
                   color: Color(0xffe1ffe1),
                   // color: Color.fromRGBO(255, 255, 255, 0.8),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16.0),
-              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 0.0),
+                  borderRadius: BorderRadius.all(Radius.circular(15.0))
+              ),
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
               child: Column(
               children: <Widget>[
                 Row(textDirection: TextDirection.rtl,

@@ -17,9 +17,9 @@ class PartCard extends StatelessWidget {
         decoration: const BoxDecoration(
             // color: Color.fromRGBO(255, 255, 255, 0.8),
             color: Color(0xffe1ffe1),
-            borderRadius: BorderRadius.all(Radius.circular(15))),
-        padding: const EdgeInsets.only(bottom: 16, right: 8, left: 8),
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+        padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
+        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -34,7 +34,7 @@ class PartCard extends StatelessWidget {
                     color: Color(0xff666666)
                   ),
                 ),
-                SizedBox(width: 8),
+                SizedBox(width: 8.0),
                 // Container(
                 //   margin: EdgeInsets.only(top: 10, bottom: 10, left: 16.0, right: 0.0),
                 //   child: Image.asset("assets/book.png", width: this.fontSize - 4),
