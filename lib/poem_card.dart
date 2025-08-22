@@ -15,8 +15,8 @@ class PoemCard extends StatelessWidget {
         decoration: const BoxDecoration(
             color: Color.fromRGBO(255, 255, 255, 0.8),
             borderRadius: BorderRadius.all(Radius.circular(15))),
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
-        margin: const EdgeInsets.symmetric(vertical: 7, horizontal: 20),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
+        margin: const EdgeInsets.symmetric(vertical: 7.0, horizontal: 20),
         child: Column(
           children: <Widget>[
             Row(
