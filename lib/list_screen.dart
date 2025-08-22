@@ -65,58 +65,62 @@ class ListPageState extends State<ListPage> {
     fetchUserPreferences();
     fetchData();
   }
+  // ... inside ListPageState class ...
+
   List<Widget> _buildList() {
-        return poems.asMap().entries.map((entry){
-          return Column(
-            children: <Widget>[
-              Row(
-                textDirection: TextDirection.rtl,
-                children: <Widget>[
-                  Expanded(
-                      child: Container(
-                          child: GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) {
-                                      if (["الأوراد", "دلائل الخيرات", "صلاوات النبي" ].contains(departmentName)){
-                                        return WerdDetails(entry.value['name'].toString(), 1, departmentName);
-                                      }else{
-                                        if (entry.value['chapters'].length > 1){
+    return poems.asMap().entries.map((entry) {
+      return Column(
+          children: <Widget>[
+            Row(
+              textDirection: TextDirection.rtl,
+              children: <Widget>[
+                Expanded(
+                    child: Container(
+                        child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) {
+                                    if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(departmentName)) {
+                                      return WerdDetails(entry.value['name'].toString(), 1, departmentName);
+                                    } else {
+                                      if (["بردة المديح للامام البوصيري"].contains(departmentName)) {
+                                        return Details(entry.value['name'].toString(), int.parse(entry.value['id']), departmentName, -1);
+                                      } else {
+                                        if (entry.value['chapters'].length > 1) {
                                           return ChapterView(entry.value, departmentName);
-                                        }else{
+                                        } else {
                                           return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
                                         }
-
                                       }
-                                    })
-                                );
-                              },
-                              child: PartCard(title: entry.value['name'].toString(), index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
-                          )
-                      )
-                  ),
-                ],
-              ),
-              // issue when deployed to store
-              // Positioned(
-              //     bottom: 20,
-              //     left: 10,
-              //     child: Text(
-              //       (pagesList.indexOf(page) + 1).toString(),
-              //       style: const TextStyle(
-              //         fontSize: 12,
-              //       ),
-              //     )
-              // )
-            ]
-          );
-
-        }).toList();
-    
+                                    }
+                                  }) // Correctly closed MaterialPageRoute
+                              ); // Correctly closed Navigator.push
+                            }, // Correctly closed onTap
+                            child: PartCard(title: entry.value['name'].toString(), index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
+                        )
+                    )
+                ),
+              ],
+            ),
+            // issue when deployed to store
+            // Positioned(
+            //     bottom: 20,
+            //     left: 10,
+            //     child: Text(
+            //       (pagesList.indexOf(page) + 1).toString(),
+            //       style: const TextStyle(
+            //         fontSize: 12,
+            //       ),
+            //     )
+            // )
+          ]
+      );
+    }).toList();
   }
+
   Widget _desciptionWidget(){
-    if(AwardSource[index]!["desc"] != null){
+    if(AwradOffline[index]!["desc"] != null){
       return Container(
         padding: const EdgeInsets.only(
           bottom: 1, // Space between underline and text
@@ -128,7 +132,7 @@ class ListPageState extends State<ListPage> {
             ))
         ),
         child: Text(
-          AwardSource[index]!["desc"].toString(),
+          AwradOffline[index]!["desc"].toString(),
           style: const TextStyle(
             fontSize: 16,
           ),

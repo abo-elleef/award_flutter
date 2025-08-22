@@ -92,16 +92,20 @@ class DetailsState extends State<Details> {
     //
     // } on Exception catch(_){
       var temp ;
-      if(chapterIndex >= 0){
-        temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
-          return line["body"];
-        })];
+      if (["بردة المديح للامام البوصيري"].contains(this.department)) {
+        temp = [(offlineStore[this.department]!.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
       }else{
-        temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
-          return chapter["lines"].map((line){
+        if(chapterIndex >= 0){
+          temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
             return line["body"];
+          })];
+        }else{
+          temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+            return chapter["lines"].map((line){
+              return line["body"];
+            });
           });
-        });
+        }
       }
       setState(() {
         temp.forEach((e) => lines.addAll(e));
@@ -221,7 +225,7 @@ class DetailsState extends State<Details> {
         }).toList();
   }
   Widget _desciptionWidget(){
-    if(AwardSource[index]!["desc"] != null){
+    if(AwradOffline[index]!["desc"] != null){
       return Container(
         padding: const EdgeInsets.only(
           bottom: 1, // Space between underline and text
@@ -233,7 +237,7 @@ class DetailsState extends State<Details> {
             ))
         ),
         child: Text(
-          AwardSource[index]!["desc"].toString(),
+          AwradOffline[index]!["desc"].toString(),
           style: const TextStyle(
             fontSize: 16,
           ),
