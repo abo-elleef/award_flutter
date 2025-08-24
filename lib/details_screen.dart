@@ -289,7 +289,6 @@ class DetailsState extends State<Details> {
         child: Center(
           child: Column(
             children: [
-              _add_banner_ads(),
               Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
@@ -297,7 +296,8 @@ class DetailsState extends State<Details> {
                       children: buildPageDetails(),
                       ),
                     )
-              )
+              ),
+              _add_banner_ads()
             ],
           ),
         )
