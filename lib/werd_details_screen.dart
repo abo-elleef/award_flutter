@@ -239,7 +239,6 @@ class WerdDetailsState extends State<WerdDetails> {
         child: Center(
           child: Column(
             children: [
-              _add_banner_ads(),
               Expanded(
                   child: SingleChildScrollView(
                     padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
@@ -247,7 +246,8 @@ class WerdDetailsState extends State<WerdDetails> {
                       children: buildPageDetails(),
                       ),
                     )
-              )
+              ),
+              _add_banner_ads()
             ],
           ),
         )
