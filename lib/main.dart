@@ -7,7 +7,6 @@ import 'award.dart';
 import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
-import 'package:collection/collection.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:io' show Platform;
 
@@ -68,11 +67,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String _getRewardedAdUnitId() {
     // Use test ad unit ID for development.
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/5224354917'; // Example Android test ID.
+      // return 'ca-app-pub-3940256099942544/5224354917'; // Example Android test ID.
+      return 'ca-app-pub-2772630944180636/7242266351'; // Real Android test ID.
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // Example iOS test ID.
     }
-    return 'ca-app-pub-3940256099942544/5224354917'; // default to Android test ID.
+    // return 'ca-app-pub-3940256099942544/5224354917'; // default to Android test ID.
+    return 'ca-app-pub-2772630944180636/7242266351'; // default to Android Real ID.
   }
 
   void _loadRewardedAd() {
