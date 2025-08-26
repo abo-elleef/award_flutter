@@ -2,7 +2,8 @@
 Main branch is https://play.google.com/store/apps/details?id=com.leef.awrad
 
 elburda_branch is https://play.google.com/store/apps/details?id=com.ionicframework.borda215096
-Release Do do 
+
+# Release TODO
 
 - switch to the right application branch
 - disable test ids enable ad unit real ids
