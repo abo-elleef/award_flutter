@@ -27,12 +27,13 @@ class DetailsState extends State<Details> {
   int chapterIndex = -1;
   String department;
   late double fontSize = 24;
-  // late int textColor = 0xff3a863d;
   late int textColor = 0xFF000000;
   DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
+  NativeAd? _nativeAd;
+  bool _isNativeAdReady = false;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
@@ -70,49 +71,25 @@ class DetailsState extends State<Details> {
     );
   }
   void fetchData() async {
-    // try {
-    //   String url = ApiEndPoints[this.department]!["show"].toString() + index.toString() + "?format=json";
-    //   final response = await http
-    //       .get(Uri.parse(url));
-    //   if (response.statusCode == 200) {
-    //     var temp = jsonDecode(response.body)["poem"]["chapters"].map((chapter){
-    //       return chapter["lines"].map((line){
-    //         return line["body"];
-    //       });
-    //     });
-    //     setState(() {
-    //       temp.forEach((e) => lines.addAll(e));
-    //     });
-    //     // TODO: save response to user preferences
-    //   } else {
-    //     // TODO: read from user preferences
-    //     _showMyDialog('Error happened while Connecting to server, please check internet connection');
-    //     throw Exception('Failed to load Data');
-    //   }
-    //
-    // } on Exception catch(_){
-      var temp ;
-      if (["بردة المديح للامام البوصيري"].contains(this.department)) {
-        temp = [(offlineStore[this.department]!.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
+    var temp ;
+    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
+      temp = [(offlineStore[this.department]!.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
+    }else{
+      if(chapterIndex >= 0){
+        temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
+          return line["body"];
+        })];
       }else{
-        if(chapterIndex >= 0){
-          temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
+        temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+          return chapter["lines"].map((line){
             return line["body"];
-          })];
-        }else{
-          temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
-            return chapter["lines"].map((line){
-              return line["body"];
-            });
           });
-        }
+        });
       }
-      setState(() {
-        temp.forEach((e) => lines.addAll(e));
-      });
-
-    // }
-
+    }
+    setState(() {
+      temp.forEach((e) => lines.addAll(e));
+    });
   }
 
   void _loadBannerAd() {
@@ -131,18 +108,53 @@ class DetailsState extends State<Details> {
         },
       ),
     );
-
     _bannerAd?.load();
   }
 
   String _getBannerAdUnitId() {
-    // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
+      // return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
       return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
+    // return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
     return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+  }
+
+  void _loadNativeAd() {
+    _nativeAd = NativeAd(
+      adUnitId: _getNativeAdUnitId(),
+      listener: NativeAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$NativeAd loaded.');
+          setState(() {
+            _isNativeAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$NativeAd failedToLoad: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+      // Styling
+      nativeTemplateStyle: NativeTemplateStyle(
+        templateType: TemplateType.medium,
+        // Optional styling options
+      ),
+    )..load();
+  }
+
+  String _getNativeAdUnitId() {
+    if (Platform.isAndroid) {
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test ad unit ID for Android
+      return 'ca-app-pub-2772630944180636/2469070370'; // Real ad unit ID for Android
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
+    }
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Default to Android test ID
+    return 'ca-app-pub-2772630944180636/2469070370'; // Default to Android Real ID
   }
 
   @override
@@ -151,38 +163,37 @@ class DetailsState extends State<Details> {
     fetchUserPreferences();
     fetchData();
     _loadBannerAd();
+    _loadNativeAd();
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
-  List<Widget> _buildList() {
 
-        return lines.asMap().entries.map((entry){
-          return Container(
-              decoration: const BoxDecoration(
-                  // color: Color.fromRGBO(255, 255, 255, 0.8),
-                  color: Color(0xffe1ffe1),
-                  borderRadius: BorderRadius.all(Radius.circular(15))),
-              padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
-              margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-              child: Column(
+  List<Widget> _buildList() {
+    return lines.asMap().entries.map((entry){
+      return Container(
+          decoration: const BoxDecoration(
+              color: Color(0xffe1ffe1),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+          child: Column(
               children: <Widget>[
                 Row(textDirection: TextDirection.rtl,
                   children: <Widget>[
                     Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(top: 10),
-                          // width: double.infinity,
                           child: Text(
                             entry.value[0],
                             softWrap: true,
                             textAlign: TextAlign.right,
                             style: TextStyle(
                               fontSize: fontSize,
-                              // color:  Color(textColor),
                               color: Color(0xff444444)
                             ),
                           ),
@@ -195,14 +206,12 @@ class DetailsState extends State<Details> {
                     Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(top: 25, bottom: 10),
-                          // width: double.infinity,
                           child: Text(
                             entry.value[1],
                             softWrap: true,
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontSize: fontSize,
-                              // color:  Color(textColor),
                               color: Color(0xff444444)
                             ),
                           ),
@@ -211,7 +220,7 @@ class DetailsState extends State<Details> {
                   ],
                 ),
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.center, //Center Row contents horizontally
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
                           (entry.key + 1).toString() +" / "+ lines.length.toString(),
@@ -221,19 +230,19 @@ class DetailsState extends State<Details> {
               ]
             )
             );
-
-        }).toList();
+    }).toList();
   }
+
   Widget _desciptionWidget(){
     if(AwradOffline[index]!["desc"] != null){
       return Container(
         padding: const EdgeInsets.only(
-          bottom: 1, // Space between underline and text
+          bottom: 1,
         ),
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(
               color: Colors.grey,
-              width: 1.0, // Underline thickness
+              width: 1.0,
             ))
         ),
         child: Text(
@@ -246,8 +255,6 @@ class DetailsState extends State<Details> {
     }else{
       return Container();
     }
-
-
   }
 
   Widget _add_banner_ads(){
@@ -263,17 +270,28 @@ class DetailsState extends State<Details> {
     }
   }
 
+  Widget _buildNativeAdWidget() {
+    if (_isNativeAdReady && _nativeAd != null) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        height: 350, // Adjust height as needed for TemplateType.medium
+        child: AdWidget(ad: _nativeAd!),
+      );
+    }
+    return SizedBox.shrink();
+  }
+
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
-    // pageDetails.add(_desciptionWidget());
     pageDetails.addAll(_buildList());
+    pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
     return pageDetails;
   }
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: TextDirection.rtl,
         child: Scaffold(
         appBar: AppBar(
             title: Text(name),

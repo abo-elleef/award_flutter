@@ -32,6 +32,8 @@ class WerdDetailsState extends State<WerdDetails> {
   List lines = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
+  NativeAd? _nativeAd;
+  bool _isNativeAdReady = false;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
@@ -68,7 +70,7 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111' // Test ad unit ID for Android
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test ad unit ID for Android
       return 'ca-app-pub-2772630944180636/8443670141'; //  real ad unit ID for Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
@@ -77,30 +79,49 @@ class WerdDetailsState extends State<WerdDetails> {
     return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
   }
 
+  void _loadNativeAd() {
+    _nativeAd = NativeAd(
+      adUnitId: _getNativeAdUnitId(),
+      listener: NativeAdListener(
+        onAdLoaded: (Ad ad) {
+          print('$NativeAd loaded.');
+          setState(() {
+            _isNativeAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print('$NativeAd failedToLoad: $error');
+          ad.dispose();
+        },
+      ),
+      request: const AdRequest(),
+      // Styling
+      nativeTemplateStyle: NativeTemplateStyle(
+        templateType: TemplateType.medium,
+        // Optional styling options
+      ),
+    )..load();
+  }
+
+  String _getNativeAdUnitId() {
+    if (Platform.isAndroid) {
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test ad unit ID for Android
+      return 'ca-app-pub-2772630944180636/2469070370'; // Real ad unit ID for Android
+
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
+    }
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Default to Android test ID
+    return 'ca-app-pub-2772630944180636/2469070370'; // Default to Android Real ID
+
+  }
+
   void fetchData() async {
-    // try {
-    //   String url = ApiEndPoints[this.department]!["show"].toString() +
-    //       name.toString() + "?format=json";
-    //   final response = await http
-    //       .get(Uri.parse(url));
-    //   if (response.statusCode == 200) {
-    //     var json = jsonDecode(response.body);
-    //     setState(() {
-    //       lines = json["textPages"];
-    //       desc = json['desc'] ?? '';
-    //     });
-    //     // TODO: save response to user preferences
-    //   } else {
-    //     // TODO: read from user preferences
-    //     throw Exception('Failed to load album');
-    //   }
-    // } on Exception catch(_){
     var json = (offlineStore[this.department]!.where( (item) => item['name'] == name.toString()).toList()[0]);
     setState(() {
       lines = json?["textPages"] as List;
       desc = json['desc']!.toString();
     });
-    // }
   }
 
   @override
@@ -109,11 +130,13 @@ class WerdDetailsState extends State<WerdDetails> {
     fetchUserPreferences();
     fetchData();
     _loadBannerAd();
+    _loadNativeAd();
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
+    _nativeAd?.dispose();
     super.dispose();
   }
 
@@ -122,7 +145,6 @@ class WerdDetailsState extends State<WerdDetails> {
           return Container(
               decoration: const BoxDecoration(
                   color: Color(0xffe1ffe1),
-                  // color: Color.fromRGBO(255, 255, 255, 0.8),
                   borderRadius: BorderRadius.all(Radius.circular(15.0))
               ),
               padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
@@ -134,7 +156,6 @@ class WerdDetailsState extends State<WerdDetails> {
                     Expanded(
                         child: Container(
                           padding: const EdgeInsets.only(bottom: 15.0),
-                          // width: double.infinity,
                           child: Text(
                             entry.value,
                             softWrap: true,
@@ -147,18 +168,6 @@ class WerdDetailsState extends State<WerdDetails> {
                           ),
                         )
                     )
-                    // Positioned(
-                    //     bottom: 10,
-                    //     left: 5,
-                    //     width: 20,
-                    //     height: 20,
-                    //     child: Text(
-                    //       (lines.indexOf(entry) + 1).toString() + " \\ " + lines.length.toString(),
-                    //       style: const TextStyle(
-                    //         fontSize: 12,
-                    //       ),
-                    //     )
-                    // )
                   ],
                 ),
                 Row(
@@ -186,6 +195,18 @@ class WerdDetailsState extends State<WerdDetails> {
       return Container();
     }
   }
+
+  Widget _buildNativeAdWidget() {
+    if (_isNativeAdReady && _nativeAd != null) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0),
+        height: 350, // Adjust height as needed for TemplateType.medium
+        child: AdWidget(ad: _nativeAd!),
+      );
+    }
+    return SizedBox.shrink();
+  }
+
   Widget _desciptionWidget(){
     if(desc.length != 0){
       return Container(
@@ -214,9 +235,8 @@ class WerdDetailsState extends State<WerdDetails> {
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     pageDetails.add(_desciptionWidget());
-    // if (_isBannerAdReady) { pageDetails.add(_add_banner_ads());};
     pageDetails.addAll(_buildList());
-    // Add banner ad at the end
+    pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
     return pageDetails;
   }
 
