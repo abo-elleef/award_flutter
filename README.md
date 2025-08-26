@@ -14,3 +14,14 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+Main branch is https://play.google.com/store/apps/details?id=com.leef.awrad
+
+elburda_branch is https://play.google.com/store/apps/details?id=com.ionicframework.borda215096
+Release Do do 
+
+- switch to the right application branch
+- disable test ids enable ad unit real ids
+- switch to relative keys in key.properities
+- popup pubspec.yaml
+- run `flutter build appbundle --release`
