@@ -46,30 +46,7 @@ class DetailsState extends State<Details> {
       textColor = pref.getInt('textColor') ?? textColor;
     });
   }
-  Future<void> _showMyDialog(text) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(text ?? ''),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[],
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
   void fetchData() async {
     var temp ;
     if (["بردة المديح للامام البوصيري"].contains(this.department)) {
@@ -113,13 +90,13 @@ class DetailsState extends State<Details> {
 
   String _getBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
-      return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+      return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
+      // return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
-    return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+    return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
+    // return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
   }
 
   void _loadNativeAd() {
@@ -148,13 +125,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test ad unit ID for Android
-      return 'ca-app-pub-2772630944180636/2469070370'; // Real ad unit ID for Android
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test ad unit ID for Android
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Real ad unit ID for Android
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Default to Android test ID
-    return 'ca-app-pub-2772630944180636/2469070370'; // Default to Android Real ID
+    return 'ca-app-pub-3940256099942544/2247696110'; // Default to Android test ID
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Default to Android Real ID
   }
 
   @override
@@ -172,7 +149,69 @@ class DetailsState extends State<Details> {
     _nativeAd?.dispose();
     super.dispose();
   }
+  List<Widget> _bulidPrefixList(){
+    var prefixLine =[
 
+      [
+        "مَولايَ صَلِّ وَسَلِّم دَائِمَاً أَبَداً",
+        "عَلى حَبيبِكَ خَيرِ الخَلقِ كُلِّهِم",
+      ],
+      [
+        "مَولايَ صَلِّ وَسَلِّم دَائِمَاً أَبَداً",
+        "عَلى النَّبيِّ وَ آل البَيْتِ كُلِّهِمِ",
+      ]
+    ];
+    return prefixLine.asMap().entries.map((entry){
+      return Container(
+          decoration: const BoxDecoration(
+              color: Color(0xffffffff),
+              borderRadius: BorderRadius.all(Radius.circular(15))),
+          padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
+          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+          child: Column(
+              children: <Widget>[
+                Row(textDirection: TextDirection.rtl,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            entry.value[0],
+                            softWrap: true,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: Color(0xff777777)
+                            ),
+                          ),
+                        )
+                    )
+                  ],
+                ),
+                Row(textDirection: TextDirection.rtl,
+                  children: <Widget>[
+                    Expanded(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 25, bottom: 10),
+                          child: Text(
+                            entry.value[1],
+                            softWrap: true,
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                                fontSize: fontSize,
+                                color: Color(0xff777777)
+                            ),
+                          ),
+                        )
+                    )
+                  ],
+                ),
+              ]
+          )
+      );
+    }).toList();
+
+  }
   List<Widget> _buildList() {
     return lines.asMap().entries.map((entry){
       return Container(
@@ -283,6 +322,10 @@ class DetailsState extends State<Details> {
 
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
+    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
+      pageDetails.addAll(_bulidPrefixList());
+    }
+
     pageDetails.addAll(_buildList());
     pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
     return pageDetails;
