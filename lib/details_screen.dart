@@ -90,13 +90,13 @@ class DetailsState extends State<Details> {
 
   String _getBannerAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
-      // return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // test ad unit ID for android
-    // return 'ca-app-pub-2772630944180636/8443670141'; // real ad unit ID for Android
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -125,13 +125,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test ad unit ID for Android
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Real ad unit ID for Android
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Default to Android test ID
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Default to Android Real ID
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -181,7 +181,7 @@ class DetailsState extends State<Details> {
                             textAlign: TextAlign.right,
                             style: TextStyle(
                                 fontSize: fontSize,
-                                color: Color(0xff777777)
+                                color: Color(0xff444444)
                             ),
                           ),
                         )
@@ -199,7 +199,7 @@ class DetailsState extends State<Details> {
                             textAlign: TextAlign.left,
                             style: TextStyle(
                                 fontSize: fontSize,
-                                color: Color(0xff777777)
+                                color: Color(0xff444444)
                             ),
                           ),
                         )
