@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'award.dart';
-import 'part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Settings extends StatefulWidget {
   late double fontSize;
@@ -39,8 +39,58 @@ class SettingsState extends State<Settings> {
     _pref.setInt('textColor', value);
   }
 
+  Widget _buildSocialButton(BuildContext context, String text, String url) {
+    final Uri facebookUrl = Uri.parse(url);
 
-
+    return GestureDetector(
+      onTap: () async {
+        try {
+          if (await canLaunchUrl(facebookUrl)) {
+            await launchUrl(facebookUrl, mode: LaunchMode.externalApplication);
+          } else {
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('تعذر فتح الرابط. يرجى التحقق من اتصالك بالإنترنت.')),
+              );
+            }
+            print('Could not launch $facebookUrl');
+          }
+        } catch (e) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('حدث خطأ أثناء محاولة فتح الرابط.')),
+            );
+          }
+          print('Error launching URL: $e');
+        }
+      },
+      child: Card(
+        color: Color(0xffe1ffe1),
+        elevation: 2.0,
+        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              // Optional: Add Facebook icon here if desired
+              // Icon(Icons.facebook, color: Color(this.textColor), size: this.fontSize + 2),
+              // SizedBox(width: 8),
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: this.fontSize,
+                  color: Color(this.textColor),
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -95,7 +145,9 @@ class SettingsState extends State<Settings> {
                           )
                         ]
                       ),
-                      PartCard(title: 'لا إله إلا الله', index: 1, listSize: 6, fontSize: this.fontSize, textColor: this.textColor)
+                      PartCard(title: 'لا إله إلا الله', index: 1, listSize: 6, fontSize: this.fontSize, textColor: this.textColor),
+                      _buildSocialButton(context, 'تابعنا على فيسبوك', 'https://www.facebook.com/bordaelmadyh/'), // Added Social button (FB)
+                      _buildSocialButton(context, 'تابعنا على تويتر', 'https://x.com/bordaelmadyh') // Added Social button (Twitter)
                     ]
                   ),
                 )
