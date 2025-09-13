@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'أوراد البرهامية',
+      title: 'البردة',
       theme: ThemeData(
         fontFamily: 'Amiri',
         primarySwatch: Colors.blue,
@@ -70,12 +70,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // Use test ad unit ID for development.
     if (Platform.isAndroid) {
       // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
+      return 'ca-app-pub-2772630944180636/9171351872'; // Elburda
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // Test
     }
     // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
+    return 'ca-app-pub-2772630944180636/9171351872'; // Elburda
   }
 
   void _loadRewardedAd() {
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _inAppReview.requestReview();
         } else {
           // Optionally, open the store listing if in-app review is not available
-          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
+          _inAppReview.openStoreListing(appStoreId: 'com.ionicframework.borda215096');
           print('In-app review is not available.');
         }
       },
