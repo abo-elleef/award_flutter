@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'أوراد البرهامية',
+      title: 'المديح',
       theme: ThemeData(
         fontFamily: 'Amiri',
         primarySwatch: Colors.blue,
@@ -174,7 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _inAppReview.requestReview();
         } else {
           // Optionally, open the store listing if in-app review is not available
-          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
+          _inAppReview.openStoreListing(appStoreId: 'com.leef.elborda');
           print('In-app review is not available.');
         }
       },
