@@ -1,21 +1,22 @@
 {
   "project_info": {
-    "project_number": "741270284032",
-    "project_id": "awrad-httpsplaycomstorea",
-    "storage_bucket": "awrad-httpsplaycomstorea.firebasestorage.app"
+    "project_number": "430556994766",
+    "firebase_url": "https://elborda-aboelleef.firebaseio.com",
+    "project_id": "elborda-aboelleef",
+    "storage_bucket": "elborda-aboelleef.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:741270284032:android:e793501bcd39b7d06eb5e5",
+        "mobilesdk_app_id": "1:430556994766:android:f795245eee212ff585849f",
         "android_client_info": {
-          "package_name": "com.leef.awrad"
+          "package_name": "com.leef.elborda"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAL5O_HJTr3bz6psf14tvLLBFtqUf2gVWE"
+          "current_key": "AIzaSyCgrN5SZfWB2S0B-ffn3yq99UZtxa3H5RU"
         }
       ],
       "services": {
