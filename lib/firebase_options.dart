@@ -53,11 +53,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAL5O_HJTr3bz6psf14tvLLBFtqUf2gVWE',
-    appId: '1:741270284032:android:e793501bcd39b7d06eb5e5',
-    messagingSenderId: '741270284032',
-    projectId: 'awrad-httpsplaycomstorea',
-    storageBucket: 'awrad-httpsplaycomstorea.firebasestorage.app',
+    apiKey: 'AIzaSyCgrN5SZfWB2S0B-ffn3yq99UZtxa3H5RU',
+    appId: '1:430556994766:android:f795245eee212ff585849f',
+    messagingSenderId: '430556994766',
+    projectId: 'elborda-aboelleef',
+    databaseURL: 'https://elborda-aboelleef.firebaseio.com',
+    storageBucket: 'elborda-aboelleef.firebasestorage.app',
   );
 
 }
