@@ -33,6 +33,13 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue
       ),
+      builder: (context, child) {
+        return SafeArea(
+          top: false, // Set to true if you want to avoid notch overlap too
+          bottom: true, // Avoids overlap with navigation bar
+          child: child!,
+        );
+      },
       home: const MyHomePage(title: 'الأقسام'),
     );
   }
