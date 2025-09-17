@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:in_app_review/in_app_review.dart';
+
 class Details extends StatefulWidget {
   final String name;
   final String department;
@@ -34,6 +36,8 @@ class DetailsState extends State<Details> {
   bool _isBannerAdReady = false;
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
+  final ScrollController _scrollController = ScrollController();
+  final InAppReview _inAppReview = InAppReview.instance;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
@@ -141,12 +145,24 @@ class DetailsState extends State<Details> {
     fetchData();
     _loadBannerAd();
     _loadNativeAd();
+    _scrollController.addListener(() async {
+      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+        if (await _inAppReview.isAvailable()) {
+          _inAppReview.requestReview();
+        } else {
+        // Optionally, open the store listing if in-app review is not available
+          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
+        print('In-app review is not available.');
+        }
+      }
+    });
   }
 
   @override
   void dispose() {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
   List<Widget> _bulidPrefixList(){
@@ -352,6 +368,7 @@ class DetailsState extends State<Details> {
             children: [
               Expanded(
                   child: SingleChildScrollView(
+                    controller: _scrollController,
                     padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
                     child: Column(
                       children: buildPageDetails(),

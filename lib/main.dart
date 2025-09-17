@@ -5,7 +5,6 @@ import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
 import './details_screen.dart';
-import 'package:in_app_review/in_app_review.dart';
 import './list_screen.dart';
 import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -59,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   RewardedAd? _rewardedAd;
   bool _isRewardedAdReady = false;
-  final InAppReview _inAppReview = InAppReview.instance;
 
   @override
   void initState() {
@@ -173,41 +171,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ) : Container()
     );
   }
-  
-  Widget buildReviewWidget() {
-    return GestureDetector(
-      onTap: () async {
-        if (await _inAppReview.isAvailable()) {
-          _inAppReview.requestReview();
-        } else {
-          // Optionally, open the store listing if in-app review is not available
-          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
-          print('In-app review is not available.');
-        }
-      },
-      child: Container(
-        decoration: const BoxDecoration(
-            color: Color(0xffe1ffe1), // Light blue color, similar to other cards
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0, top: 16.0), // Added top padding
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0), // Consistent margin
-        child: Row(
-          textDirection: TextDirection.rtl,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'ساعدنا بتقييمك',
-              style: TextStyle(
-                fontSize: 28.0,
-                color: Color(0xFF000000),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
@@ -266,7 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                     )
                                 )
                             ),
-                            buildReviewWidget(),
                             buildRewardedAdWidget()
                           ],
                         ),
