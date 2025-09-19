@@ -104,7 +104,8 @@ class DetailsState extends State<Details> {
       return 'ca-app-pub-3940256099942544/6300978111'; // Test
       // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
+      // return 'ca-app-pub-3940256099942544/2934735716'; // Test
+      return 'ca-app-pub-2772630944180636/6363624876'; // Award
     }
     return 'ca-app-pub-3940256099942544/6300978111'; // Test
     // return 'ca-app-pub-2772630944180636/8443670141'; // Award
@@ -139,7 +140,8 @@ class DetailsState extends State<Details> {
       return 'ca-app-pub-3940256099942544/2247696110'; // Test
       // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
+      // return 'ca-app-pub-3940256099942544/3986624511'; // Test
+      return 'ca-app-pub-2772630944180636/3851682612'; // Award
     }
     return 'ca-app-pub-3940256099942544/2247696110'; // Test
     // return 'ca-app-pub-2772630944180636/2469070370'; // Award
