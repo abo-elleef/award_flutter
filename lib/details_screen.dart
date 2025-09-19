@@ -35,6 +35,10 @@ class DetailsState extends State<Details> {
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
   NativeAd? _nativeAd;
+  NativeAd? _nativeAd2;
+  NativeAd? _nativeAd3;
+  NativeAd? _nativeAd4;
+  NativeAd? _nativeAd5;
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
@@ -94,13 +98,13 @@ class DetailsState extends State<Details> {
 
   String _getBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -129,13 +133,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -337,14 +341,26 @@ class DetailsState extends State<Details> {
   }
 
   List<Widget> buildPageDetails() {
-    List<Widget> pageDetails = [];
+    List<Widget> finalPageDetails = []; // Renamed to avoid confusion
+
+    // Add prefix list if applicable
     if (["بردة المديح للامام البوصيري"].contains(this.department)) {
-      pageDetails.addAll(_bulidPrefixList());
+      finalPageDetails.addAll(_bulidPrefixList());
     }
 
-    pageDetails.addAll(_buildList());
-    pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
-    return pageDetails;
+    List<Widget> contentItems = _buildList(); // Get the main list of items
+    if(contentItems.length > 20){
+      for (int i = 0; i < contentItems.length; i++) {
+        finalPageDetails.add(contentItems[i]); // Add the content item
+        if ((i + 1) % 15 == 0 && (i + 1) < contentItems.length) {
+          finalPageDetails.add(_buildNativeAdWidget());
+        }
+      }
+    }else{
+      finalPageDetails.addAll(contentItems);
+    }
+    finalPageDetails.add(_buildNativeAdWidget());
+    return finalPageDetails;
   }
 
   @override

@@ -74,13 +74,13 @@ class _MyHomePageState extends State<MyHomePage> {
   String _getRewardedAdUnitId() {
     // Use test ad unit ID for development.
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
+      return 'ca-app-pub-3940256099942544/5224354917'; // Test
+      // return 'ca-app-pub-2772630944180636/7242266351'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // Test
     }
-    // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
+    return 'ca-app-pub-3940256099942544/5224354917'; // Test
+    // return 'ca-app-pub-2772630944180636/7242266351'; // Award
   }
 
   void _loadRewardedAd() {
