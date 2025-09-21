@@ -362,7 +362,7 @@ class DetailsState extends State<Details> {
         child: AdWidget(ad: _topBannerAd!),
       );
     } else {
-      return SizedBox.shrink();
+      return SizedBox(height: 65);
     }
   }
 
