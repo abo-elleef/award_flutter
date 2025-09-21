@@ -32,8 +32,13 @@ class DetailsState extends State<Details> {
   late int textColor = 0xFF000000;
   DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
-  BannerAd? _bannerAd;
-  bool _isBannerAdReady = false;
+
+  BannerAd? _bottomBannerAd;
+  bool _isBottomBannerAdReady = false;
+
+  BannerAd? _topBannerAd; // New state variable for top banner
+  bool _isTopBannerAdReady = false; // New state variable for top banner readiness
+
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
@@ -73,15 +78,16 @@ class DetailsState extends State<Details> {
     });
   }
 
-  void _loadBannerAd() {
-    _bannerAd = BannerAd(
+  void _loadBottomBannerAd() {
+    _bottomBannerAd = BannerAd(
       adUnitId: _getBannerAdUnitId(),
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
+          if (!mounted) return;
           setState(() {
-            _isBannerAdReady = true;
+            _isBottomBannerAdReady = true;
           });
         },
         onAdFailedToLoad: (ad, error) {
@@ -89,7 +95,7 @@ class DetailsState extends State<Details> {
         },
       ),
     );
-    _bannerAd?.load();
+    _bottomBannerAd?.load();
   }
 
   String _getBannerAdUnitId() {
@@ -101,6 +107,28 @@ class DetailsState extends State<Details> {
     }
     // return 'ca-app-pub-3940256099942544/6300978111'; // Test
     return 'ca-app-pub-2772630944180636/8443670141'; // Award
+  }
+
+  // New method to load top banner ad
+  void _loadTopBannerAd() {
+    _topBannerAd = BannerAd(
+      adUnitId: _getBannerAdUnitId(),
+      size: AdSize.banner,
+      request: const AdRequest(),
+      listener: BannerAdListener(
+        onAdLoaded: (Ad ad) {
+          if (!mounted) return;
+          setState(() {
+            _topBannerAd = ad as BannerAd;
+            _isTopBannerAdReady = true;
+          });
+        },
+        onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          ad.dispose();
+        },
+      ),
+    );
+    _topBannerAd?.load();
   }
 
   void _loadNativeAd() {
@@ -119,10 +147,8 @@ class DetailsState extends State<Details> {
         },
       ),
       request: const AdRequest(),
-      // Styling
       nativeTemplateStyle: NativeTemplateStyle(
         templateType: TemplateType.medium,
-        // Optional styling options
       ),
     )..load();
   }
@@ -143,16 +169,16 @@ class DetailsState extends State<Details> {
     super.initState();
     fetchUserPreferences();
     fetchData();
-    _loadBannerAd();
+    _loadTopBannerAd();
+    _loadBottomBannerAd();
     _loadNativeAd();
     _scrollController.addListener(() async {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         if (await _inAppReview.isAvailable()) {
           _inAppReview.requestReview();
         } else {
-        // Optionally, open the store listing if in-app review is not available
           _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
-        print('In-app review is not available.');
+          print('In-app review is not available.');
         }
       }
     });
@@ -160,14 +186,15 @@ class DetailsState extends State<Details> {
 
   @override
   void dispose() {
-    _bannerAd?.dispose();
+    _bottomBannerAd?.dispose();
+    _topBannerAd?.dispose(); // Dispose the top banner ad
     _nativeAd?.dispose();
     _scrollController.dispose();
     super.dispose();
   }
-  List<Widget> _bulidPrefixList(){
-    var prefixLine =[
 
+  List<Widget> _bulidPrefixList(){
+    var prefixLine = [
       [
         "مَولايَ صَلِّ وَسَلِّم دَائِمَاً أَبَداً",
         "عَلى حَبيبِكَ خَيرِ الخَلقِ كُلِّهِم",
@@ -226,8 +253,8 @@ class DetailsState extends State<Details> {
           )
       );
     }).toList();
-
   }
+
   List<Widget> _buildList() {
     return lines.asMap().entries.map((entry){
       return Container(
@@ -312,16 +339,30 @@ class DetailsState extends State<Details> {
     }
   }
 
-  Widget _add_banner_ads(){
-    if (_isBannerAdReady) {
+  Widget _buildBottomBannerAdWidget(){
+    if (_isBottomBannerAdReady && _bottomBannerAd != null) {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
-        width: _bannerAd!.size.width.toDouble(),
-        height: _bannerAd!.size.height.toDouble(),
-        child: AdWidget(ad: _bannerAd!),
+        width: _bottomBannerAd!.size.width.toDouble(),
+        height: _bottomBannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _bottomBannerAd!),
       );
     }else{
-      return Container();
+      return SizedBox.shrink(); // Use SizedBox.shrink() for consistency
+    }
+  }
+
+  // New widget builder for the top banner ad
+  Widget _buildTopBannerAdWidget() {
+    if (_isTopBannerAdReady && _topBannerAd != null) {
+      return Container(
+        margin: const EdgeInsets.symmetric(vertical: 8.0), // Consistent margin
+        width: _topBannerAd!.size.width.toDouble(),
+        height: _topBannerAd!.size.height.toDouble(),
+        child: AdWidget(ad: _topBannerAd!),
+      );
+    } else {
+      return SizedBox.shrink();
     }
   }
 
@@ -329,7 +370,7 @@ class DetailsState extends State<Details> {
     if (_isNativeAdReady && _nativeAd != null) {
       return Container(
         margin: const EdgeInsets.symmetric(vertical: 8.0),
-        height: 350, // Adjust height as needed for TemplateType.medium
+        height: 350,
         child: AdWidget(ad: _nativeAd!),
       );
     }
@@ -337,14 +378,18 @@ class DetailsState extends State<Details> {
   }
 
   List<Widget> buildPageDetails() {
-    List<Widget> pageDetails = [];
-    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
-      pageDetails.addAll(_bulidPrefixList());
-    }
+    List<Widget> finalPageDetails = [];
 
-    pageDetails.addAll(_buildList());
-    pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
-    return pageDetails;
+    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
+      finalPageDetails.addAll(_bulidPrefixList());
+      finalPageDetails.add(_buildTopBannerAdWidget());
+    }
+    List<Widget> contentItems = _buildList();
+    finalPageDetails.addAll(contentItems); // Add the content item
+    // Add Native Ad at the end, after all content items and the inserted top banner
+    finalPageDetails.add(_buildNativeAdWidget()); 
+    
+    return finalPageDetails;
   }
 
   @override
@@ -375,7 +420,7 @@ class DetailsState extends State<Details> {
                       ),
                     )
               ),
-              _add_banner_ads()
+              _buildBottomBannerAdWidget() // Bottom banner remains at the very bottom
             ],
           ),
         )
