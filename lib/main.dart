@@ -102,6 +102,7 @@ class _MyAppState extends State<MyApp> {
         Locale('ar'), // Arabic
         Locale('fr'), // French
       ],
+      debugShowCheckedModeBanner: false,
       home: Builder(
         builder: (BuildContext context) {
           // This context is a descendant of MaterialApp
