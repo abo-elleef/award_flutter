@@ -36,9 +36,6 @@ class DetailsState extends State<Details> {
   BannerAd? _bottomBannerAd;
   bool _isBottomBannerAdReady = false;
 
-  BannerAd? _topBannerAd; // New state variable for top banner
-  bool _isTopBannerAdReady = false; // New state variable for top banner readiness
-
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
@@ -80,7 +77,7 @@ class DetailsState extends State<Details> {
 
   void _loadBottomBannerAd() {
     _bottomBannerAd = BannerAd(
-      adUnitId: _getBannerAdUnitId(),
+      adUnitId: _getBottomBannerAdUnitId(),
       size: AdSize.banner,
       request: const AdRequest(),
       listener: BannerAdListener(
@@ -98,7 +95,7 @@ class DetailsState extends State<Details> {
     _bottomBannerAd?.load();
   }
 
-  String _getBannerAdUnitId() {
+  String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
       // return 'ca-app-pub-3940256099942544/6300978111'; // Test
       return 'ca-app-pub-2772630944180636/8443670141'; // Award
@@ -109,35 +106,15 @@ class DetailsState extends State<Details> {
     return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
-  // New method to load top banner ad
-  void _loadTopBannerAd() {
-    _topBannerAd = BannerAd(
-      adUnitId: _getBannerAdUnitId(),
-      size: AdSize.banner,
-      request: const AdRequest(),
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          if (!mounted) return;
-          setState(() {
-            _topBannerAd = ad as BannerAd;
-            _isTopBannerAdReady = true;
-          });
-        },
-        onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          ad.dispose();
-        },
-      ),
-    );
-    _topBannerAd?.load();
-  }
-
   void _loadNativeAd() {
     _nativeAd = NativeAd(
       adUnitId: _getNativeAdUnitId(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
+          if (!mounted) return;
           print('$NativeAd loaded.');
           setState(() {
+            _nativeAd = ad as NativeAd;
             _isNativeAdReady = true;
           });
         },
@@ -169,7 +146,6 @@ class DetailsState extends State<Details> {
     super.initState();
     fetchUserPreferences();
     fetchData();
-    _loadTopBannerAd();
     _loadBottomBannerAd();
     _loadNativeAd();
     _scrollController.addListener(() async {
@@ -187,7 +163,6 @@ class DetailsState extends State<Details> {
   @override
   void dispose() {
     _bottomBannerAd?.dispose();
-    _topBannerAd?.dispose(); // Dispose the top banner ad
     _nativeAd?.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -352,20 +327,6 @@ class DetailsState extends State<Details> {
     }
   }
 
-  // New widget builder for the top banner ad
-  Widget _buildTopBannerAdWidget() {
-    if (_isTopBannerAdReady && _topBannerAd != null) {
-      return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8.0), // Consistent margin
-        width: _topBannerAd!.size.width.toDouble(),
-        height: _topBannerAd!.size.height.toDouble(),
-        child: AdWidget(ad: _topBannerAd!),
-      );
-    } else {
-      return SizedBox(height: 65);
-    }
-  }
-
   Widget _buildNativeAdWidget() {
     if (_isNativeAdReady && _nativeAd != null) {
       return Container(
@@ -382,11 +343,11 @@ class DetailsState extends State<Details> {
 
     if (["بردة المديح للامام البوصيري"].contains(this.department)) {
       finalPageDetails.addAll(_bulidPrefixList());
-      finalPageDetails.add(_buildTopBannerAdWidget());
     }
     List<Widget> contentItems = _buildList();
     finalPageDetails.addAll(contentItems); // Add the content item
-    // Add Native Ad at the end, after all content items and the inserted top banner
+    
+    // Add Native Ad at the end, after all content items
     finalPageDetails.add(_buildNativeAdWidget()); 
     
     return finalPageDetails;
