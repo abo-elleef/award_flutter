@@ -43,6 +43,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'الأقسام'),
     );
   }
