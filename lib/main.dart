@@ -8,11 +8,11 @@ import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'dart:io' show Platform;
+// import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  MobileAds.instance.initialize(); // Initialize MobileAds
+  MobileAds.instance.initialize(); // Initialize MobileAds - Keep this if other ads are used or planned
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -22,7 +22,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,12 +29,17 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'Amiri',
         primarySwatch: Colors.blue,
-        primaryColor: Colors.blue
+        primaryColor: Colors.blue,
+        appBarTheme: AppBarTheme(
+          iconTheme: IconThemeData(
+          color: Colors.white, // Change the color here
+          ),
+        ),
       ),
       builder: (context, child) {
         return SafeArea(
-          top: false, // Set to true if you want to avoid notch overlap too
-          bottom: true, // Avoids overlap with navigation bar
+          top: false,
+          bottom: true,
           child: child!,
         );
       },
@@ -56,120 +60,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var names = offlineStore.keys.toList();
 
-  RewardedAd? _rewardedAd;
-  bool _isRewardedAdReady = false;
-
   @override
   void initState() {
     super.initState();
-    _loadRewardedAd();
+    // _loadRewardedAd(); // Removed
   }
 
   @override
   void dispose() {
-    _rewardedAd?.dispose();
     super.dispose();
-  }
-
-  String _getRewardedAdUnitId() {
-    // Use test ad unit ID for development.
-    if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/1712485313'; // Test
-    }
-    // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
-  }
-
-  void _loadRewardedAd() {
-    RewardedAd.load(
-      adUnitId: _getRewardedAdUnitId(),
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          _rewardedAd = ad;
-          setState(() {
-            _isRewardedAdReady = true;
-          });
-          _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (RewardedAd ad) {
-              ad.dispose();
-              setState(() {
-                _isRewardedAdReady = false;
-              });
-              _loadRewardedAd(); // Load the next ad
-            },
-            onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-              print('$ad onAdFailedToShowFullScreenContent: $error');
-              ad.dispose();
-              setState(() {
-                _isRewardedAdReady = false;
-              });
-              _loadRewardedAd();
-            },
-          );
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('RewardedAd failed to load: $error');
-          setState(() {
-            _isRewardedAdReady = false;
-          });
-        },
-      ),
-    );
-  }
-
-  void _showRewardedAd() {
-    if (_isRewardedAdReady && _rewardedAd != null) {
-      _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          // Handle the reward.
-          print('Reward earned: ${reward.type} ${reward.amount}');
-          // TODO: Grant the user their reward. For example, by increasing a counter.
-        },
-      );
-    } else {
-      print('Rewarded ad is not ready yet.');
-      // Optionally, show a message to the user or try to load ad again.
-      if (!_isRewardedAdReady) {
-        _loadRewardedAd(); // Try to load an ad if not ready
-      }
-    }
   }
 
   savePref() async {
     // SharedPreferences _pref = await SharedPreferences.getInstance();
     // _pref.setString('textColor', 'ff0000');
     // _pref.setDouble('fontSize', 48);
-  }
-
-  Widget buildRewardedAdWidget() { // Renamed for clarity
-    return GestureDetector(
-        onTap: _showRewardedAd, // Call _showRewardedAd on tap
-        child: _isRewardedAdReady ? Container(
-            decoration: const BoxDecoration(
-              // color: Color.fromRGBO(255, 255, 255, 0.8),
-                color: Color(0xffe1ffe1),
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
-            padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
-            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0), // Reduced vertical margin
-            child: Row(
-                textDirection: TextDirection.rtl,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[Text(
-                  'إعلان اليوم',
-                  style: TextStyle(
-                    fontSize: 28.0,
-                    color: Color(0xFF000000),
-                  )
-                  )
-                ]
-            )
-        ) : Container()
-    );
   }
 
   List<Widget> buildPageDetails() {
@@ -193,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: TextDirection.rtl,
         child: Scaffold(
             appBar: AppBar(
                 title: Text(widget.title),
@@ -229,7 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                     )
                                 )
                             ),
-                            buildRewardedAdWidget()
                           ],
                         ),
                       ),
