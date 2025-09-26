@@ -11,24 +11,25 @@ import 'package:http/http.dart' as http;
 import 'award.dart';
 import './part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n/app_localizations.dart';
 class ListPage extends StatefulWidget {
-  final String departmentName;
+  final String storeKey;
   final int index;
   late double fontSize;
   late int textColor;
-  ListPage(this.departmentName, this.index);
+  ListPage(this.storeKey, this.index);
   @override
   State<StatefulWidget> createState() {
-    return ListPageState(departmentName, index);
+    return ListPageState(storeKey, index);
   }
 }
 
 class ListPageState extends State<ListPage> {
-  String departmentName;
+  String storeKey;
   int index;
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-  ListPageState(this.departmentName, this.index);
+  ListPageState(this.storeKey, this.index);
   List poems = [];
 
   void fetchUserPreferences () async {
@@ -55,7 +56,10 @@ class ListPageState extends State<ListPage> {
     //   }
     // } on Exception catch(_){
     setState(() {
-      poems = offlineStore[this.departmentName]!;
+      print(storeKey);
+      print(offlineStore.where( (item) => item['key'] == storeKey).toList());
+      poems = offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content']! as List;
+      print(poems);
     });
     // }
   }
@@ -72,7 +76,7 @@ class ListPageState extends State<ListPage> {
       return Column(
           children: <Widget>[
             Row(
-              textDirection: TextDirection.rtl,
+              textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               children: <Widget>[
                 Expanded(
                     child: Container(
@@ -81,16 +85,16 @@ class ListPageState extends State<ListPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) {
-                                    if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(departmentName)) {
-                                      return WerdDetails(entry.value['name'].toString(), 1, departmentName);
+                                    if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(storeKey)) {
+                                      return WerdDetails(entry.value['name'].toString(), 1, storeKey);
                                     } else {
-                                      if (["بردة المديح للامام البوصيري"].contains(departmentName)) {
-                                        return Details(entry.value['name'].toString(), int.parse(entry.value['id']), departmentName, -1);
+                                      if (["بردة المديح للامام البوصيري"].contains(storeKey)) {
+                                        return Details(entry.value['name'].toString(), int.parse(entry.value['id']), storeKey, -1);
                                       } else {
                                         if (entry.value['chapters'].length > 1) {
-                                          return ChapterView(entry.value, departmentName);
+                                          return ChapterView(entry.value, storeKey);
                                         } else {
-                                          return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
+                                          return Details(entry.value['name'].toString(), entry.value['id'], storeKey, -1);
                                         }
                                       }
                                     }
@@ -155,10 +159,10 @@ class ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text(departmentName),
+          title: Text(storeKey),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),

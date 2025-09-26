@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'l10n/app_localizations.dart';
 
 class Details extends StatefulWidget {
   final String name;
@@ -56,14 +57,17 @@ class DetailsState extends State<Details> {
   void fetchData() async {
     var temp ;
     if (["بردة المديح للامام البوصيري"].contains(this.department)) {
-      temp = [(offlineStore[this.department]!.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
+      var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
+      temp = [(content.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
     }else{
       if(chapterIndex >= 0){
-        temp = [(offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
+        var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
+        temp = [(content.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
           return line["body"];
         })];
       }else{
-        temp = (offlineStore[this.department]!.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+        var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
+        temp = (content.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
           return chapter["lines"].map((line){
             return line["body"];
           });
@@ -97,13 +101,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -132,13 +136,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -188,7 +192,8 @@ class DetailsState extends State<Details> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
           child: Column(
               children: <Widget>[
-                Row(textDirection: TextDirection.rtl,
+                Row(
+                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                   children: <Widget>[
                     Expanded(
                         child: Container(
@@ -206,7 +211,8 @@ class DetailsState extends State<Details> {
                     )
                   ],
                 ),
-                Row(textDirection: TextDirection.rtl,
+                Row(
+                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                   children: <Widget>[
                     Expanded(
                         child: Container(
@@ -240,7 +246,8 @@ class DetailsState extends State<Details> {
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
           child: Column(
               children: <Widget>[
-                Row(textDirection: TextDirection.rtl,
+                Row(
+                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                   children: <Widget>[
                     Expanded(
                         child: Container(
@@ -258,7 +265,8 @@ class DetailsState extends State<Details> {
                     )
                   ],
                 ),
-                Row(textDirection: TextDirection.rtl,
+                Row(
+                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                   children: <Widget>[
                     Expanded(
                         child: Container(
@@ -356,7 +364,7 @@ class DetailsState extends State<Details> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
             title: Text(name),

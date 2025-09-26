@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 
 class PoemCard extends StatelessWidget {
   PoemCard({required this.title, this.desc = '', this.fontSize = 24, this.textColor = 0xff444444 });
@@ -20,7 +21,7 @@ class PoemCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Row(
-              textDirection: TextDirection.rtl,
+              textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Container(
