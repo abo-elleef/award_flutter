@@ -4,6 +4,7 @@ import 'chapter_card.dart';
 import 'part_card.dart';
 import 'details_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n/app_localizations.dart';
 
 class ChapterView extends StatefulWidget {
   final body;
@@ -64,7 +65,7 @@ class _ChapterViewState extends State<ChapterView> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
             appBar: AppBar(
                 title: Text("الفصول"),

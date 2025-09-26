@@ -6,6 +6,7 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart'; // Added import
+import 'l10n/app_localizations.dart';
 
 class Settings extends StatefulWidget {
   late double fontSize;
@@ -48,14 +49,14 @@ class SettingsState extends State<Settings> {
   // Copied from main.dart
   String _getRewardedAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
+      return 'ca-app-pub-3940256099942544/5224354917'; // Test
+      // return 'ca-app-pub-2772630944180636/7242266351'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // Test
     }
     // Fallback, should match one of the above based on your main.dart logic
-    // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
+    return 'ca-app-pub-3940256099942544/5224354917'; // Test
+    // return 'ca-app-pub-2772630944180636/7242266351'; // Award
   }
 
   // Copied from main.dart
@@ -123,24 +124,20 @@ class SettingsState extends State<Settings> {
     return GestureDetector(
         onTap: _showRewardedAd,
         child: _isRewardedAdReady ? Container(
+            width: double.infinity,
             decoration: const BoxDecoration(
                 color: Color(0xffe1ffe1), // Using similar styling as PartCard
                 borderRadius: BorderRadius.all(Radius.circular(15.0))),
             padding: const EdgeInsets.all(16.0), // Consistent padding
             margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), // Consistent margin
-            child: Row(
-                textDirection: TextDirection.rtl,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[Text(
-                  'شاهد إعلان (مكافأة)', // Updated text
-                  style: TextStyle(
-                    fontSize: this.fontSize, // Using dynamic font size
-                    color: Color(this.textColor), // Using dynamic text color
-                    fontWeight: FontWeight.bold,
-                  )
-                  )
-                ]
+            child: Text(
+                    AppLocalizations.of(context)!.settings_page_watch_ad,
+                    softWrap: true,
+                    style: TextStyle(
+                      fontSize: this.fontSize, // Using dynamic font size
+                      color: Color(this.textColor), // Using dynamic text color
+                      fontWeight: FontWeight.bold,
+                    )
             )
         ) : Container() // Or SizedBox.shrink()
     );
@@ -172,28 +169,25 @@ class SettingsState extends State<Settings> {
           print('Error launching URL: $e');
         }
       },
-      child: Card(
-        color: Color(0xffe1ffe1),
-        elevation: 0,
-        margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                text,
-                style: TextStyle(
-                  fontSize: this.fontSize,
-                  color: Color(this.textColor),
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+      child: Container(
+        width: double.infinity,
+        child: Card(
+          color: Color(0xffe1ffe1),
+          elevation: 0,
+          margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Text(
+                    text,
+                    style: TextStyle(
+                      fontSize: this.fontSize,
+                      color: Color(this.textColor),
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
           ),
-        ),
-      ),
+      ),)
     );
   }
 
@@ -213,10 +207,10 @@ class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text('الاعدادات'),
+          title: Text(AppLocalizations.of(context)!.main_page_settings),
           backgroundColor: Colors.green,
           titleTextStyle: TextStyle(color: Colors.white)
         ),
@@ -236,7 +230,7 @@ class SettingsState extends State<Settings> {
                       Row(
                         children:[
                           Expanded( // Added Expanded for better layout
-                            child: Text('حجم الخط',
+                            child: Text(AppLocalizations.of(context)!.settings_page_font_size,
                               style: TextStyle(
                                 fontSize: 20, // Consider making this dynamic or a fixed larger size for a label
                                 color:  Color(this.textColor),
@@ -262,9 +256,9 @@ class SettingsState extends State<Settings> {
                           )
                         ]
                       ),
-                      PartCard(title: 'لا إله إلا الله', index: 0, listSize: 6, fontSize: this.fontSize, textColor: this.textColor),
-                      _buildSocialButton(context, 'تابعنا على فيسبوك', 'https://www.facebook.com/bordaelmadyh/'),
-                      _buildSocialButton(context, 'تابعنا على تويتر', 'https://x.com/bordaelmadyh'),
+                      PartCard(title: AppLocalizations.of(context)!.settings_page_font_example, index: 0, listSize: 6, fontSize: this.fontSize, textColor: this.textColor),
+                      _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_facebook, 'https://www.facebook.com/bordaelmadyh/'),
+                      _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_twitter, 'https://x.com/bordaelmadyh'),
                       buildRewardedAdWidget(),
                     ]
                   ),

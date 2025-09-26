@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 
 class PartCard extends StatelessWidget {
   PartCard({required this.title, required this.index, required this.listSize, this.fontSize = 28, this.textColor = 0xFF000000});
@@ -23,7 +24,7 @@ class PartCard extends StatelessWidget {
         child: Column(
           children: <Widget>[
             Row(
-              textDirection: TextDirection.rtl,
+              textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[

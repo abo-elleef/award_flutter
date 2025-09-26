@@ -1,0 +1,12 @@
+{
+  "main_page_title":"Sections",
+  "main_page_settings": "Paramètres",
+  "settings_page_font_size" : "Taille de la police:",
+  "settings_page_facebook" : "Suivez-nous sur Facebook.",
+  "settings_page_twitter" : "Suivez-nous sur Twitter.",
+  "settings_page_font_example" : "Il n'y a de dieu qu'Allah.",
+  "settings_page_watch_ad" : "Regardez une publicité, cela nous aide.",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  }
+}

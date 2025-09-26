@@ -20764,10 +20764,41 @@ const SalatsOffline = [
   },
 ];
 
-const offlineStore = {
-  "بردة المديح للامام البوصيري": Elburda,
-  "الأوراد": AwradOffline,
-  "صلاوات النبي": SalatsOffline,
-  "دلائل الخيرات": DalaelsOffline,
-  "المديح": PoemsOffline,
-};
+const offlineStore = [
+  {
+    "key": "بردة المديح للامام البوصيري",
+    "name_ar": "بردة المديح للامام البوصيري",
+    "name_en": "Elburda",
+    "name_fr": "Elburda",
+    "content": Elburda
+
+  },
+  {
+    "key": "الأوراد",
+    "name_ar": "الأوراد",
+    "name_en": "Wirds",
+    "name_fr": "Wirds",
+    "content": AwradOffline
+  },
+  {
+    "key": "صلاوات النبي",
+    "name_ar": "صلاوات النبي",
+    "name_en": "Prayers on the prophet Muhammed",
+    "name_fr": "Prayers on the prophet Muhammed",
+    "content": SalatsOffline
+  },
+  {
+    "key": "دلائل الخيرات",
+    "name_ar": "دلائل الخيرات",
+    "name_en": "Dalael El khyrat",
+    "name_fr": "Dalael El khyrat",
+    "content": DalaelsOffline
+  },
+  {
+    "key": "المديح",
+    "name_ar": "المديح",
+    "name_en": "Madeeh",
+    "name_fr": "Madeeh",
+    "content": PoemsOffline
+  }
+];

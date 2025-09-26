@@ -8,6 +8,10 @@ import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'l10n/app_localizations.dart';
+import 'dart:io' show Platform;
+
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
@@ -37,13 +41,39 @@ class MyApp extends StatelessWidget {
         ),
       ),
       builder: (context, child) {
-        return SafeArea(
-          top: false,
-          bottom: true,
-          child: child!,
+        return Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage("assets/bg.png"),
+                fit: BoxFit.cover,
+              ),
+            ),
+          child: SafeArea(
+            top: false,
+            bottom: Platform.isAndroid,
+            child: child!,
+          )
         );
       },
-      home: const MyHomePage(title: 'الأقسام'),
+      localizationsDelegates: [
+        AppLocalizations.delegate, // Add this line
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en'), // English
+        Locale('ar'), // Arabic
+        Locale('fr'), // French
+      ],
+      home: Builder(
+        builder: (BuildContext context) {
+          // This context is a descendant of MaterialApp
+          // The '!' is used assuming AppLocalizations.of(context) might be nullable
+          // and 'hello' is a non-nullable string.
+          return MyHomePage(title: AppLocalizations.of(context)!.main_page_title);
+        }
+      ),
     );
   }
 }
@@ -58,7 +88,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var names = offlineStore.keys.toList();
+  var names = offlineStore.map((e) => e[""].toString()).toList();
 
   @override
   void initState() {
@@ -80,15 +110,17 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     pageDetails.addAll(
-        names.map((name) {
+        offlineStore.map((store) {
+          String key = "name_" + AppLocalizations.of(context)!.localeName;
           return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListPage(name, names.indexOf(name))),
+                  MaterialPageRoute(builder: (context) => ListPage(store["key"] as String, offlineStore.indexOf(store))),
                 );
               },
-              child: PartCard(title: name, index: names.indexOf(name), listSize: names.length)
+              //  as String
+              child: PartCard(title: store[key] as String, index: offlineStore.indexOf(store), listSize: offlineStore.length)
           );
         })
     );
@@ -98,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl,
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
             appBar: AppBar(
                 title: Text(widget.title),
@@ -108,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     IconButton(
                       icon: const Icon(Icons.settings),
                       color: Colors.white,
-                      tooltip: 'Settings',
+                      tooltip: AppLocalizations.of(context)!.main_page_settings,
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -122,22 +154,23 @@ class _MyHomePageState extends State<MyHomePage> {
               position: DecorationPosition.background,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                          image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
-                        ),child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Expanded(
-                                child: SingleChildScrollView(
-                                    child: Column(
-                                      children: buildPageDetails()
-                                    )
-                                )
-                            ),
-                          ],
+                    image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
                         ),
-                      ),
-                )
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Expanded(
+                        child: SingleChildScrollView(
+                            child: Column(
+                              children: buildPageDetails()
+                            )
+                        )
+                    ),
+                  ],
+                ),
+              ),
+            )
         )
     );
   }
