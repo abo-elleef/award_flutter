@@ -1,0 +1,12 @@
+{
+  "main_page_title":"Sections",
+  "main_page_settings": "Settings",
+  "settings_page_font_size" : "Font size:",
+  "settings_page_facebook" : "Follow us on Facebook.",
+  "settings_page_twitter" : "Follow us on Twitter.",
+  "settings_page_font_example" : "There is no god but Allah.",
+  "settings_page_watch_ad" : "Watch an ads, it help us.",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  }
+}

@@ -11,24 +11,27 @@ import 'package:http/http.dart' as http;
 import 'award.dart';
 import './part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n/app_localizations.dart';
 class ListPage extends StatefulWidget {
-  final String departmentName;
+  final String storeKey;
+  final String title;
   final int index;
   late double fontSize;
   late int textColor;
-  ListPage(this.departmentName, this.index);
+  ListPage(this.storeKey, this.title, this.index);
   @override
   State<StatefulWidget> createState() {
-    return ListPageState(departmentName, index);
+    return ListPageState(storeKey, title, index);
   }
 }
 
 class ListPageState extends State<ListPage> {
-  String departmentName;
+  String storeKey;
+  String title;
   int index;
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-  ListPageState(this.departmentName, this.index);
+  ListPageState(this.storeKey, this.title, this.index);
   List poems = [];
 
   void fetchUserPreferences () async {
@@ -55,7 +58,7 @@ class ListPageState extends State<ListPage> {
     //   }
     // } on Exception catch(_){
     setState(() {
-      poems = offlineStore[this.departmentName]!;
+      poems = offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content']! as List;
     });
     // }
   }
@@ -69,10 +72,17 @@ class ListPageState extends State<ListPage> {
 
   List<Widget> _buildList() {
     return poems.asMap().entries.map((entry) {
+      String key = "name_" + AppLocalizations.of(context)!.localeName;
+      String title = "";
+      if(entry.value[key] == null || entry.value[key].isEmpty) {
+        title = entry.value['name'].toString();
+      } else {
+      title = entry.value[key];
+      };
       return Column(
           children: <Widget>[
             Row(
-              textDirection: TextDirection.rtl,
+              textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               children: <Widget>[
                 Expanded(
                     child: Container(
@@ -81,23 +91,23 @@ class ListPageState extends State<ListPage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) {
-                                    if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(departmentName)) {
-                                      return WerdDetails(entry.value['name'].toString(), 1, departmentName);
+                                    if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(storeKey)) {
+                                      return WerdDetails(title, int.parse(entry.value['id'].toString()), storeKey as String);
                                     } else {
-                                      if (["بردة المديح للامام البوصيري"].contains(departmentName)) {
-                                        return Details(entry.value['name'].toString(), int.parse(entry.value['id']), departmentName, -1);
+                                      if (["بردة المديح للامام البوصيري"].contains(storeKey)) {
+                                        return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
                                       } else {
                                         if (entry.value['chapters'].length > 1) {
-                                          return ChapterView(entry.value, departmentName);
+                                          return ChapterView(entry.value, storeKey);
                                         } else {
-                                          return Details(entry.value['name'].toString(), entry.value['id'], departmentName, -1);
+                                          return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
                                         }
                                       }
                                     }
                                   }) // Correctly closed MaterialPageRoute
                               ); // Correctly closed Navigator.push
                             }, // Correctly closed onTap
-                            child: PartCard(title: entry.value['name'].toString(), index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
+                            child: PartCard(title: title, index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
                         )
                     )
                 ),
@@ -155,10 +165,10 @@ class ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text(departmentName),
+          title: Text(title),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),

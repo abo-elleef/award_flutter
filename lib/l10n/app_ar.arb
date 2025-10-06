@@ -1,0 +1,12 @@
+{
+  "main_page_title": "الأقسام",
+  "main_page_settings": "الإعدادات",
+  "settings_page_font_size" : "حجم الخط",
+  "settings_page_facebook" : "شاركنا الرحلة علي facebook",
+  "settings_page_twitter" : "شاركنا الرحلة علي twitter",
+  "settings_page_font_example" : "لا اله الا الله",
+  "settings_page_watch_ad" : "شاهد اعلان. بيساعدنا نكبر",
+  "@helloWorld": {
+    "description": "The conventional newborn programmer greeting"
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 
 class PartCard extends StatelessWidget {
   PartCard({required this.title, required this.index, required this.listSize, this.fontSize = 28, this.textColor = 0xFF000000});
@@ -19,11 +20,11 @@ class PartCard extends StatelessWidget {
             color: Color(0xffe1ffe1),
             borderRadius: BorderRadius.all(Radius.circular(15.0))),
         padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
-        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+        margin: const EdgeInsets.only(top: 16.0, bottom: 0.0, right: 8.0, left: 8.0),
         child: Column(
           children: <Widget>[
             Row(
-              textDirection: TextDirection.rtl,
+              textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -31,6 +32,7 @@ class PartCard extends StatelessWidget {
                   "("+(index+ 1).toString() + ")" ,
                   style: TextStyle(
                     fontSize: fontSize/1.5,
+                    fontWeight: FontWeight.bold,
                     color: Color(0xff666666)
                   ),
                 ),
@@ -44,6 +46,7 @@ class PartCard extends StatelessWidget {
                     title,
                     style: TextStyle(
                       fontSize: fontSize,
+                      fontWeight: FontWeight.normal,
                       color: Color(textColor),
                     ),
                   ),

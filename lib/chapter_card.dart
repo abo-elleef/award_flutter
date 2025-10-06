@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'l10n/app_localizations.dart';
 
 class ChapterCard extends StatelessWidget {
   ChapterCard({required this.title});
@@ -15,7 +16,7 @@ class ChapterCard extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 0),
         margin: EdgeInsets.symmetric(vertical: 7.0, horizontal: 20.0),
         child: Row(
-          textDirection: TextDirection.rtl,
+          textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
           children: <Widget>[
             Container(
                 margin: EdgeInsets.symmetric(vertical: 0, horizontal: 16.0),

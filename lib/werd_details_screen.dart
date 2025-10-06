@@ -8,29 +8,30 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:in_app_review/in_app_review.dart'; // Added import
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'l10n/app_localizations.dart';
 
 class WerdDetails extends StatefulWidget {
-  final String name;
-  final String department;
+  final String title;
+  final String storeKey;
   final int index;
   late double fontSize;
   late int textColor;
-  WerdDetails(this.name, this.index, this.department);
+  WerdDetails(this.title, this.index, this.storeKey);
   @override
   State<StatefulWidget> createState() {
-    return WerdDetailsState(name, index, department);
+    return WerdDetailsState(title, index, storeKey);
   }
 }
 
 class WerdDetailsState extends State<WerdDetails> {
-  String name;
+  String title;
   int index;
-  String department;
+  String storeKey;
   late double fontSize = 24;
   // late int textColor = 0xff3a863d;
   late int textColor = 0xff444444;
   late String desc = "";
-  WerdDetailsState(this.name, this.index, this.department);
+  WerdDetailsState(this.title, this.index, this.storeKey);
   List lines = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
@@ -38,10 +39,6 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
-
-  List range (int start, int size){
-    return List<int>.generate(size, (int index) => start + index);
-  }
 
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -74,13 +71,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -109,19 +106,19 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
   }
 
   void fetchData() async {
-    var json = (offlineStore[this.department]!.where( (item) => item['name'] == name.toString()).toList()[0]);
+    var json = (offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content'] as List)[index-1];
     setState(() {
       lines = json?["textPages"] as List;
       desc = json['desc']!.toString();
@@ -131,10 +128,14 @@ class WerdDetailsState extends State<WerdDetails> {
   @override
   void initState() {
     super.initState();
-    fetchUserPreferences();
-    fetchData();
-    _loadBannerAd();
-    _loadNativeAd();
+    Future.delayed(Duration.zero, () {
+      fetchUserPreferences();
+      _loadBannerAd();
+      _loadNativeAd();
+      fetchData();
+    });
+
+
     _scrollController.addListener(() async { // Added listener for in-app review
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         if (await _inAppReview.isAvailable()) {
@@ -167,7 +168,8 @@ class WerdDetailsState extends State<WerdDetails> {
               margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
               child: Column(
               children: <Widget>[
-                Row(textDirection: TextDirection.rtl,
+                Row(
+                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
                   children: <Widget>[
                     Expanded(
                         child: Container(
@@ -259,10 +261,10 @@ class WerdDetailsState extends State<WerdDetails> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: TextDirection.rtl, // set this property
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text(name),
+          title: Text(title),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),
