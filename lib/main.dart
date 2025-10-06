@@ -47,7 +47,7 @@ class _MyAppState extends State<MyApp> {
   void _fetchUserPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language_code');
-    double? fontsize = prefs.getDouble('fontSize');
+    double? fontSize = prefs.getDouble('fontSize');
     if (languageCode != null) {
       if (!mounted) return;
       setState(() {
@@ -71,8 +71,7 @@ class _MyAppState extends State<MyApp> {
       title: 'أوراد البرهامية',
       locale: _locale,
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue,
+        fontFamily: 'Amiri',
         appBarTheme: AppBarTheme(
           iconTheme: IconThemeData(
           color: Colors.white, // Change the color here
