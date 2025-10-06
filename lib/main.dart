@@ -23,15 +23,54 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  // Helper method to find the state object of MyApp
+  static _MyAppState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>();
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Locale _locale = const Locale('ar');
+  double fontSize = 24;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUserPref();
+  }
+
+  void _fetchUserPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
+    double? fontsize = prefs.getDouble('fontSize');
+    if (languageCode != null) {
+      if (!mounted) return;
+      setState(() {
+        _locale = Locale(languageCode);
+      });
+    }
+  }
+
+  void setLocale(Locale value) async {
+    if (!mounted) return;
+    setState(() {
+      _locale = value;
+    });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language_code', value.languageCode);
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'أوراد البرهامية',
+      locale: _locale,
       theme: ThemeData(
-        fontFamily: 'Amiri',
         primarySwatch: Colors.blue,
         primaryColor: Colors.blue,
         appBarTheme: AppBarTheme(
@@ -69,8 +108,6 @@ class MyApp extends StatelessWidget {
       home: Builder(
         builder: (BuildContext context) {
           // This context is a descendant of MaterialApp
-          // The '!' is used assuming AppLocalizations.of(context) might be nullable
-          // and 'hello' is a non-nullable string.
           return MyHomePage(title: AppLocalizations.of(context)!.main_page_title);
         }
       ),
@@ -88,12 +125,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  late double fontSize = 24;
   var names = offlineStore.map((e) => e[""].toString()).toList();
 
   @override
   void initState() {
     super.initState();
-    // _loadRewardedAd(); // Removed
   }
 
   @override
@@ -116,15 +153,62 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListPage(store["key"] as String, offlineStore.indexOf(store))),
+                  MaterialPageRoute(builder: (context) => ListPage(store["key"] as String, store[key] as String,  offlineStore.indexOf(store))),
                 );
               },
               //  as String
-              child: PartCard(title: store[key] as String, index: offlineStore.indexOf(store), listSize: offlineStore.length)
+              child: PartCard(title: store[key] as String, index: offlineStore.indexOf(store), listSize: offlineStore.length, fontSize: fontSize)
           );
         })
     );
     return pageDetails;
+  }
+
+  Widget buildLanguageDropdown() {
+    String currentLanguage = AppLocalizations.of(context)!.localeName;
+    Widget languageDropdown = Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: Color(0xffe1ffe1),
+        borderRadius: BorderRadius.circular(15.0),
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+      ),
+      child: DropdownButtonHideUnderline(
+        child: DropdownButton<String>(
+          value: currentLanguage,
+          isExpanded: true,
+            // Colors.green.shade800
+          icon: Icon(Icons.language_outlined, color: Colors.black),
+          items: [
+            buildDropdownMenuItem('ar', 'العربية'),
+            buildDropdownMenuItem('en', 'English'),
+            buildDropdownMenuItem('fr', 'Français'),
+          ],
+          onChanged: (String? newValue) {
+            if (newValue != null && newValue != currentLanguage) {
+              // Call the setLocale method from _MyAppState to update the app's language
+              MyApp.of(context)?.setLocale(Locale(newValue));
+            }
+          },
+        ),
+      ),
+    );
+    return languageDropdown;
+  }
+  DropdownMenuItem<String> buildDropdownMenuItem(value, name){
+    return DropdownMenuItem(
+        value: value,
+        child: Text(
+            name,
+            style: TextStyle(
+                fontSize: fontSize,
+                color: Colors.black
+            ),
+        )
+    );
+
+
   }
 
   @override
@@ -167,6 +251,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             )
                         )
                     ),
+                    buildLanguageDropdown()
                   ],
                 ),
               ),

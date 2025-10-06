@@ -11,27 +11,27 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 
 class WerdDetails extends StatefulWidget {
-  final String name;
-  final String department;
+  final String title;
+  final String storeKey;
   final int index;
   late double fontSize;
   late int textColor;
-  WerdDetails(this.name, this.index, this.department);
+  WerdDetails(this.title, this.index, this.storeKey);
   @override
   State<StatefulWidget> createState() {
-    return WerdDetailsState(name, index, department);
+    return WerdDetailsState(title, index, storeKey);
   }
 }
 
 class WerdDetailsState extends State<WerdDetails> {
-  String name;
+  String title;
   int index;
-  String department;
+  String storeKey;
   late double fontSize = 24;
   // late int textColor = 0xff3a863d;
   late int textColor = 0xff444444;
   late String desc = "";
-  WerdDetailsState(this.name, this.index, this.department);
+  WerdDetailsState(this.title, this.index, this.storeKey);
   List lines = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
@@ -39,10 +39,6 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
-
-  List range (int start, int size){
-    return List<int>.generate(size, (int index) => start + index);
-  }
 
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -122,7 +118,7 @@ class WerdDetailsState extends State<WerdDetails> {
   }
 
   void fetchData() async {
-    var json = (offlineStore.where( (item) => item['key'] == department).toList()[0]['content'] as List).where( (item) => item['name'] == name.toString()).toList()[0];
+    var json = (offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content'] as List)[index-1];
     setState(() {
       lines = json?["textPages"] as List;
       desc = json['desc']!.toString();
@@ -132,10 +128,14 @@ class WerdDetailsState extends State<WerdDetails> {
   @override
   void initState() {
     super.initState();
-    fetchUserPreferences();
-    fetchData();
-    _loadBannerAd();
-    _loadNativeAd();
+    Future.delayed(Duration.zero, () {
+      fetchUserPreferences();
+      _loadBannerAd();
+      _loadNativeAd();
+      fetchData();
+    });
+
+
     _scrollController.addListener(() async { // Added listener for in-app review
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
         if (await _inAppReview.isAvailable()) {
@@ -264,7 +264,7 @@ class WerdDetailsState extends State<WerdDetails> {
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text(name),
+          title: Text(title),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),

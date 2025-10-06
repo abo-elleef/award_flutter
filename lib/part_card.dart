@@ -19,7 +19,7 @@ class PartCard extends StatelessWidget {
             // color: Color.fromRGBO(255, 255, 255, 0.8),
             color: Color(0xffe1ffe1),
             borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
         margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
         child: Column(
           children: <Widget>[

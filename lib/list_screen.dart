@@ -14,22 +14,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 class ListPage extends StatefulWidget {
   final String storeKey;
+  final String title;
   final int index;
   late double fontSize;
   late int textColor;
-  ListPage(this.storeKey, this.index);
+  ListPage(this.storeKey, this.title, this.index);
   @override
   State<StatefulWidget> createState() {
-    return ListPageState(storeKey, index);
+    return ListPageState(storeKey, title, index);
   }
 }
 
 class ListPageState extends State<ListPage> {
   String storeKey;
+  String title;
   int index;
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-  ListPageState(this.storeKey, this.index);
+  ListPageState(this.storeKey, this.title, this.index);
   List poems = [];
 
   void fetchUserPreferences () async {
@@ -56,10 +58,7 @@ class ListPageState extends State<ListPage> {
     //   }
     // } on Exception catch(_){
     setState(() {
-      print(storeKey);
-      print(offlineStore.where( (item) => item['key'] == storeKey).toList());
       poems = offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content']! as List;
-      print(poems);
     });
     // }
   }
@@ -73,6 +72,13 @@ class ListPageState extends State<ListPage> {
 
   List<Widget> _buildList() {
     return poems.asMap().entries.map((entry) {
+      String key = "name_" + AppLocalizations.of(context)!.localeName;
+      String title = "";
+      if(entry.value[key] == null || entry.value[key].isEmpty) {
+        title = entry.value['name'].toString();
+      } else {
+      title = entry.value[key];
+      };
       return Column(
           children: <Widget>[
             Row(
@@ -86,22 +92,22 @@ class ListPageState extends State<ListPage> {
                                   context,
                                   MaterialPageRoute(builder: (context) {
                                     if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(storeKey)) {
-                                      return WerdDetails(entry.value['name'].toString(), 1, storeKey);
+                                      return WerdDetails(title, int.parse(entry.value['id'].toString()), storeKey as String);
                                     } else {
                                       if (["بردة المديح للامام البوصيري"].contains(storeKey)) {
-                                        return Details(entry.value['name'].toString(), int.parse(entry.value['id']), storeKey, -1);
+                                        return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
                                       } else {
                                         if (entry.value['chapters'].length > 1) {
                                           return ChapterView(entry.value, storeKey);
                                         } else {
-                                          return Details(entry.value['name'].toString(), entry.value['id'], storeKey, -1);
+                                          return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
                                         }
                                       }
                                     }
                                   }) // Correctly closed MaterialPageRoute
                               ); // Correctly closed Navigator.push
                             }, // Correctly closed onTap
-                            child: PartCard(title: entry.value['name'].toString(), index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
+                            child: PartCard(title: title, index: entry.key, listSize: poems.length, fontSize: fontSize, textColor: textColor)
                         )
                     )
                 ),
@@ -162,7 +168,7 @@ class ListPageState extends State<ListPage> {
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-          title: Text(storeKey),
+          title: Text(title),
           backgroundColor: Colors.green,
             titleTextStyle: TextStyle(color: Colors.white)
         ),
