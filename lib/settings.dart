@@ -49,14 +49,14 @@ class SettingsState extends State<Settings> {
   // Copied from main.dart
   String _getRewardedAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
+      return 'ca-app-pub-3940256099942544/5224354917'; // Test
+      // return 'ca-app-pub-2772630944180636/7242266351'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/1712485313'; // Test
     }
     // Fallback, should match one of the above based on your main.dart logic
-    // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
+    return 'ca-app-pub-3940256099942544/5224354917'; // Test
+    // return 'ca-app-pub-2772630944180636/7242266351'; // Award
   }
 
   // Copied from main.dart

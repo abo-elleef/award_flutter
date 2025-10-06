@@ -10,8 +10,6 @@ import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
-import 'dart:io' show Platform;
-
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
@@ -88,7 +86,7 @@ class _MyAppState extends State<MyApp> {
             ),
           child: SafeArea(
             top: false,
-            bottom: Platform.isAndroid,
+            bottom: Theme.of(context).platform == TargetPlatform.android,
             child: child!,
           )
         );
@@ -125,7 +123,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double fontSize = 24;
-  var names = offlineStore.map((e) => e[""].toString()).toList();
 
   @override
   void initState() {
@@ -146,17 +143,21 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     pageDetails.addAll(
-        offlineStore.map((store) {
-          String key = "name_" + AppLocalizations.of(context)!.localeName;
+        offlineStore.asMap().entries.map((entry) {
+          final store = entry.value;
+          final lang = AppLocalizations.of(context)!.localeName.split('_').first;
+          final key = 'name_$lang';
+          final localized = (store[key] as String?)?.trim();
+          final displayTitle = (localized != null && localized.isNotEmpty) ? localized : (store['name'] as String?)?.trim() ?? '';
           return GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ListPage(store["key"] as String, store[key] as String,  offlineStore.indexOf(store))),
+                  MaterialPageRoute(builder: (context) => ListPage(store["key"].toString(), displayTitle, entry.key)),
                 );
               },
               //  as String
-              child: PartCard(title: store[key] as String, index: offlineStore.indexOf(store), listSize: offlineStore.length, fontSize: fontSize)
+              child: PartCard(title: displayTitle, index: entry.key, listSize: offlineStore.length, fontSize: fontSize)
           );
         })
     );
