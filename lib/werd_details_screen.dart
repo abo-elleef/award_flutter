@@ -71,13 +71,14 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Awrad
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
+      // return 'ca-app-pub-3940256099942544/2934735716'; // Test
+      return 'ca-app-pub-2772630944180636/6363624876'; // Awrad
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Awrad
   }
 
   void _loadNativeAd() {
@@ -106,14 +107,15 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Awrad
 
     } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
+      // return 'ca-app-pub-3940256099942544/3986624511'; // Test
+      return 'ca-app-pub-2772630944180636/3851682612'; // Awrad
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Awrad
 
   }
 
