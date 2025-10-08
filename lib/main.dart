@@ -86,7 +86,7 @@ class _MyAppState extends State<MyApp> {
             ),
           child: SafeArea(
             top: false,
-            bottom: Theme.of(context).platform == TargetPlatform.android,
+            bottom: true,
             child: child!,
           )
         );

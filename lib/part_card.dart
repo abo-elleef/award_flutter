@@ -19,13 +19,13 @@ class PartCard extends StatelessWidget {
             // color: Color.fromRGBO(255, 255, 255, 0.8),
             color: Color(0xffe1ffe1),
             borderRadius: BorderRadius.all(Radius.circular(15.0))),
-        padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         margin: const EdgeInsets.only(top: 16.0, bottom: 0.0, right: 8.0, left: 8.0),
         child: Column(
           children: <Widget>[
             Row(
               textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
