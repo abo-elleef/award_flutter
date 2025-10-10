@@ -43,6 +43,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: any
+  flutter_local_notifications: ^19.4.2
+  timezone:
 
 dev_dependencies:
   flutter_test:

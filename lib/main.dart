@@ -4,16 +4,20 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
-import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
-// import 'dart:io' show Platform; // Potentially remove if not used elsewhere
+import 'notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Notification Service and schedule notifications
+  await NotificationService().init();
+  await NotificationService().scheduleDailyTwoNotifications();
+
   MobileAds.instance.initialize(); // Initialize MobileAds - Keep this if other ads are used or planned
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
