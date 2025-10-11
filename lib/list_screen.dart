@@ -37,6 +37,8 @@ class ListPageState extends State<ListPage> {
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
+      // print("this is fine");
+      // print(this.index);
       fontSize = pref.getDouble('fontSize') ?? fontSize;
       textColor = pref.getInt('textColor') ?? textColor;
     });

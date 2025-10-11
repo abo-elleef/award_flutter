@@ -43,6 +43,8 @@ class WerdDetailsState extends State<WerdDetails> {
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
+      // print("this is werd details page");
+      // print(this.index);
       fontSize = pref.getDouble('fontSize') ?? fontSize;
       textColor = pref.getInt('textColor') ?? textColor;
     });
@@ -71,13 +73,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -106,19 +108,20 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
-
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   void fetchData() async {
-    var json = (offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content'] as List)[index-1];
+    var json = (offlineStore.where( (item) => item['key'] == storeKey).toList()[0]['content'] as List).where(
+        (item) => item['id'].toString() == index.toString()
+    ).first;
     setState(() {
       lines = json?["textPages"] as List;
       desc = json['desc']!.toString();
