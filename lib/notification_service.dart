@@ -53,7 +53,7 @@ class NotificationService {
     final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
         flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
-    await androidImplementation?.requestPermission();
+    await androidImplementation?.requestNotificationsPermission();
   }
 
   /// Schedules two daily notifications at 10:00 AM and 8:00 PM.
@@ -79,12 +79,6 @@ class NotificationService {
 
   /// Helper method to schedule a daily notification.
   Future<void> _scheduleDaily(int id, String title, String body, int hour, int minute) async {
-    // --- DEBUGGING STEP ---
-    // The zonedSchedule call has been temporarily commented out to isolate the error.
-    print('--- Notification scheduling is temporarily disabled for debugging ---');
-    print('Attempting to schedule notification with id: $id at $hour:$minute');
-    
-    /*
     final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
     tz.TZDateTime scheduledDate =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
@@ -114,8 +108,6 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-    */
-    return Future.value();
   }
 
   Future<void> cancelAllNotifications() async {
