@@ -28,4 +28,29 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get settings_page_watch_ad => 'شاهد اعلان. بيساعدنا نكبر';
+
+  @override
+  String get settings_page_notifications => 'التذكيرات اليومية';
+
+  @override
+  String get settings_page_notifications_desc =>
+      'استقبل تذكيرات يومية لقراءة الأوراد';
+
+  @override
+  String get settings_page_morning_time => 'وقت التذكير الصباحي';
+
+  @override
+  String get settings_page_evening_time => 'وقت التذكير المسائي';
+
+  @override
+  String get settings_page_morning_notification =>
+      'حان وقت قراءة الأوراد الصباحية';
+
+  @override
+  String get settings_page_evening_notification =>
+      'حان وقت قراءة الأوراد المسائية';
+
+  @override
+  String get settings_page_exact_alarm_permission_error =>
+      'يرجى السماح بالتنبيهات الدقيقة في إعدادات التطبيق';
 }

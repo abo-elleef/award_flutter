@@ -121,13 +121,13 @@ abstract class AppLocalizations {
   /// No description provided for @settings_page_facebook.
   ///
   /// In en, this message translates to:
-  /// **'Follow us on Facebook.'**
+  /// **'Follow us on Facebook'**
   String get settings_page_facebook;
 
   /// No description provided for @settings_page_twitter.
   ///
   /// In en, this message translates to:
-  /// **'Follow us on Twitter.'**
+  /// **'Follow us on Twitter'**
   String get settings_page_twitter;
 
   /// No description provided for @settings_page_font_example.
@@ -141,6 +141,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Watch an ads, it help us.'**
   String get settings_page_watch_ad;
+
+  /// No description provided for @settings_page_notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Daily Reminders'**
+  String get settings_page_notifications;
+
+  /// No description provided for @settings_page_notifications_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Receive daily reminders to read Awrad'**
+  String get settings_page_notifications_desc;
+
+  /// No description provided for @settings_page_morning_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning Reminder Time'**
+  String get settings_page_morning_time;
+
+  /// No description provided for @settings_page_evening_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening Reminder Time'**
+  String get settings_page_evening_time;
+
+  /// No description provided for @settings_page_morning_notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to read morning Awrad'**
+  String get settings_page_morning_notification;
+
+  /// No description provided for @settings_page_evening_notification.
+  ///
+  /// In en, this message translates to:
+  /// **'Time to read evening Awrad'**
+  String get settings_page_evening_notification;
+
+  /// No description provided for @settings_page_exact_alarm_permission_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Please allow exact alarms in app settings'**
+  String get settings_page_exact_alarm_permission_error;
 }
 
 class _AppLocalizationsDelegate

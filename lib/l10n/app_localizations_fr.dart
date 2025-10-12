@@ -29,4 +29,29 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get settings_page_watch_ad =>
       'Regardez une publicité, cela nous aide.';
+
+  @override
+  String get settings_page_notifications => 'Rappels quotidiens';
+
+  @override
+  String get settings_page_notifications_desc =>
+      'Recevez des rappels quotidiens pour lire les Awrad';
+
+  @override
+  String get settings_page_morning_time => 'Heure du rappel matinal';
+
+  @override
+  String get settings_page_evening_time => 'Heure du rappel du soir';
+
+  @override
+  String get settings_page_morning_notification =>
+      'Il est temps de lire les Awrad du matin';
+
+  @override
+  String get settings_page_evening_notification =>
+      'Il est temps de lire les Awrad du soir';
+
+  @override
+  String get settings_page_exact_alarm_permission_error =>
+      'Veuillez autoriser les alarmes exactes dans les paramètres de l\'application';
 }

@@ -4,12 +4,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
-import './details_screen.dart';
 import './list_screen.dart';
 import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
+import 'notification_service.dart';
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
@@ -18,6 +18,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
+  // Initialize notification service
+  final notificationService = NotificationService();
+  await notificationService.initialize();
+  await notificationService.requestPermissions();
+  
   runApp(const MyApp());
 }
 
@@ -45,7 +51,6 @@ class _MyAppState extends State<MyApp> {
   void _fetchUserPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? languageCode = prefs.getString('language_code');
-    double? fontSize = prefs.getDouble('fontSize');
     if (languageCode != null) {
       if (!mounted) return;
       setState(() {

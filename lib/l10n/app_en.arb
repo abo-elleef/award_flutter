@@ -2,10 +2,17 @@
   "main_page_title":"Sections",
   "main_page_settings": "Settings",
   "settings_page_font_size" : "Font size:",
-  "settings_page_facebook" : "Follow us on Facebook.",
-  "settings_page_twitter" : "Follow us on Twitter.",
+  "settings_page_facebook" : "Follow us on Facebook",
+  "settings_page_twitter" : "Follow us on Twitter",
   "settings_page_font_example" : "There is no god but Allah.",
   "settings_page_watch_ad" : "Watch an ads, it help us.",
+  "settings_page_notifications" : "Daily Reminders",
+  "settings_page_notifications_desc" : "Receive daily reminders to read Awrad",
+  "settings_page_morning_time" : "Morning Reminder Time",
+  "settings_page_evening_time" : "Evening Reminder Time",
+  "settings_page_morning_notification" : "Time to read morning Awrad",
+  "settings_page_evening_notification" : "Time to read evening Awrad",
+  "settings_page_exact_alarm_permission_error" : "Please allow exact alarms in app settings",
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   }

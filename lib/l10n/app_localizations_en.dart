@@ -18,14 +18,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settings_page_font_size => 'Font size:';
 
   @override
-  String get settings_page_facebook => 'Follow us on Facebook.';
+  String get settings_page_facebook => 'Follow us on Facebook';
 
   @override
-  String get settings_page_twitter => 'Follow us on Twitter.';
+  String get settings_page_twitter => 'Follow us on Twitter';
 
   @override
   String get settings_page_font_example => 'There is no god but Allah.';
 
   @override
   String get settings_page_watch_ad => 'Watch an ads, it help us.';
+
+  @override
+  String get settings_page_notifications => 'Daily Reminders';
+
+  @override
+  String get settings_page_notifications_desc =>
+      'Receive daily reminders to read Awrad';
+
+  @override
+  String get settings_page_morning_time => 'Morning Reminder Time';
+
+  @override
+  String get settings_page_evening_time => 'Evening Reminder Time';
+
+  @override
+  String get settings_page_morning_notification => 'Time to read morning Awrad';
+
+  @override
+  String get settings_page_evening_notification => 'Time to read evening Awrad';
+
+  @override
+  String get settings_page_exact_alarm_permission_error =>
+      'Please allow exact alarms in app settings';
 }

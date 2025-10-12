@@ -6,6 +6,13 @@
   "settings_page_twitter" : "Suivez-nous sur Twitter.",
   "settings_page_font_example" : "Il n'y a de dieu qu'Allah.",
   "settings_page_watch_ad" : "Regardez une publicité, cela nous aide.",
+  "settings_page_notifications" : "Rappels quotidiens",
+  "settings_page_notifications_desc" : "Recevez des rappels quotidiens pour lire les Awrad",
+  "settings_page_morning_time" : "Heure du rappel matinal",
+  "settings_page_evening_time" : "Heure du rappel du soir",
+  "settings_page_morning_notification" : "Il est temps de lire les Awrad du matin",
+  "settings_page_evening_notification" : "Il est temps de lire les Awrad du soir",
+  "settings_page_exact_alarm_permission_error" : "Veuillez autoriser les alarmes exactes dans les paramètres de l'application",
   "@helloWorld": {
     "description": "The conventional newborn programmer greeting"
   }
