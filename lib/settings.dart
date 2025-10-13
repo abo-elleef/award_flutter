@@ -259,7 +259,7 @@ class SettingsState extends State<Settings> {
                       PartCard(title: AppLocalizations.of(context)!.settings_page_font_example, index: 0, listSize: 6, fontSize: this.fontSize, textColor: this.textColor),
                       _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_facebook, 'https://www.facebook.com/bordaelmadyh/'),
                       _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_twitter, 'https://x.com/bordaelmadyh'),
-                      buildRewardedAdWidget(),
+                      // buildRewardedAdWidget(),
                     ]
                   ),
                 )
