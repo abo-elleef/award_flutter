@@ -164,52 +164,18 @@ class _MyHomePageState extends State<MyHomePage> {
     return pageDetails;
   }
 
-  Widget buildLanguageDropdown() {
-    String currentLanguage = AppLocalizations.of(context)!.localeName;
-    Widget languageDropdown = Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
-      margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-      decoration: BoxDecoration(
-        color: Color(0xffe1ffe1),
-        borderRadius: BorderRadius.circular(15.0),
-        border: Border.all(color: Colors.grey.shade300, width: 1),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<String>(
-          value: currentLanguage,
-          isExpanded: true,
-            // Colors.green.shade800
-          icon: Icon(Icons.language_outlined, color: Colors.black),
-          items: [
-            buildDropdownMenuItem('ar', 'العربية'),
-            buildDropdownMenuItem('en', 'English'),
-            buildDropdownMenuItem('fr', 'Français'),
-          ],
-          onChanged: (String? newValue) {
-            if (newValue != null && newValue != currentLanguage) {
-              // Call the setLocale method from _MyAppState to update the app's language
-              MyApp.of(context)?.setLocale(Locale(newValue));
-            }
-          },
-        ),
-      ),
-    );
-    return languageDropdown;
-  }
-  DropdownMenuItem<String> buildDropdownMenuItem(value, name){
-    return DropdownMenuItem(
-        value: value,
-        child: Text(
-            name,
-            style: TextStyle(
-                fontSize: fontSize,
-                color: Colors.black
-            ),
-        )
-    );
-
-
-  }
+  PopupMenuItem<String> buildPopupMenuItem(String value, String flag, String name) {
+  return PopupMenuItem<String>(
+    value: value,
+    child: Row(
+      children: [
+        Text(flag),
+        SizedBox(width: 10),
+        Text(name),
+      ],
+    ),
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +197,19 @@ class _MyHomePageState extends State<MyHomePage> {
                           MaterialPageRoute(builder: (context) => Settings()),
                         );
                       },
-                    )
+                    ),
+                  PopupMenuButton<String>(
+                    onSelected: (String newValue) {
+                      if (newValue != AppLocalizations.of(context)!.localeName) {
+                        MyApp.of(context)?.setLocale(Locale(newValue));
+                      }
+                    },
+                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                      buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
+                      buildPopupMenuItem('en', '🇺🇸', 'English'),
+                      buildPopupMenuItem('fr', '🇫🇷', 'Français'),
+                    ],
+                  ),
                   ]
             ),
             body: DecoratedBox(
@@ -251,7 +229,6 @@ class _MyHomePageState extends State<MyHomePage> {
                             )
                         )
                     ),
-                    buildLanguageDropdown()
                   ],
                 ),
               ),
