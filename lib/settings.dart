@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart'; // Added import
+// import 'package:google_mobile_ads/google_mobile_ads.dart'; // Added import
 import 'l10n/app_localizations.dart';
 import 'notification_service.dart';
 
@@ -18,9 +18,6 @@ class Settings extends StatefulWidget {
 class SettingsState extends State<Settings> {
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-
-  RewardedAd? _rewardedAd; // Added state variable
-  bool _isRewardedAdReady = false; // Added state variable
   
   // Notification settings
   final NotificationService _notificationService = NotificationService();
@@ -129,104 +126,6 @@ class SettingsState extends State<Settings> {
       );
     }
   }
-
-  // Copied from main.dart
-  String _getRewardedAdUnitId() {
-    if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-      return 'ca-app-pub-2772630944180636/7242266351'; // Award
-    } else if (Platform.isIOS) {
-      return 'ca-app-pub-3940256099942544/1712485313'; // Test
-    }
-    // Fallback, should match one of the above based on your main.dart logic
-    // return 'ca-app-pub-3940256099942544/5224354917'; // Test
-    return 'ca-app-pub-2772630944180636/7242266351'; // Award
-  }
-
-  // Copied from main.dart
-  void _loadRewardedAd() {
-    RewardedAd.load(
-      adUnitId: _getRewardedAdUnitId(),
-      request: const AdRequest(),
-      rewardedAdLoadCallback: RewardedAdLoadCallback(
-        onAdLoaded: (RewardedAd ad) {
-          _rewardedAd = ad;
-          if (!mounted) return;
-          setState(() {
-            _isRewardedAdReady = true;
-          });
-          _rewardedAd?.fullScreenContentCallback = FullScreenContentCallback(
-            onAdDismissedFullScreenContent: (RewardedAd ad) {
-              ad.dispose();
-              if (!mounted) return;
-              setState(() {
-                _isRewardedAdReady = false;
-              });
-              _loadRewardedAd(); // Load the next ad
-            },
-            onAdFailedToShowFullScreenContent: (RewardedAd ad, AdError error) {
-              print('$ad onAdFailedToShowFullScreenContent: $error');
-              ad.dispose();
-              if (!mounted) return;
-              setState(() {
-                _isRewardedAdReady = false;
-              });
-              _loadRewardedAd();
-            },
-          );
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          print('RewardedAd failed to load: $error');
-          if (!mounted) return;
-          setState(() {
-            _isRewardedAdReady = false;
-          });
-        },
-      ),
-    );
-  }
-
-  // Copied from main.dart
-  void _showRewardedAd() {
-    if (_isRewardedAdReady && _rewardedAd != null) {
-      _rewardedAd!.show(
-        onUserEarnedReward: (AdWithoutView ad, RewardItem reward) {
-          print('Reward earned: ${reward.type} ${reward.amount}');
-          // TODO: Grant the user their reward.
-        },
-      );
-    } else {
-      print('Rewarded ad is not ready yet.');
-      if (!_isRewardedAdReady) {
-        _loadRewardedAd();
-      }
-    }
-  }
-
-  // Copied from main.dart
-  Widget buildRewardedAdWidget() {
-    return GestureDetector(
-        onTap: _showRewardedAd,
-        child: _isRewardedAdReady ? Container(
-            width: double.infinity,
-            decoration: const BoxDecoration(
-                color: Color(0xffe1ffe1), // Using similar styling as PartCard
-                borderRadius: BorderRadius.all(Radius.circular(15.0))),
-            padding: const EdgeInsets.all(16.0), // Consistent padding
-            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0), // Consistent margin
-            child: Text(
-                    AppLocalizations.of(context)!.settings_page_watch_ad,
-                    softWrap: true,
-                    style: TextStyle(
-                      fontSize: this.fontSize, // Using dynamic font size
-                      color: Color(this.textColor), // Using dynamic text color
-                      fontWeight: FontWeight.bold,
-                    )
-            )
-        ) : Container() // Or SizedBox.shrink()
-    );
-  }
-
 
   Widget _buildNotificationSettings() {
     return Column(
@@ -411,12 +310,10 @@ class SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     fetchUserPreferences();
-    _loadRewardedAd(); // Load rewarded ad
   }
 
   @override
   void dispose() {
-    _rewardedAd?.dispose(); // Dispose rewarded ad
     super.dispose();
   }
 
@@ -476,7 +373,6 @@ class SettingsState extends State<Settings> {
                       _buildNotificationSettings(),
                       _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_facebook, 'https://www.facebook.com/bordaelmadyh/'),
                       _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_twitter, 'https://x.com/bordaelmadyh'),
-                      buildRewardedAdWidget(),
                     ]
                   ),
                 )

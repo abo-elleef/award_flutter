@@ -188,8 +188,6 @@ class NotificationService {
   Future<void> setNotificationsEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notifications_enabled', enabled);
-    print("notificaition path");
-    print(enabled);
     if (enabled) {
       // Get saved times or use defaults
       final times = await getNotificationTimes();
