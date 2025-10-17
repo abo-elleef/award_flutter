@@ -10,6 +10,7 @@ import './part_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
+import 'analytics.dart'; // Import the analytics class
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
@@ -123,6 +124,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double fontSize = 24;
+  final Analytics analytics = Analytics(); // Instantiate the analytics class
 
   @override
   void initState() {
@@ -151,6 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
           final displayTitle = (localized != null && localized.isNotEmpty) ? localized : (store['name'] as String?)?.trim() ?? '';
           return GestureDetector(
               onTap: () {
+                analytics.logScreenView(displayTitle); // Log the screen view event
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ListPage(store["key"].toString(), displayTitle, entry.key)),
