@@ -9,6 +9,8 @@ import 'package:in_app_review/in_app_review.dart'; // Added import
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class WerdDetails extends StatefulWidget {
   final String title;
@@ -33,6 +35,7 @@ class WerdDetailsState extends State<WerdDetails> {
   late String desc = "";
   WerdDetailsState(this.title, this.index, this.storeKey);
   List lines = [];
+  List links = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
   NativeAd? _nativeAd;
@@ -73,13 +76,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -108,14 +111,14 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   void fetchData() async {
@@ -124,6 +127,7 @@ class WerdDetailsState extends State<WerdDetails> {
     ).first;
     setState(() {
       lines = json?["textPages"] as List;
+      links = json?["links"] as List;
       desc = json['desc']!.toString();
     });
   }
@@ -158,6 +162,60 @@ class WerdDetailsState extends State<WerdDetails> {
     _nativeAd?.dispose();
     _scrollController.dispose(); // Dispose ScrollController
     super.dispose();
+  }
+
+  Widget soundCloudPlayerWebView(url) {
+    final webviewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
+    return SizedBox(
+      height: 350,
+      child: WebViewWidget(
+        controller: webviewController,
+      ),
+    );
+  }
+
+  Widget youtubePlayer(url) {
+    var videoId = url.split('/embed/').last;
+    print(videoId);
+    print("video id above");
+    YoutubePlayerController _controller = YoutubePlayerController(
+      initialVideoId: videoId,
+      flags: YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+        controlsVisibleAtStart: true, // Added to show controls
+      ),
+    );
+
+    return YoutubePlayer(
+      controller: _controller,
+      showVideoProgressIndicator: true,
+      progressIndicatorColor: Colors.green,
+      progressColors: const ProgressBarColors(
+        playedColor: Colors.green,
+        handleColor: Colors.greenAccent,
+      ),
+      // onReady: () {
+      //   _controller.addListener(listener);
+      // },
+    );
+  }
+
+
+  Widget _buildMediaPlayer() {
+    print("media links from _buildMediaPlayer");
+    print(links);
+    if (links.isNotEmpty) {
+      if(links.first['source'] == 'sound_cloud'){
+        return soundCloudPlayerWebView(links.first['link']);
+      }else{
+        return youtubePlayer(links.first['link']);
+      }
+    } else {
+      return Container();
+    }
   }
 
   List<Widget> _buildList() {
@@ -232,7 +290,7 @@ class WerdDetailsState extends State<WerdDetails> {
     if(desc.length != 0){
       return Container(
         padding: const EdgeInsets.only(
-          bottom: 1, // Space between underline and text
+          bottom: 8, // Space between underline and text
         ),
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(
@@ -256,6 +314,7 @@ class WerdDetailsState extends State<WerdDetails> {
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     pageDetails.add(_desciptionWidget());
+    pageDetails.add(_buildMediaPlayer());
     pageDetails.addAll(_buildList());
     pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
     return pageDetails;
