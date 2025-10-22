@@ -48,8 +48,6 @@ class WerdDetailsState extends State<WerdDetails> {
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      // print("this is werd details page");
-      // print(this.index);
       fontSize = pref.getDouble('fontSize') ?? fontSize;
       textColor = pref.getInt('textColor') ?? textColor;
     });
@@ -78,13 +76,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -92,13 +90,13 @@ class WerdDetailsState extends State<WerdDetails> {
       adUnitId: _getNativeAdUnitId(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
-          print('$NativeAd loaded.');
+          // print('$NativeAd loaded.');
           setState(() {
             _isNativeAdReady = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
+          // print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -113,14 +111,14 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   void fetchData() async {
@@ -152,7 +150,7 @@ class WerdDetailsState extends State<WerdDetails> {
         } else {
           // Optionally, open the store listing if in-app review is not available
           _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad'); // Replace with your actual appStoreId if different
-          print('In-app review is not available on WerdDetailsScreen.');
+          // print('In-app review is not available on WerdDetailsScreen.');
         }
       }
     });
@@ -208,8 +206,6 @@ class WerdDetailsState extends State<WerdDetails> {
 
 
   Widget _buildMediaPlayer() {
-    print("media links from _buildMediaPlayer");
-    print(links);
     if (links.isNotEmpty) {
       if(links.first['source'] == 'sound_cloud'){
         return soundCloudPlayerWebView(links.first['link']);

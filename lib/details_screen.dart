@@ -55,15 +55,11 @@ class DetailsState extends State<Details> {
     var temp;
     var tempLinks;
     if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
-      print("path البردة");
       var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
       temp = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
       tempLinks = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['links'] as List)];
-      print(temp);
-      print(tempLinks);
     }else{
       if(widget.chapterIndex >= 0){
-        print("بقية القصائد");
         var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
         temp = [(content.where( (item) => item['id'] == widget.index).toList()[0]!["chapters"] as List)[widget.chapterIndex]['lines'].map((line){
           return line["body"];
@@ -72,7 +68,6 @@ class DetailsState extends State<Details> {
           return chapter["links"];
         }).toList();
       }else{
-        print("بقية الاوراد و الصلاوات و دلائل الخيرات");
         var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
         temp = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!["chapters"] as List).map((chapter){
           return chapter["lines"].map((line){
@@ -82,16 +77,11 @@ class DetailsState extends State<Details> {
         tempLinks = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!['chapters'] as List).map((chapter){
           return chapter["links"];
         }).toList();
-        print("links");
-        print(tempLinks);
       }
     }
     setState(() {
       temp.forEach((e) => lines.addAll(e));
-      print("tempLinks");
       tempLinks.forEach((e) => links.addAll(e));
-      print(lines);
-      print(tempLinks);
     });
   }
 
@@ -135,8 +125,6 @@ class DetailsState extends State<Details> {
 
 
   Widget _buildMediaPlayer() {
-    print("media links from _buildMediaPlayer");
-    print(links);
     if (links.isNotEmpty) {
       if(links.first['source'] == 'sound_cloud'){
         return soundCloudPlayerWebView(links.first['link']);
@@ -170,13 +158,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -203,13 +191,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
