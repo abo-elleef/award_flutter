@@ -42,6 +42,8 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
+  YoutubePlayerController? _youtubeController; // added youtube controller
+
 
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
@@ -126,8 +128,8 @@ class WerdDetailsState extends State<WerdDetails> {
         (item) => item['id'].toString() == index.toString()
     ).first;
     setState(() {
-      lines = json?["textPages"] as List;
-      links = json?["links"] as List;
+      lines = (json?["textPages"] as List?) ?? const [];
+      links = (json?["links"] as List?) ?? const [];
       desc = json['desc']!.toString();
     });
   }
@@ -161,6 +163,8 @@ class WerdDetailsState extends State<WerdDetails> {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose(); // Dispose ScrollController
+    _youtubeController?.dispose();
+
     super.dispose();
   }
 
@@ -176,21 +180,20 @@ class WerdDetailsState extends State<WerdDetails> {
     );
   }
 
-  Widget youtubePlayer(url) {
-    var videoId = url.split('/embed/').last;
-    print(videoId);
-    print("video id above");
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
+  Widget youtubePlayer(String url) {
+    final parsedId = YoutubePlayer.convertUrlToId(url)
+        ?? url.split('/embed/').last.split('?').first;
+    _youtubeController?.dispose();
+    _youtubeController = YoutubePlayerController(
+      initialVideoId: parsedId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
         mute: false,
-        controlsVisibleAtStart: true, // Added to show controls
+        controlsVisibleAtStart: true,
       ),
     );
-
     return YoutubePlayer(
-      controller: _controller,
+      controller: _youtubeController!,
       showVideoProgressIndicator: true,
       progressIndicatorColor: Colors.green,
       progressColors: const ProgressBarColors(

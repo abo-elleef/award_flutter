@@ -107,27 +107,26 @@ class DetailsState extends State<Details> {
     );
   }
 
-  Widget youtubePlayer(url) {
-    var videoId = url.split('/embed/').last;
-    print(videoId);
-    print("video id above");
-    YoutubePlayerController _controller = YoutubePlayerController(
-      initialVideoId: videoId,
-      flags: YoutubePlayerFlags(
-        autoPlay: false,
+  Widget youtubePlayer(String url) {
+    final parsedId = YoutubePlayer.convertUrlToId(url)
+        ?? url.split('/embed/').last.split('?').first;
+    // Recreate controller for a new video and dispose old one
+    _youtubeController?.dispose();
+    _youtubeController = YoutubePlayerController(
+      initialVideoId: parsedId,
+      flags: const YoutubePlayerFlags(
+        autoPlay: true,
         mute: false,
-        controlsVisibleAtStart: true, // Added to show controls
+        controlsVisibleAtStart: true,
       ),
     );
-
     return YoutubePlayer(
-      controller: _controller,
+      controller: _youtubeController!,
       showVideoProgressIndicator: true,
       progressIndicatorColor: Colors.green,
       progressColors: const ProgressBarColors(
-        playedColor: Colors.green,
-        handleColor: Colors.greenAccent,
-      ),
+        playedColor: Colors.green,        handleColor: Colors.greenAccent,
+      )
       // onReady: () {
       //   _controller.addListener(listener);
       // },
