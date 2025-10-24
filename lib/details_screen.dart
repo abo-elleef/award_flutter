@@ -9,7 +9,6 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'l10n/app_localizations.dart';
 
 class Details extends StatefulWidget {
@@ -37,7 +36,7 @@ class DetailsState extends State<Details> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
-  YoutubePlayerController? _youtubeController;
+  WebViewController? _webviewController;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
@@ -86,54 +85,19 @@ class DetailsState extends State<Details> {
   }
 
   Widget soundCloudPlayerWebView(url) {
-    final webviewController = WebViewController()
+    _webviewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse(url));
     return SizedBox(
-      height: 350,
+      height: 166,
       child: WebViewWidget(
-        controller: webviewController,
+        controller: _webviewController!,
       ),
     );
   }
-
-  Widget youtubePlayer(String url) {
-    final parsedId = YoutubePlayer.convertUrlToId(url)
-        ?? url.split('/embed/').last.split('?').first;
-    // Recreate controller for a new video and dispose old one
-    _youtubeController?.dispose();
-    _youtubeController = YoutubePlayerController(
-      initialVideoId: parsedId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
-        mute: false,
-        controlsVisibleAtStart: true,
-      ),
-    );
-    return YoutubePlayer(
-      controller: _youtubeController!,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.green,
-      progressColors: const ProgressBarColors(
-        playedColor: Colors.green,        handleColor: Colors.greenAccent,
-      )
-      // onReady: () {
-      //   _controller.addListener(listener);
-      // },
-    );
-  }
-
 
   Widget _buildMediaPlayer() {
-    if (links.isNotEmpty) {
-      if(links.first['source'] == 'sound_cloud'){
-        return soundCloudPlayerWebView(links.first['link']);
-      }else{
-        return youtubePlayer(links.first['link']);
-      }
-    } else {
-      return Container();
-    }
+    return links.isNotEmpty ? soundCloudPlayerWebView(links.first['link']) : Container();
   }
 
   void _loadBottomBannerAd() {
@@ -158,13 +122,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -191,13 +155,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -220,10 +184,10 @@ class DetailsState extends State<Details> {
 
   @override
   void dispose() {
+    print("showing up");
     _bottomBannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose();
-    _youtubeController?.dispose();
     super.dispose();
   }
 

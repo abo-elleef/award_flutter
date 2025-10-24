@@ -10,7 +10,6 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class WerdDetails extends StatefulWidget {
   final String title;
@@ -42,7 +41,6 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
-  YoutubePlayerController? _youtubeController; // added youtube controller
 
 
   void fetchUserPreferences () async {
@@ -76,13 +74,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -111,14 +109,14 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   void fetchData() async {
@@ -161,7 +159,6 @@ class WerdDetailsState extends State<WerdDetails> {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose(); // Dispose ScrollController
-    _youtubeController?.dispose();
 
     super.dispose();
   }
@@ -171,50 +168,16 @@ class WerdDetailsState extends State<WerdDetails> {
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..loadRequest(Uri.parse(url));
     return SizedBox(
-      height: 350,
+      height: 166,
       child: WebViewWidget(
         controller: webviewController,
       ),
     );
   }
 
-  Widget youtubePlayer(String url) {
-    final parsedId = YoutubePlayer.convertUrlToId(url)
-        ?? url.split('/embed/').last.split('?').first;
-    _youtubeController?.dispose();
-    _youtubeController = YoutubePlayerController(
-      initialVideoId: parsedId,
-      flags: const YoutubePlayerFlags(
-        autoPlay: true,
-        mute: false,
-        controlsVisibleAtStart: true,
-      ),
-    );
-    return YoutubePlayer(
-      controller: _youtubeController!,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: Colors.green,
-      progressColors: const ProgressBarColors(
-        playedColor: Colors.green,
-        handleColor: Colors.greenAccent,
-      ),
-      // onReady: () {
-      //   _controller.addListener(listener);
-      // },
-    );
-  }
-
 
   Widget _buildMediaPlayer() {
-    if (links.isNotEmpty) {
-      if(links.first['source'] == 'sound_cloud'){
-        return soundCloudPlayerWebView(links.first['link']);
-      }else{
-        return youtubePlayer(links.first['link']);
-      }
-    } else {
-      return Container();
-    }
+    return links.isNotEmpty ?  soundCloudPlayerWebView(links.first['link']) : Container();
   }
 
   List<Widget> _buildList() {
@@ -289,7 +252,7 @@ class WerdDetailsState extends State<WerdDetails> {
     if(desc.length != 0){
       return Container(
         padding: const EdgeInsets.only(
-          bottom: 8, // Space between underline and text
+          bottom: 8.0, // Space between underline and text
         ),
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(

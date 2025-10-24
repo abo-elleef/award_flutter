@@ -6686,8 +6686,8 @@ const PoemsOffline = [
         "links": [
           {
             "id": 18,
-            "link": "https://www.youtube.com/embed/sCk39GKACS0",
-            "source": "you_tube"
+            "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A442020975&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+            "source": "sound_cloud"
           }
         ]
       }
@@ -19735,7 +19735,7 @@ const PoemsOffline = [
     "desc_fr": "",
     "chapters": [
       {
-        "id": "150",
+        "id": 150,
         "name": "",
         "name_en": "",
         "name_fr": "",
@@ -19744,242 +19744,249 @@ const PoemsOffline = [
         "desc_fr": "",
         "lines": [
           {
-            "id": "4611",
+            "id": 4611,
             "body": [
               "لا إله إلا الله",
               "مُحمد رسول الله يقول أنا لها"
             ]
           },
           {
-            "id": "4612",
+            "id": 4612,
             "body": [
               "اذكر الهك وغير ربك ما تذكرش",
               "واخضع ليه ولغيره ما تخضعشِ"
             ]
           },
           {
-            "id": "4613",
+            "id": 4613,
             "body": [
               "إذا سألت اسأله وغير ربك تسألشِ",
               "وإن حد أساء ليك يا أخى"
             ]
           },
           {
-            "id": "4614",
+            "id": 4614,
             "body": [
               "اصفح ما تفضحشِ",
               "واسمع دعاء سيدنا النبي"
             ]
           },
           {
-            "id": "4615",
+            "id": 4615,
             "body": [
               "أعوذ بك ربي",
               "من قلبٍ ما يخشعشِ"
             ]
           },
           {
-            "id": "4616",
+            "id": 4616,
             "body": [
               "أعوذ بك ربي",
               "من عينٍ ما تدمعشِ"
             ]
           },
           {
-            "id": "4617",
+            "id": 4617,
             "body": [
               "أعوذ بك ربي",
               "من نفسٍ ما تشبعشِ"
             ]
           },
           {
-            "id": "4618",
+            "id": 4618,
             "body": [
               "أعوذ بك ربي",
               "من علمٍ من ينفعشِ"
             ]
           },
           {
-            "id": "4619",
+            "id": 4619,
             "body": [
               "أعوذ بك ربي",
               "من ذنبٍ ما يُغفرشِ"
             ]
           },
           {
-            "id": "4620",
+            "id": 4620,
             "body": [
               "إلا الصلاة علي سيدنا النبي",
               "اللي يصلي عليه يكسب ما يخسرشِ"
             ]
           },
           {
-            "id": "4621",
+            "id": 4621,
             "body": [
               "حسبي ربي جل الله",
               "ما في قلب غير الله"
             ]
           },
           {
-            "id": "4622",
+            "id": 4622,
             "body": [
               "نور محمد صلي الله",
               "نور محمد ماشاء الله"
             ]
           },
           {
-            "id": "4623",
+            "id": 4623,
             "body": [
               "قد جاء القرآن",
               "من بين ثنايا العدنان"
             ]
           },
           {
-            "id": "4624",
+            "id": 4624,
             "body": [
               "أن توحيد الرحمن",
               "في لا إله إلا الله"
             ]
           },
           {
-            "id": "4625",
+            "id": 4625,
             "body": [
               "ها قد جاء في الأصول",
               "من بين ثنايا الرسول"
             ]
           },
           {
-            "id": "4626",
+            "id": 4626,
             "body": [
               "أن مفتاح الوصول",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4627",
+            "id": 4627,
             "body": [
               "تكرارها ما أحلاه",
               "لا إله إلا الله"
             ]
           },
           {
-            "id": "4628",
+            "id": 4628,
             "body": [
               "ما أباه ما أعلاه",
               "لا إله إلا الله"
             ]
           },
           {
-            "id": "4629",
+            "id": 4629,
             "body": [
               "تدنى العبد من مولاه",
               "بـ لا إلا الله"
             ]
           },
           {
-            "id": "4630",
+            "id": 4630,
             "body": [
               "قد أتانا في الأخبار",
               "عن النبي المختار"
             ]
           },
           {
-            "id": "4631",
+            "id": 4631,
             "body": [
               "أن أفضل الأذكار",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4632",
+            "id": 4632,
             "body": [
               "ذاكرها لا يشقي",
               "لا إلا الله"
             ]
           },
           {
-            "id": "4633",
+            "id": 4633,
             "body": [
               "لا ينال فُرق هى العروة الوثقي",
               "بـ لا إله الله"
             ]
           },
           {
-            "id": "4634",
+            "id": 4634,
             "body": [
               "بها تمحو السيئات",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4635",
+            "id": 4635,
             "body": [
               "بها تنمو الحسنات",
               "بـ لا إله الله"
             ]
           },
           {
-            "id": "4636",
+            "id": 4636,
             "body": [
               "تنهل من جميع الخيرات",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4637",
+            "id": 4637,
             "body": [
               "هى شفاءٌ للصدور",
               "لا إله إلا الله"
             ]
           },
           {
-            "id": "4638",
+            "id": 4638,
             "body": [
               "هى نورٌ علي نور",
               "لا إله إلا الله"
             ]
           },
           {
-            "id": "4639",
+            "id": 4639,
             "body": [
               "ذكر ربك الغفور",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4640",
+            "id": 4640,
             "body": [
               "إنها النعمة العظمي",
               "لا إله إلا الله"
             ]
           },
           {
-            "id": "4641",
+            "id": 4641,
             "body": [
               "إنها المقام الأسمى",
               "لا إله الا الله"
             ]
           },
           {
-            "id": "4642",
+            "id": 4642,
             "body": [
               "ليس بها ألماً",
               "بـ لا إله إلا الله"
             ]
           },
           {
-            "id": "4643",
+            "id": 4643,
             "body": [
               "هى شفاء العلل",
               "لا إله الا الله"
             ]
           },
           {
-            "id": "4644",
+            "id": 4644,
             "body": [
               "فيها اصلاح الخلل",
               "بـ لا إله الا الله"
             ]
+          }
+        ],
+        "links": [
+          {
+            "id": 51,
+            "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A2196734191&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+            "source": "sound_cloud"
           }
         ]
       }
@@ -20136,8 +20143,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 86,
-        "link": "https://www.youtube.com/embed/qGpMJUMx97g",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A736336171&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+        "source": "sound_cloud"
       }
     ]
   },
@@ -20240,8 +20247,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 87,
-        "link": "https://www.youtube.com/embed/ceKHrGut5j0",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A1160621113&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+        "source": "sound_cloud"
       }
     ]
   },
@@ -20264,8 +20271,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 88,
-        "link": "https://www.youtube.com/embed/0dFIhdaZPys",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A155210630&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+        "source": "sound_cloud"
       }
     ]
   },
@@ -20358,13 +20365,7 @@ const AwradOffline = [
       "اللَّهُمَّ إنْ تَرحَمنيَ فأنتَ أهْلٌ ،و إنْ تُعَذِبَنيَ فأنَا أهلٌ فَارْحَمْنِي،  يَاأَهْلُ التَّقْوَى وَياأَهْلُ الْمَغْفِرَةِ وياأَرْحَمُ الرَّاحِمِينَ وياخَيْرُ النَّاصِرِينَ وياخَيْرُ الْغَافِرِينَ، حَسْبيَ اللهُ وَحْدَهُ بِرَحْمَتِكَ يا أَرْحَمَ الرَّاحِمِينَ",
       "وصَلَّىَ اللهُ عَلَى سَيِدْنَا مُّحَمَّدٍ و آلهِ و وَصَحبِهِ أجمعين وَسَلّمَ تسليما"
     ],
-    "links": [
-      {
-        "id": 89,
-        "link": "https://www.youtube.com/embed/ONXeu0AfSPM",
-        "source": "you_tube"
-      }
-    ]
+    "links": []
   },
   {
     "id": 12,
@@ -20399,8 +20400,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 84,
-        "link": "https://www.youtube.com/embed/-wzbMyzEV00",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A441952161&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+        "source": "sound_cloud"
       }
     ]
   },
@@ -20434,8 +20435,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 85,
-        "link": "https://www.youtube.com/embed/4GGjJlDCjWQ",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A451391751&color=%23a0b099&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true",
+        "source": "sound_cloud"
       }
     ]
   },
@@ -20688,13 +20689,7 @@ const AwradOffline = [
       " شَجَرَةِ الْأَصْلِ النُّورَانِيَّة، وَلَمْعَة الْقَبْضَةِ الرَّحْمَانِيَّةِ، وَأَفْضَلِ الْخَلِيقَةِ الْإِنْسَانِيَّةِ، وَأَشْرَفِ الصُّوَر الجِسْمانِيَّةِ، وَمَعْدِنِ الأَسْرَار الرَّبَّانِيَّةِ، وَخَزَائِنِ العُلومِ الاِصْطِفَائِيَّةِ، صَاحِبِ الْقَبْضَة الْأَصْلِيَّة، وَالْبَهْجَة السنية، والرتبة العَلِيَّةِ، مَنِ انْدَرَجَتِ النَّبِيُّوْنَ تَحْتَ لِوَائِهِ فَهُمْ مِنْهُ وَإِلَيْهِ",
       " وَصَلِّ وَسَلِّمْ وَبَارِكْ عَلَيْهِ وَعَلَى آلِهِ وَصَحْبِهِ عَدَدَ مَا خَلَقْتَ وَرَزَقْتَ وَأَمَتْ وَأَحْيَيْتَ إِلَى يَوْمَ تَبْعَثُ مَنْ أَفْنَيْتَ، وَسَلَّمْ تَسْلِيْمًا كَثِيْرًا وَالْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِيْنَ "
     ],
-    "links": [
-      {
-        "id": 90,
-        "link": "https://www.youtube.com/embed/2gOI_X4kE-0",
-        "source": "you_tube"
-      }
-    ]
+    "links": []
   },
   {
     "id": 21,
@@ -20784,8 +20779,8 @@ const AwradOffline = [
     "links": [
       {
         "id": 91,
-        "link": "https://www.youtube.com/embed/u5u8kvsrKzU",
-        "source": "you_tube"
+        "link": "https://w.soundcloud.com/player/?url=https%3A//api.soundcloud.com/tracks/soundcloud%253Atracks%253A1750689945&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true",
+        "source": "sound_cloud"
       }
     ]
   }
