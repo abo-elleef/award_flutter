@@ -36,10 +36,37 @@ class DetailsState extends State<Details> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
-  WebViewController? _webviewController;
+  WebViewController? _webViewController;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
+  }
+
+  void _initializeWebViewController(String url) {
+     _webViewController = WebViewController()
+       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+       ..loadRequest(Uri.parse(url));
+  }
+
+  void _initializeMediaControllers() {
+    if (links.isEmpty) return;
+    final firstLink = links.first;
+    final link = firstLink['link'] as String?;
+    _initializeWebViewController(link!);
+  }
+
+  Widget soundCloudPlayerWebView() {
+    if (_webViewController == null) return Container();
+    return SizedBox(
+      height: 300,
+      child: WebViewWidget(
+        controller: _webViewController!,
+      ),
+    );
+  }
+
+  Widget _buildMediaPlayer() {
+    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
   }
 
   void fetchUserPreferences () async {
@@ -81,23 +108,8 @@ class DetailsState extends State<Details> {
     setState(() {
       temp.forEach((e) => lines.addAll(e));
       tempLinks.forEach((e) => links.addAll(e));
+      _initializeMediaControllers();
     });
-  }
-
-  Widget soundCloudPlayerWebView(url) {
-    _webviewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(url));
-    return SizedBox(
-      height: 166,
-      child: WebViewWidget(
-        controller: _webviewController!,
-      ),
-    );
-  }
-
-  Widget _buildMediaPlayer() {
-    return links.isNotEmpty ? soundCloudPlayerWebView(links.first['link']) : Container();
   }
 
   void _loadBottomBannerAd() {
@@ -122,13 +134,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -155,13 +167,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696111'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696111'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -184,10 +196,11 @@ class DetailsState extends State<Details> {
 
   @override
   void dispose() {
-    print("showing up");
     _bottomBannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose();
+    _webViewController?.loadRequest(Uri.parse('about:blank'));
+    _webViewController = null;
     super.dispose();
   }
 

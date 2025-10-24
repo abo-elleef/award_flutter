@@ -41,6 +41,37 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
+  WebViewController? _webViewController;
+
+
+  // media methods
+  void _initializeWebViewController(String url) {
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
+  }
+
+  void _initializeMediaControllers() {
+    if (links.isEmpty) return;
+    final firstLink = links.first;
+    final link = firstLink['link'] as String?;
+    _initializeWebViewController(link!);
+  }
+
+  Widget soundCloudPlayerWebView() {
+    if (_webViewController == null) return Container();
+    return SizedBox(
+      height: 300,
+      child: WebViewWidget(
+        controller: _webViewController!,
+      ),
+    );
+  }
+
+  Widget _buildMediaPlayer() {
+    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
+  }
+  // end of media methods
 
 
   void fetchUserPreferences () async {
@@ -74,13 +105,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -88,13 +119,11 @@ class WerdDetailsState extends State<WerdDetails> {
       adUnitId: _getNativeAdUnitId(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
-          // print('$NativeAd loaded.');
           setState(() {
             _isNativeAdReady = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          // print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -109,14 +138,14 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   void fetchData() async {
@@ -127,6 +156,7 @@ class WerdDetailsState extends State<WerdDetails> {
       lines = (json?["textPages"] as List?) ?? const [];
       links = (json?["links"] as List?) ?? const [];
       desc = json['desc']!.toString();
+      _initializeMediaControllers();
     });
   }
 
@@ -148,7 +178,7 @@ class WerdDetailsState extends State<WerdDetails> {
         } else {
           // Optionally, open the store listing if in-app review is not available
           _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad'); // Replace with your actual appStoreId if different
-          // print('In-app review is not available on WerdDetailsScreen.');
+
         }
       }
     });
@@ -159,25 +189,9 @@ class WerdDetailsState extends State<WerdDetails> {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose(); // Dispose ScrollController
-
+    _webViewController?.loadRequest(Uri.parse('about:blank'));
+    _webViewController = null;
     super.dispose();
-  }
-
-  Widget soundCloudPlayerWebView(url) {
-    final webviewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..loadRequest(Uri.parse(url));
-    return SizedBox(
-      height: 166,
-      child: WebViewWidget(
-        controller: webviewController,
-      ),
-    );
-  }
-
-
-  Widget _buildMediaPlayer() {
-    return links.isNotEmpty ?  soundCloudPlayerWebView(links.first['link']) : Container();
   }
 
   List<Widget> _buildList() {
