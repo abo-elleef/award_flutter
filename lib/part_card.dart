@@ -28,19 +28,19 @@ class PartCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  "("+(index+ 1).toString() + ")" ,
-                  style: TextStyle(
-                    fontSize: fontSize/1.5,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff666666)
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                // Container(
-                //   margin: EdgeInsets.only(top: 10, bottom: 10, left: 16.0, right: 0.0),
-                //   child: Image.asset("assets/book.png", width: this.fontSize - 4),
+                // Text(
+                //   "("+(index+ 1).toString() + ")" ,
+                //   style: TextStyle(
+                //     fontSize: fontSize/1.5,
+                //     fontWeight: FontWeight.bold,
+                //     color: Color(0xff666666)
+                //   ),
                 // ),
+                SizedBox(width: 8.0),
+                Container(
+                  margin: EdgeInsets.only(top: 20, bottom: 0, left: 16.0, right: 0.0),
+                  child: Image.asset("assets/book.png", width: 20),
+                ),
                 Expanded(
                   child: Text(
                     title,

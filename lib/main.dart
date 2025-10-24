@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
 import './details_screen.dart';
 import './list_screen.dart';
-import './part_card.dart';
+import './home_grid_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Locale _locale = const Locale('ar');
-  double fontSize = 24;
+  double _fontSize = 24;
 
   @override
   void initState() {
@@ -51,6 +51,7 @@ class _MyAppState extends State<MyApp> {
       if (!mounted) return;
       setState(() {
         _locale = Locale(languageCode);
+        _fontSize = fontSize ?? 24;
       });
     }
   }
@@ -149,8 +150,11 @@ class _MyHomePageState extends State<MyHomePage> {
           final store = entry.value;
           final lang = AppLocalizations.of(context)!.localeName.split('_').first;
           final key = 'name_$lang';
-          final localized = (store[key] as String?)?.trim();
-          final displayTitle = (localized != null && localized.isNotEmpty) ? localized : (store['name'] as String?)?.trim() ?? '';
+          final descKey = 'desc_$lang';
+          final localizedDesc = (store[descKey] as String?)?.trim() ?? '';
+          final localizedTitle = (store[key] as String?)?.trim() ?? '';
+          final displayTitle = (localizedTitle != null && localizedTitle.isNotEmpty) ? localizedTitle : (store['name'] as String?)?.trim() ?? '';
+          final displayDesc = (localizedDesc != null && localizedDesc.isNotEmpty) ? localizedDesc : (store['desc'] as String?)?.trim() ?? '';
           return GestureDetector(
               onTap: () {
                 analytics.logScreenView(displayTitle); // Log the screen view event
@@ -159,8 +163,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   MaterialPageRoute(builder: (context) => ListPage(store["key"].toString(), displayTitle, entry.key)),
                 );
               },
-              //  as String
-              child: PartCard(title: displayTitle, index: entry.key, listSize: offlineStore.length, fontSize: fontSize)
+              // image: store['image'],
+              child: HomeGridCard(title: displayTitle, desc: displayDesc, image: store['image'].toString())
           );
         })
     );
@@ -201,18 +205,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                     ),
-                  PopupMenuButton<String>(
-                    onSelected: (String newValue) {
-                      if (newValue != AppLocalizations.of(context)!.localeName) {
-                        MyApp.of(context)?.setLocale(Locale(newValue));
-                      }
-                    },
-                    itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                      buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
-                      buildPopupMenuItem('en', '🇺🇸', 'English'),
-                      buildPopupMenuItem('fr', '🇫🇷', 'Français'),
-                    ],
-                  ),
+                    PopupMenuButton<String>(
+                      icon: const Icon(Icons.language_outlined), // -> Specify the Icon
+                      onSelected: (String newValue) {
+                        if (newValue != AppLocalizations.of(context)!.localeName) {
+                          MyApp.of(context)?.setLocale(Locale(newValue));
+                        }
+                      },
+                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                        buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
+                        buildPopupMenuItem('en', '🇺🇸', 'English'),
+                        buildPopupMenuItem('fr', '🇫🇷', 'Français'),
+                      ],
+                    ),
                   ]
             ),
             body: DecoratedBox(
@@ -221,19 +226,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 image: DecorationImage(
                     image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
                         ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Expanded(
-                        child: SingleChildScrollView(
-                            child: Column(
-                              children: buildPageDetails()
-                            )
-                        )
-                    ),
-                  ],
-                ),
+              child: GridView.count(
+                padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+                crossAxisCount: 2,
+                children: buildPageDetails(),
               ),
             )
         )
