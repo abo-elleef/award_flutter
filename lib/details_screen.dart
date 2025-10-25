@@ -8,6 +8,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_review/in_app_review.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'l10n/app_localizations.dart';
 
 class Details extends StatefulWidget {
@@ -15,24 +16,18 @@ class Details extends StatefulWidget {
   final String department;
   final int chapterIndex;
   final int index;
-  late double fontSize;
-  late int textColor;
-  Details(this.name, this.index, this.department, this.chapterIndex);
+  const Details(this.name, this.index, this.department, this.chapterIndex, {Key? key}) : super(key: key);
   @override
   State<StatefulWidget> createState() {
-    return DetailsState(name, index, department, chapterIndex);
+    return DetailsState();
   }
 }
 
 class DetailsState extends State<Details> {
-  String name;
-  int index;
-  int chapterIndex = -1;
-  String department;
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-  DetailsState(this.name, this.index, this.department, this.chapterIndex);
   List lines = [];
+  List links = [];
 
   BannerAd? _bottomBannerAd;
   bool _isBottomBannerAdReady = false;
@@ -41,9 +36,37 @@ class DetailsState extends State<Details> {
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
+  WebViewController? _webViewController;
 
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
+  }
+
+  void _initializeWebViewController(String url) {
+     _webViewController = WebViewController()
+       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+       ..loadRequest(Uri.parse(url));
+  }
+
+  void _initializeMediaControllers() {
+    if (links.isEmpty) return;
+    final firstLink = links.first;
+    final link = firstLink['link'] as String?;
+    _initializeWebViewController(link!);
+  }
+
+  Widget soundCloudPlayerWebView() {
+    if (_webViewController == null) return Container();
+    return SizedBox(
+      height: 300,
+      child: WebViewWidget(
+        controller: _webViewController!,
+      ),
+    );
+  }
+
+  Widget _buildMediaPlayer() {
+    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
   }
 
   void fetchUserPreferences () async {
@@ -55,27 +78,37 @@ class DetailsState extends State<Details> {
   }
 
   void fetchData() async {
-    var temp ;
-    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
-      var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
-      temp = [(content.where( (item) => item['id'].toString() == index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
+    var temp;
+    var tempLinks;
+    if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
+      var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
+      temp = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
+      tempLinks = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['links'] as List)];
     }else{
-      if(chapterIndex >= 0){
-        var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
-        temp = [(content.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List)[chapterIndex]['lines'].map((line){
+      if(widget.chapterIndex >= 0){
+        var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
+        temp = [(content.where( (item) => item['id'] == widget.index).toList()[0]!["chapters"] as List)[widget.chapterIndex]['lines'].map((line){
           return line["body"];
         })];
+        tempLinks = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!['chapters'] as List).map((chapter){
+          return chapter["links"];
+        }).toList();
       }else{
-        var content = offlineStore.where( (item) => item['key'] == this.department).toList()[0]['content']! as List;
-        temp = (content.where( (item) => item['id'] == index).toList()[0]!["chapters"] as List).map((chapter){
+        var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
+        temp = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!["chapters"] as List).map((chapter){
           return chapter["lines"].map((line){
             return line["body"];
           });
         });
+        tempLinks = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!['chapters'] as List).map((chapter){
+          return chapter["links"];
+        }).toList();
       }
     }
     setState(() {
       temp.forEach((e) => lines.addAll(e));
+      tempLinks.forEach((e) => links.addAll(e));
+      _initializeMediaControllers();
     });
   }
 
@@ -116,14 +149,12 @@ class DetailsState extends State<Details> {
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
           if (!mounted) return;
-          print('$NativeAd loaded.');
           setState(() {
             _nativeAd = ad as NativeAd;
             _isNativeAdReady = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -136,12 +167,12 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-3940256099942544/2247696111'; // Test
       return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-3940256099942544/2247696111'; // Test
     return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
@@ -158,7 +189,6 @@ class DetailsState extends State<Details> {
           _inAppReview.requestReview();
         } else {
           _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
-          print('In-app review is not available.');
         }
       }
     });
@@ -169,6 +199,8 @@ class DetailsState extends State<Details> {
     _bottomBannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose();
+    _webViewController?.loadRequest(Uri.parse('about:blank'));
+    _webViewController = null;
     super.dispose();
   }
 
@@ -288,7 +320,7 @@ class DetailsState extends State<Details> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
-                          (entry.key + 1).toString() +" / "+ lines.length.toString(),
+                          '${entry.key + 1} / ${lines.length}',
                       )
                     ]
                 )
@@ -296,30 +328,6 @@ class DetailsState extends State<Details> {
             )
             );
     }).toList();
-  }
-
-  Widget _desciptionWidget(){
-    if(AwradOffline[index]!["desc"] != null){
-      return Container(
-        padding: const EdgeInsets.only(
-          bottom: 1,
-        ),
-        decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(
-              color: Colors.grey,
-              width: 1.0,
-            ))
-        ),
-        child: Text(
-          AwradOffline[index]!["desc"].toString(),
-          style: const TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      );
-    }else{
-      return Container();
-    }
   }
 
   Widget _buildBottomBannerAdWidget(){
@@ -331,7 +339,7 @@ class DetailsState extends State<Details> {
         child: AdWidget(ad: _bottomBannerAd!),
       );
     }else{
-      return SizedBox.shrink(); // Use SizedBox.shrink() for consistency
+      return const SizedBox.shrink(); // Use SizedBox.shrink() for consistency
     }
   }
 
@@ -343,21 +351,22 @@ class DetailsState extends State<Details> {
         child: AdWidget(ad: _nativeAd!),
       );
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 
   List<Widget> buildPageDetails() {
     List<Widget> finalPageDetails = [];
-
-    if (["بردة المديح للامام البوصيري"].contains(this.department)) {
+    finalPageDetails.add(SizedBox(height: 8.0));
+    finalPageDetails.add(_buildMediaPlayer());
+    if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
       finalPageDetails.addAll(_bulidPrefixList());
     }
     List<Widget> contentItems = _buildList();
     finalPageDetails.addAll(contentItems); // Add the content item
-    
+
     // Add Native Ad at the end, after all content items
-    finalPageDetails.add(_buildNativeAdWidget()); 
-    
+    finalPageDetails.add(_buildNativeAdWidget());
+
     return finalPageDetails;
   }
 
@@ -367,9 +376,9 @@ class DetailsState extends State<Details> {
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-            title: Text(name),
+            title: Text(widget.name),
             backgroundColor: Colors.green,
-            titleTextStyle: TextStyle(color: Colors.white)
+            titleTextStyle: const TextStyle(color: Colors.white)
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,

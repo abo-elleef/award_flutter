@@ -9,6 +9,7 @@ import 'package:in_app_review/in_app_review.dart'; // Added import
 import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class WerdDetails extends StatefulWidget {
   final String title;
@@ -33,18 +34,49 @@ class WerdDetailsState extends State<WerdDetails> {
   late String desc = "";
   WerdDetailsState(this.title, this.index, this.storeKey);
   List lines = [];
+  List links = [];
   BannerAd? _bannerAd;
   bool _isBannerAdReady = false;
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
+  WebViewController? _webViewController;
+
+
+  // media methods
+  void _initializeWebViewController(String url) {
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
+  }
+
+  void _initializeMediaControllers() {
+    if (links.isEmpty) return;
+    final firstLink = links.first;
+    final link = firstLink['link'] as String?;
+    _initializeWebViewController(link!);
+  }
+
+  Widget soundCloudPlayerWebView() {
+    if (_webViewController == null) return Container();
+    return SizedBox(
+      height: 300,
+      child: WebViewWidget(
+        controller: _webViewController!,
+      ),
+    );
+  }
+
+  Widget _buildMediaPlayer() {
+    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
+  }
+  // end of media methods
+
 
   void fetchUserPreferences () async {
     SharedPreferences pref = await SharedPreferences.getInstance();
     setState(() {
-      // print("this is werd details page");
-      // print(this.index);
       fontSize = pref.getDouble('fontSize') ?? fontSize;
       textColor = pref.getInt('textColor') ?? textColor;
     });
@@ -87,13 +119,11 @@ class WerdDetailsState extends State<WerdDetails> {
       adUnitId: _getNativeAdUnitId(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
-          print('$NativeAd loaded.');
           setState(() {
             _isNativeAdReady = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$NativeAd failedToLoad: $error');
           ad.dispose();
         },
       ),
@@ -123,8 +153,10 @@ class WerdDetailsState extends State<WerdDetails> {
         (item) => item['id'].toString() == index.toString()
     ).first;
     setState(() {
-      lines = json?["textPages"] as List;
+      lines = (json?["textPages"] as List?) ?? const [];
+      links = (json?["links"] as List?) ?? const [];
       desc = json['desc']!.toString();
+      _initializeMediaControllers();
     });
   }
 
@@ -146,7 +178,7 @@ class WerdDetailsState extends State<WerdDetails> {
         } else {
           // Optionally, open the store listing if in-app review is not available
           _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad'); // Replace with your actual appStoreId if different
-          print('In-app review is not available on WerdDetailsScreen.');
+
         }
       }
     });
@@ -157,6 +189,8 @@ class WerdDetailsState extends State<WerdDetails> {
     _bannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose(); // Dispose ScrollController
+    _webViewController?.loadRequest(Uri.parse('about:blank'));
+    _webViewController = null;
     super.dispose();
   }
 
@@ -232,7 +266,7 @@ class WerdDetailsState extends State<WerdDetails> {
     if(desc.length != 0){
       return Container(
         padding: const EdgeInsets.only(
-          bottom: 1, // Space between underline and text
+          bottom: 8.0, // Space between underline and text
         ),
         decoration: const BoxDecoration(
             border: Border(bottom: BorderSide(
@@ -256,6 +290,7 @@ class WerdDetailsState extends State<WerdDetails> {
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
     pageDetails.add(_desciptionWidget());
+    pageDetails.add(_buildMediaPlayer());
     pageDetails.addAll(_buildList());
     pageDetails.add(_buildNativeAdWidget()); // Add Native Ad at the end
     return pageDetails;
