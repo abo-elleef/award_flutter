@@ -21489,7 +21489,7 @@ const offlineStore = [
   },
   {
     "key": "بردة المديح للامام البوصيري",
-    "name_ar": "بردة المديح المباركة",
+    "name_ar": "البردة الشريفة",
     "name_en": "Qasīdat al-Burda",
     "name_fr": "QASIDA AL BURDA",
     "desc_ar": "للامام محمد البوصيري",
