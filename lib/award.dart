@@ -20703,7 +20703,7 @@ const AwradOffline = [
       "﷽",
       "  اللَّهُمَّ صَلَّ عَلَى سَيِّدِنَا مُحَمَّدٍ الْفَاتِحَ لِمَا أُغْلِقَ، وَالْخَاتِمِ لِمَا سَبَقَ، نَاصِرِ الْحَقِّ بِالْحَقِّ، الهَادِي إِلَى صِرَاطِكَ الْمُسْتَقِيمٍ، وَعَلَى آلِهِ حَقَّ قَدْرِهِ وَمِقْدَارِهِ الْعَظِيمِ",
       "  اللَّهُمَّ صَلِّ عَلَى خَاتِم أَنْبِيَائِكَ، وَسَيْدِ رُسُلِكَ، وَإِمَام أَهْلِ حَقِيقَةِ تَوْحِيدِكَ، وَصَفْوَتِكَ مِنْ خَلْقِكَ سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِهِ وَأَصْحَابِهِ وَسَلَّمْ تَسْلِيمًا",
-      "الصَّلَاةُ وَالسَّلَامُ عَلَيْكَ يَا سَيْدِي يَا رَسُولَ اللهِ، ضَاقَتْ وَقَلَّتْ حِيَلِي وَوَسِيلَتِي أَدْرِكْنِي. (١١٦ مرة)",
+      "الصَّلَاةُ وَالسَّلَامُ عَلَيْكَ يَا سَيْدِي يَا رَسُولَ اللهِ، ضَاقَتْ وَقَلَّتْ حِيَلِي، أنت وَسِيلَتِي أَدْرِكْنِي.\r\n(١١٦ مرة)",
       "  اللَّهُمَّ هَبْنِي مِنَ الْعِلْمِ اللَّدُنِّي وَالْمَشْرَبِ الصَّافِي وَالْهَنِِيّ ، يَا وَهَّابُ يَا غَنِي"
     ],
     "links": []
@@ -21478,16 +21478,24 @@ const SalatsOffline = [
 const offlineStore = [
   {
     "key": "الأوراد",
-    "name_ar": "الأوراد",
-    "name_en": "Wirds",
-    "name_fr": "Wirds",
+    "name_ar": "أوراد البرهامية",
+    "name_en": "Borhamya Wirds",
+    "name_fr": "Borhamya Wirds",
+    "desc_ar": "مجموعة اذكار الطريقة البرهامية",
+    "desc_en": "Set of Zikr Borhamya",
+    "desc_fr": "Ensemble de Zikr Borhamya",
+    "image": "assets/sidi_akeel.png",
     "content": AwradOffline
   },
   {
     "key": "بردة المديح للامام البوصيري",
-    "name_ar": "بردة المديح للامام البوصيري",
+    "name_ar": "بردة المديح المباركة",
     "name_en": "Qasīdat al-Burda",
     "name_fr": "QASIDA AL BURDA",
+    "desc_ar": "للامام محمد البوصيري",
+    "desc_en": "By Imam Muhammed Elbosery",
+    "desc_fr": "Par l'imam Mohammed Elbosery",
+    "image": "assets/elborda.png",
     "content": Elburda
 
   },
@@ -21496,6 +21504,10 @@ const offlineStore = [
     "name_ar": "دلائل الخيرات",
     "name_en": "Dalael El khyrat",
     "name_fr": "Dalaïl Al Khayrat",
+    "desc_ar": "كتاب دلائل الخيرات و شوارق الانوار",
+    "desc_en": "The Book of Evidence of Goodness and the Rising Lights",
+    "desc_fr": "Le livre des preuves de la bonté et des lumières naissantes",
+    "image": "assets/green_mosque.png",
     "content": DalaelsOffline
   },
   {
@@ -21503,13 +21515,21 @@ const offlineStore = [
     "name_ar": "صلاوات النبي",
     "name_en": "Prayers on the prophet Muhammed",
     "name_fr": "Prières sur le prophète Mahomet",
+    "desc_ar": "مجموعة صلاوات الأولياء علي النبي",
+    "desc_en": "Collection of prayers of the saints upon the Prophet",
+    "desc_fr": "Recueil de prières des saints sur le Prophète",
+    "image": "assets/prayer.png",
     "content": SalatsOffline
   },
   {
     "key": "المديح",
-    "name_ar": "المديح",
+    "name_ar": "قصائد المديح",
     "name_en": "Praise of the Chosen One",
     "name_fr": "Louange à l'Élu",
+    "desc_ar": "مجموعة قصائد مدح في النبي وآله",
+    "desc_en": "A collection of poems praising the Prophet and his family",
+    "desc_fr": "Un recueil de poèmes louant le Prophète et sa famille",
+    "image": "assets/madeeh.png",
     "content": PoemsOffline
   }
 ];

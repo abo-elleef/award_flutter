@@ -131,35 +131,8 @@ class ListPageState extends State<ListPage> {
     }).toList();
   }
 
-  Widget _desciptionWidget(){
-    if(AwradOffline[index]!["desc"] != null){
-      return Container(
-        padding: const EdgeInsets.only(
-          bottom: 1, // Space between underline and text
-        ),
-        decoration: const BoxDecoration(
-            border: Border(bottom: BorderSide(
-              color: Colors.grey,
-              width: 1.0, // Underline thickness
-            ))
-        ),
-        child: Text(
-          AwradOffline[index]!["desc"].toString(),
-          style: const TextStyle(
-            fontSize: 16,
-          ),
-        ),
-      );
-    }else{
-      return Container();
-    }
-
-
-  }
-
   List<Widget> buildPageDetails() {
     List<Widget> pageDetails = [];
-    // pageDetails.add(_desciptionWidget());
     pageDetails.addAll(_buildList());
     return pageDetails;
   }

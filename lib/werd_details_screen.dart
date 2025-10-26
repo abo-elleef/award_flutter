@@ -241,7 +241,7 @@ class WerdDetailsState extends State<WerdDetails> {
   Widget _add_banner_ads(){
     if (_isBannerAdReady) {
       return Container(
-        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+        margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 0),
         width: _bannerAd!.size.width.toDouble(),
         height: _bannerAd!.size.height.toDouble(),
         child: AdWidget(ad: _bannerAd!),
