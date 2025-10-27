@@ -9,6 +9,7 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'l10n/app_localizations.dart';
 
 class Details extends StatefulWidget {
@@ -34,6 +35,7 @@ class DetailsState extends State<Details> {
 
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
+  bool _hasInternet = false; // Track internet connectivity
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
   WebViewController? _webViewController;
@@ -66,7 +68,40 @@ class DetailsState extends State<Details> {
   }
 
   Widget _buildMediaPlayer() {
-    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
+    return (links.isNotEmpty && _hasInternet) ? soundCloudPlayerWebView() : Container();
+  }
+
+  Future<void> _checkInternetConnectivity() async {
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      bool hasConnection = connectivityResult.contains(ConnectivityResult.mobile) ||
+          connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet);
+
+      if (hasConnection) {
+        // Try to make a simple HTTP request to verify actual internet access
+        final response = await http.get(
+          Uri.parse('https://www.google.com'),
+        ).timeout(const Duration(seconds: 5));
+        if (mounted) {
+          setState(() {
+            _hasInternet = response.statusCode == 200;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _hasInternet = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _hasInternet = false;
+        });
+      }
+    }
   }
 
   void fetchUserPreferences () async {
@@ -134,13 +169,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -167,19 +202,20 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696111'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696111'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696111'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696111'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
   void initState() {
     super.initState();
     fetchUserPreferences();
+    _checkInternetConnectivity(); // Check internet connectivity
     fetchData();
     _loadBottomBannerAd();
     _loadNativeAd();

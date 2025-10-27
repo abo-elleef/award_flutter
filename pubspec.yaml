@@ -44,6 +44,9 @@ dependencies:
     sdk: flutter
   intl: any
   webview_flutter: ^4.8.0
+  connectivity_plus: ^6.0.3
+
+
 
 dev_dependencies:
   flutter_test:
