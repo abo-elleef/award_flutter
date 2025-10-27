@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -9,6 +6,7 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:in_app_review/in_app_review.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'l10n/app_localizations.dart';
 
 class Details extends StatefulWidget {
@@ -34,6 +32,7 @@ class DetailsState extends State<Details> {
 
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
+  bool _hasInternet = false; // Track internet connectivity
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
   WebViewController? _webViewController;
@@ -66,7 +65,40 @@ class DetailsState extends State<Details> {
   }
 
   Widget _buildMediaPlayer() {
-    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
+    return (links.isNotEmpty && _hasInternet) ? soundCloudPlayerWebView() : Container();
+  }
+
+  Future<void> _checkInternetConnectivity() async {
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      bool hasConnection = connectivityResult.contains(ConnectivityResult.mobile) || 
+                           connectivityResult.contains(ConnectivityResult.wifi) ||
+                           connectivityResult.contains(ConnectivityResult.ethernet);
+      
+      if (hasConnection) {
+        // Try to make a simple HTTP request to verify actual internet access
+        final response = await http.get(
+          Uri.parse('https://www.google.com'),
+        ).timeout(const Duration(seconds: 5));
+        if (mounted) {
+          setState(() {
+            _hasInternet = response.statusCode == 200;
+          });
+        }
+      } else {
+        if (mounted) {
+          setState(() {
+            _hasInternet = false;
+          });
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _hasInternet = false;
+        });
+      }
+    }
   }
 
   void fetchUserPreferences () async {
@@ -180,6 +212,7 @@ class DetailsState extends State<Details> {
   void initState() {
     super.initState();
     fetchUserPreferences();
+    _checkInternetConnectivity(); // Check internet connectivity
     fetchData();
     _loadBottomBannerAd();
     _loadNativeAd();

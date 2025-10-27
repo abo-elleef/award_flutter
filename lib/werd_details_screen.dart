@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import 'package:http/http.dart' as http;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -10,6 +7,7 @@ import 'award.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class WerdDetails extends StatefulWidget {
   final String title;
@@ -39,6 +37,7 @@ class WerdDetailsState extends State<WerdDetails> {
   bool _isBannerAdReady = false;
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
+  bool _hasInternet = false; // Track internet connectivity
   final ScrollController _scrollController = ScrollController(); // Added ScrollController
   final InAppReview _inAppReview = InAppReview.instance; // Added InAppReview instance
   WebViewController? _webViewController;
@@ -69,7 +68,7 @@ class WerdDetailsState extends State<WerdDetails> {
   }
 
   Widget _buildMediaPlayer() {
-    return links.isNotEmpty ? soundCloudPlayerWebView() : Container();
+    return (links.isNotEmpty && _hasInternet) ? soundCloudPlayerWebView() : Container();
   }
   // end of media methods
 
@@ -80,6 +79,33 @@ class WerdDetailsState extends State<WerdDetails> {
       fontSize = pref.getDouble('fontSize') ?? fontSize;
       textColor = pref.getInt('textColor') ?? textColor;
     });
+  }
+
+  Future<void> _checkInternetConnectivity() async {
+    try {
+      final connectivityResult = await Connectivity().checkConnectivity();
+      bool hasConnection = connectivityResult.contains(ConnectivityResult.mobile) || 
+                           connectivityResult.contains(ConnectivityResult.wifi) ||
+                           connectivityResult.contains(ConnectivityResult.ethernet);
+      
+      if (hasConnection) {
+        // Try to make a simple HTTP request to verify actual internet access
+        final response = await http.get(
+          Uri.parse('https://www.google.com'),
+        ).timeout(const Duration(seconds: 5));
+        setState(() {
+          _hasInternet = response.statusCode == 200;
+        });
+      } else {
+        setState(() {
+          _hasInternet = false;
+        });
+      }
+    } catch (e) {
+      setState(() {
+        _hasInternet = false;
+      });
+    }
   }
 
   void _loadBannerAd() {
@@ -105,13 +131,13 @@ class WerdDetailsState extends State<WerdDetails> {
   String _getBannerAdUnitId() {
     // Replace these with your actual ad unit IDs
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/3185523871'; //  Elburda
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/3185523871'; //  Elburda
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/3185523871'; // Elburda
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/3185523871'; // Elburda
   }
 
   void _loadNativeAd() {
@@ -138,14 +164,14 @@ class WerdDetailsState extends State<WerdDetails> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
 
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
 
   }
 
@@ -166,6 +192,7 @@ class WerdDetailsState extends State<WerdDetails> {
     super.initState();
     Future.delayed(Duration.zero, () {
       fetchUserPreferences();
+      _checkInternetConnectivity(); // Check internet connectivity
       _loadBannerAd();
       _loadNativeAd();
       fetchData();
