@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
 import './details_screen.dart';
-import './werd_details_screen.dart';
 import 'package:http/http.dart' as http;
 import 'award.dart';
 import './part_card.dart';
@@ -90,19 +89,29 @@ class ListPageState extends State<ListPage> {
                     child: Container(
                         child: GestureDetector(
                             onTap: () {
+                              // TODO: make sure all ids are numbers not string
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) {
                                     if (["الأوراد", "دلائل الخيرات", "صلاوات النبي"].contains(storeKey)) {
-                                      return WerdDetails(title, int.parse(entry.value['id'].toString()), storeKey as String);
+                                      // باقي الاثسام
+                                      print("path 1");
+                                      return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
+                                      // return WerdDetails(title, int.parse(entry.value['id'].toString()), storeKey as String);
                                     } else {
                                       if (["بردة المديح للامام البوصيري"].contains(storeKey)) {
+                                        // البردة
+                                        print("path 2");
                                         return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
                                       } else {
                                         if (entry.value['chapters'].length > 1) {
+                                          // قصيدة مدح من اكتر فصل واحد
+                                          print("path 3");
                                           return ChapterView(entry.value, storeKey);
                                         } else {
-                                          return Details(title, int.parse(entry.value['id'].toString()), storeKey, -1);
+                                          // قصيدة مدح من فصل واحد
+                                          print("path 4");
+                                          return Details(title, int.parse(entry.value['id'].toString()), storeKey, 0);
                                         }
                                       }
                                     }
