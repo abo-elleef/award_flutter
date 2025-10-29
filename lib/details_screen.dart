@@ -116,11 +116,13 @@ class DetailsState extends State<Details> {
     var temp;
     var tempLinks;
     if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
+      print("details path 1");
       var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
       temp = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['lines'] as List).map((line){return line["body"];})];
       tempLinks = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['links'] as List)];
     }else{
       if(widget.chapterIndex >= 0){
+        print("details path 2");
         var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
         temp = [(content.where( (item) => item['id'] == widget.index).toList()[0]!["chapters"] as List)[widget.chapterIndex]['lines'].map((line){
           return line["body"];
@@ -129,20 +131,19 @@ class DetailsState extends State<Details> {
           return chapter["links"];
         }).toList();
       }else{
+        print("details path 3");
         var content = offlineStore.where( (item) => item['key'] == widget.department).toList()[0]['content']! as List;
-        temp = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!["chapters"] as List).map((chapter){
-          return chapter["lines"].map((line){
-            return line["body"];
-          });
-        });
-        tempLinks = (content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]!['chapters'] as List).map((chapter){
-          return chapter["links"];
-        }).toList();
+        print(content);
+        temp = [(content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['lines'] as List).map((line){return [line];})];
+        tempLinks = [((content.where( (item) => item['id'].toString() == widget.index.toString()).toList()[0]['links'] ?? []) as List)];
       }
     }
     setState(() {
       temp.forEach((e) => lines.addAll(e));
-      tempLinks.forEach((e) => links.addAll(e));
+      if (!tempLinks.isEmpty){
+        tempLinks.forEach((e) => links.addAll(e));
+      }
+
       _initializeMediaControllers();
     });
   }
@@ -183,6 +184,7 @@ class DetailsState extends State<Details> {
       adUnitId: _getNativeAdUnitId(),
       listener: NativeAdListener(
         onAdLoaded: (Ad ad) {
+          print("loading native successfully ");
           if (!mounted) return;
           setState(() {
             _nativeAd = ad as NativeAd;
@@ -190,6 +192,8 @@ class DetailsState extends State<Details> {
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
+          print("loading native failed ");
+          print(error);
           ad.dispose();
         },
       ),
@@ -202,12 +206,12 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696111'; // Test
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
       // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696111'; // Test
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
     // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
@@ -312,58 +316,83 @@ class DetailsState extends State<Details> {
               borderRadius: BorderRadius.all(Radius.circular(15))),
           padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
           margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
-          child: Column(
-              children: <Widget>[
-                Row(
-                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-                  children: <Widget>[
-                    Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 10),
-                          child: Text(
-                            entry.value[0],
-                            softWrap: true,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              fontSize: fontSize,
-                              color: Color(0xff444444)
-                            ),
-                          ),
-                        )
-                    )
-                  ],
-                ),
-                Row(
-                  textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-                  children: <Widget>[
-                    Expanded(
-                        child: Container(
-                          margin: const EdgeInsets.only(top: 25, bottom: 10),
-                          child: Text(
-                            entry.value[1],
-                            softWrap: true,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontSize: fontSize,
-                              color: Color(0xff444444)
-                            ),
-                          ),
-                        )
-                    )
-                  ],
-                ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                          '${entry.key + 1} / ${lines.length}',
-                      )
-                    ]
-                )
-              ]
-            )
+          child: Column(children: _buildRowContent(entry))
             );
     }).toList();
+  }
+
+
+  List<Widget> _buildRowContent(entry){
+    var rowContent = <Widget>[];
+    if (entry?.value.length > 1){
+      rowContent.add(Row(
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        children: <Widget>[
+          Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: Text(
+                  entry.value[0],
+                  softWrap: true,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      color: Color(0xff444444)
+                  ),
+                ),
+              )
+          )
+        ],
+      ));
+      rowContent.add(Row(
+        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+        children: <Widget>[
+          Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 25, bottom: 10),
+                child: Text(
+                  entry.value[1],
+                  softWrap: true,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      color: Color(0xff444444)
+                  ),
+                ),
+              )
+          )
+        ],
+      ));
+    }else{
+      rowContent.add(Row(
+        children: <Widget>[
+          Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Text(
+                  entry.value[0],
+                  softWrap: true,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: fontSize,
+                      height: 2.5,
+                      color: Color(0xff444444)
+                  ),
+                ),
+              )
+          )
+        ],
+      ));
+    }
+    rowContent.add(Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: <Widget>[
+      Text(
+        '${entry.key + 1} / ${lines.length}',
+      )
+    ]
+));
+    return rowContent;
   }
 
   Widget _buildBottomBannerAdWidget(){
@@ -397,9 +426,7 @@ class DetailsState extends State<Details> {
     if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
       finalPageDetails.addAll(_bulidPrefixList());
     }
-    List<Widget> contentItems = _buildList();
-    finalPageDetails.addAll(contentItems); // Add the content item
-
+    finalPageDetails.addAll(_buildList()); // Add the content item
     // Add Native Ad at the end, after all content items
     finalPageDetails.add(_buildNativeAdWidget());
 
