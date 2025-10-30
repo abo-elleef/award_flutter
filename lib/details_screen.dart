@@ -170,13 +170,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -206,13 +206,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -320,70 +320,87 @@ class DetailsState extends State<Details> {
             );
     }).toList();
   }
+  Widget _buildRigtSideText(text){
+    return Row(
+      textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      children: <Widget>[
+        Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 10),
+              child: Text(
+                text,
+                softWrap: true,
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    color: Color(0xff444444)
+                ),
+              ),
+            )
+        )
+      ],
+    );
+  }
+  Widget _buildLeftSideText(text){
+    return Row(
+      textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
+      children: <Widget>[
+        Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 25, bottom: 10),
+              child: Text(
+                text,
+                softWrap: true,
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    color: Color(0xff444444)
+                ),
+              ),
+            )
+        )
+      ],
+    );
+  }
 
+  Widget _buildCenterText(text){
+    return Row(
+      children: <Widget>[
+        Expanded(
+            child: Container(
+              margin: const EdgeInsets.only(top: 5, bottom: 5),
+              child: Text(
+                text,
+                softWrap: true,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: fontSize,
+                    height: 2.5,
+                    color: Color(0xff444444)
+                ),
+              ),
+            )
+        )
+      ],
+    );
+  }
 
   List<Widget> _buildRowContent(entry){
     var rowContent = <Widget>[];
-    if (entry?.value.length > 1){
-      rowContent.add(Row(
-        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        children: <Widget>[
-          Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                child: Text(
-                  entry.value[0],
-                  softWrap: true,
-                  textAlign: TextAlign.right,
-                  style: TextStyle(
-                      fontSize: fontSize,
-                      color: Color(0xff444444)
-                  ),
-                ),
-              )
-          )
-        ],
-      ));
-      rowContent.add(Row(
-        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        children: <Widget>[
-          Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(top: 25, bottom: 10),
-                child: Text(
-                  entry.value[1],
-                  softWrap: true,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      fontSize: fontSize,
-                      color: Color(0xff444444)
-                  ),
-                ),
-              )
-          )
-        ],
-      ));
+    // TODO: temp solution till we return complete lines for werds
+    if(widget.name == "منظومة أسماء الله الحسنى"){
+      rowContent.add(_buildRigtSideText(entry.value.first[0]));
+      rowContent.add(_buildLeftSideText(entry.value.first[1]));
+
     }else{
-      rowContent.add(Row(
-        children: <Widget>[
-          Expanded(
-              child: Container(
-                margin: const EdgeInsets.only(top: 5, bottom: 5),
-                child: Text(
-                  entry.value[0],
-                  softWrap: true,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      fontSize: fontSize,
-                      height: 2.5,
-                      color: Color(0xff444444)
-                  ),
-                ),
-              )
-          )
-        ],
-      ));
+      if (entry?.value.length > 1){
+        rowContent.add(_buildRigtSideText(entry.value[0]));
+        rowContent.add(_buildLeftSideText(entry.value[1]));
+      }else{
+        rowContent.add(_buildCenterText(entry.value[0]));
+      }
     }
+
     rowContent.add(Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
