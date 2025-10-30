@@ -11,6 +11,7 @@ import 'package:in_app_review/in_app_review.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'l10n/app_localizations.dart';
+import 'package:wakelock/wakelock.dart';
 
 class Details extends StatefulWidget {
   final String name;
@@ -218,6 +219,7 @@ class DetailsState extends State<Details> {
   @override
   void initState() {
     super.initState();
+    Wakelock.enable();
     fetchUserPreferences();
     _checkInternetConnectivity(); // Check internet connectivity
     fetchData();
@@ -236,6 +238,7 @@ class DetailsState extends State<Details> {
 
   @override
   void dispose() {
+    Wakelock.disable();
     _bottomBannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose();

@@ -45,6 +45,8 @@ dependencies:
   intl: any
   webview_flutter: ^4.8.0
   connectivity_plus: ^6.0.3
+  wakelock: ^0.6.2
+
 
 
 
