@@ -186,6 +186,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    var width = size.width;
+    var height = 400;
     return Directionality(
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
@@ -229,6 +232,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: GridView.count(
                 padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                 crossAxisCount: 2,
+                childAspectRatio: width/height,
                 children: buildPageDetails(),
               ),
             )
