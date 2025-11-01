@@ -71,7 +71,8 @@ class SettingsState extends State<Settings> {
       child: Container(
         width: double.infinity,
         child: Card(
-          color: Color(0xffe1ffe1),
+          // color: Color(0xffe1ffe1),
+          color: Color(0xfffffcf5),
           elevation: 0,
           margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 4.0),
           child: Padding(
@@ -114,8 +115,7 @@ class SettingsState extends State<Settings> {
         body:DecoratedBox(
         position: DecorationPosition.background,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
+            color: Color(0xfffffcf5)
         ),
         child: Center(
               child: Container(

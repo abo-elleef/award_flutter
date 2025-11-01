@@ -16,9 +16,17 @@ class PartCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         decoration: const BoxDecoration(
+            border: Border(
+              bottom: BorderSide(
+                color: Color(0xffcccccc), // Customize color
+                width: 1.0,       // Customize thickness
+                style: BorderStyle.solid, // Customize style (solid, none)
+              ),
+            ),
             // color: Color.fromRGBO(255, 255, 255, 0.8),
-            color: Color(0xffe1ffe1),
-            borderRadius: BorderRadius.all(Radius.circular(15.0))),
+            // color: Color(0xffe1ffe1),
+            color: Color(0xfffffcf5),
+            ),
         padding: const EdgeInsets.only(bottom: 16.0, right: 8.0, left: 8.0),
         margin: const EdgeInsets.only(top: 16.0, bottom: 0.0, right: 8.0, left: 8.0),
         child: Column(
@@ -28,19 +36,19 @@ class PartCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
+                // Container(
+                //   margin: EdgeInsets.only(top: 20, bottom: 0, left: 8.0, right: 8.0),
+                //   child: Image.asset("assets/book.png", width: 20),
+                // ),
                 Text(
                   "("+(index+ 1).toString() + ")" ,
                   style: TextStyle(
-                    fontSize: fontSize/1.5,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff666666)
+                      fontSize: fontSize/1.5,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xff666666)
                   ),
                 ),
                 SizedBox(width: 8.0),
-                // Container(
-                //   margin: EdgeInsets.only(top: 20, bottom: 0, left: 16.0, right: 0.0),
-                //   child: Image.asset("assets/book.png", width: 20),
-                // ),
                 Expanded(
                   child: Text(
                     title,
