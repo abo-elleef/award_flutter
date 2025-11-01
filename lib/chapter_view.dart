@@ -95,10 +95,7 @@ class _ChapterViewState extends State<ChapterView> {
         body: DecoratedBox(
           position: DecorationPosition.background,
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/bg.png'),
-              fit: BoxFit.cover,
-            ),
+              color: Color(0xfffffcf5)
           ),
           child: Center(
             child: Container(

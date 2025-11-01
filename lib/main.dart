@@ -81,10 +81,7 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) {
         return Container(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage("assets/bg.png"),
-                fit: BoxFit.cover,
-              ),
+              color: Color(0xfffffcf5),
             ),
           child: SafeArea(
             top: false,
@@ -226,9 +223,8 @@ class _MyHomePageState extends State<MyHomePage> {
             body: DecoratedBox(
               position: DecorationPosition.background,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
-                        ),
+                color: Color(0xfffffcf5)
+              ),
               child: GridView.count(
                 padding: const EdgeInsets.only(right: 8.0, left: 8.0),
                 crossAxisCount: 2,

@@ -260,11 +260,9 @@ class DetailsState extends State<Details> {
     ];
     return prefixLine.asMap().entries.map((entry){
       return Container(
-          decoration: const BoxDecoration(
-              color: Color(0xffffffff),
-              borderRadius: BorderRadius.all(Radius.circular(15))),
-          padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+
+          padding: const EdgeInsets.only(top: 10, bottom: 0.0, left: 16.0, right: 16.0),
+          margin: const EdgeInsets.only(top: 8.0),
           child: Column(
               children: <Widget>[
                 Row(
@@ -279,7 +277,7 @@ class DetailsState extends State<Details> {
                             textAlign: TextAlign.right,
                             style: TextStyle(
                                 fontSize: fontSize,
-                                color: Color(0xff444444)
+                                color: Color(0xff111111)
                             ),
                           ),
                         )
@@ -305,6 +303,19 @@ class DetailsState extends State<Details> {
                     )
                   ],
                 ),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                              '------   **   ------',
+                              style: const TextStyle(color: Colors.green)
+                          )
+                      )
+
+                    ]
+                )
               ]
           )
       );
@@ -315,10 +326,10 @@ class DetailsState extends State<Details> {
     return lines.asMap().entries.map((entry){
       return Container(
           decoration: const BoxDecoration(
-              color: Color(0xffe1ffe1),
+              // color: Color(0xffe1ffe1),
               borderRadius: BorderRadius.all(Radius.circular(15))),
-          padding: const EdgeInsets.only(top: 0, bottom: 8.0, left: 16.0, right: 16.0),
-          margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 0.0),
+          padding: const EdgeInsets.only(top: 0, bottom: 0, left: 16.0, right: 16.0),
+          margin: const EdgeInsets.only(top: 16.0),
           child: Column(children: _buildRowContent(entry))
             );
     }).toList();
@@ -407,9 +418,14 @@ class DetailsState extends State<Details> {
     rowContent.add(Row(
     mainAxisAlignment: MainAxisAlignment.center,
     children: <Widget>[
-      Text(
-        '${entry.key + 1} / ${lines.length}',
+      Container(
+        margin: const EdgeInsets.only(top: 16.0),
+        child: Text(
+            '------   ${entry.key + 1} / ${lines.length}   ------',
+            style: const TextStyle(color: Colors.green)
+        )
       )
+
     ]
 ));
     return rowContent;
@@ -466,8 +482,7 @@ class DetailsState extends State<Details> {
         body:DecoratedBox(
         position: DecorationPosition.background,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-          image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
+            color: Color(0xfffffcf5),
         ),
         child: Center(
           child: Column(

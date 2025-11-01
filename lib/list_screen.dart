@@ -11,6 +11,7 @@ import 'award.dart';
 import './part_card.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'l10n/app_localizations.dart';
+import 'analytics.dart'; // Import the analytics class
 
 class ListPage extends StatefulWidget {
   final String storeKey;
@@ -31,6 +32,7 @@ class ListPageState extends State<ListPage> {
   String storeKey;
   String title;
   int index;
+  final Analytics analytics = Analytics(); // Instantiate the analytics class
   late double fontSize = 24;
   late int textColor = 0xFF000000;
 
@@ -108,6 +110,7 @@ class ListPageState extends State<ListPage> {
                         context,
                         MaterialPageRoute(
                           builder: (context) {
+                            analytics.logScreenView(storeKey + ":" + entry.value['name']); // Log the screen view event
                             if ([
                               "الأوراد",
                               "دلائل الخيرات",
@@ -204,10 +207,7 @@ class ListPageState extends State<ListPage> {
         body: DecoratedBox(
           position: DecorationPosition.background,
           decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/bg.png'),
-              fit: BoxFit.cover,
-            ),
+              color: Color(0xfffffcf5)
           ),
           child: Center(
             child: Container(
