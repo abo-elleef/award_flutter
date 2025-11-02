@@ -15,6 +15,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get main_page_settings => 'Settings';
 
   @override
+  String get main_page_share => 'Share';
+
+  @override
   String get settings_page_font_size => 'Font size:';
 
   @override

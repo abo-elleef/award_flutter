@@ -15,6 +15,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get main_page_settings => 'Paramètres';
 
   @override
+  String get main_page_share => 'Partager';
+
+  @override
   String get settings_page_font_size => 'Taille de la police:';
 
   @override

@@ -112,6 +112,12 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get main_page_settings;
 
+  /// No description provided for @main_page_share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get main_page_share;
+
   /// No description provided for @settings_page_font_size.
   ///
   /// In en, this message translates to:

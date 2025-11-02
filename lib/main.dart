@@ -11,6 +11,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
 import 'analytics.dart'; // Import the analytics class
+import 'package:share_plus/share_plus.dart';
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
 void main() async {
@@ -195,6 +196,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 titleTextStyle: TextStyle(color: Colors.white),
                 actions: <Widget>[
                     IconButton(
+                      icon: const Icon(Icons.share),
+                      color: Colors.white,
+                      tooltip: AppLocalizations.of(context)!.main_page_share,
+                      onPressed: () {
+                        Share.share('Check out this amazing app! https://play.google.com/store/apps/details?id=com.leef.awrad');
+                      },
+                    ),
+                    IconButton(
                       icon: const Icon(Icons.settings),
                       color: Colors.white,
                       tooltip: AppLocalizations.of(context)!.main_page_settings,
@@ -205,19 +214,19 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                     ),
-                    PopupMenuButton<String>(
-                      icon: const Icon(Icons.language_outlined), // -> Specify the Icon
-                      onSelected: (String newValue) {
-                        if (newValue != AppLocalizations.of(context)!.localeName) {
-                          MyApp.of(context)?.setLocale(Locale(newValue));
-                        }
-                      },
-                      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                        buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
-                        buildPopupMenuItem('en', '🇺🇸', 'English'),
-                        buildPopupMenuItem('fr', '🇫🇷', 'Français'),
-                      ],
-                    ),
+                    // PopupMenuButton<String>(
+                    //   icon: const Icon(Icons.language_outlined), // -> Specify the Icon
+                    //   onSelected: (String newValue) {
+                    //     if (newValue != AppLocalizations.of(context)!.localeName) {
+                    //       MyApp.of(context)?.setLocale(Locale(newValue));
+                    //     }
+                    //   },
+                    //   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                    //     buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
+                    //     buildPopupMenuItem('en', '🇺🇸', 'English'),
+                    //     buildPopupMenuItem('fr', '🇫🇷', 'Français'),
+                    //   ],
+                    // ),
                   ]
             ),
             body: DecoratedBox(
