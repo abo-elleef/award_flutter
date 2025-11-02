@@ -41,6 +41,15 @@ class DetailsState extends State<Details> {
   final InAppReview _inAppReview = InAppReview.instance;
   WebViewController? _webViewController;
 
+  // Search state variables
+  bool _isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+  List<GlobalKey> _textKeys = [];
+  List<int> _matchIndexes = [];
+  int _currentMatchIndex = -1;
+
+
   List range (int start, int size){
     return List<int>.generate(size, (int index) => start + index);
   }
@@ -141,6 +150,7 @@ class DetailsState extends State<Details> {
     }
     setState(() {
       temp.forEach((e) => lines.addAll(e));
+      _textKeys = List.generate(lines.length, (_) => GlobalKey());
       if (!tempLinks.isEmpty){
         tempLinks.forEach((e) => links.addAll(e));
       }
@@ -239,6 +249,7 @@ class DetailsState extends State<Details> {
   @override
   void dispose() {
     WakelockPlus.disable();
+    _searchController.dispose();
     _bottomBannerAd?.dispose();
     _nativeAd?.dispose();
     _scrollController.dispose();
@@ -246,6 +257,80 @@ class DetailsState extends State<Details> {
     _webViewController = null;
     super.dispose();
   }
+  
+  void _startSearch() {
+    setState(() {
+      _isSearching = true;
+    });
+  }
+
+  void _stopSearch() {
+    setState(() {
+      _isSearching = false;
+      _searchController.clear();
+      _searchText = '';
+      _matchIndexes.clear();
+      _currentMatchIndex = -1;
+    });
+  }
+  
+  String _removeDiacritics(String text) {
+    return text
+        .replaceAll(RegExp(r'[\u064B-\u0652]'), '') // Remove Arabic diacritics (tashkeel)
+        .replaceAll('أ', 'ا')
+        .replaceAll('إ', 'ا')
+        .replaceAll('آ', 'ا')
+        .replaceAll('ة', 'ه')
+        .replaceAll('ى', 'ي');
+  }
+
+  void _updateSearchQuery(String query) {
+    setState(() {
+      _searchText = query;
+      _matchIndexes.clear();
+      _currentMatchIndex = -1;
+      if (query.isNotEmpty) {
+        final cleanQuery = _removeDiacritics(query.toLowerCase());
+        for (int i = 0; i < lines.length; i++) {
+          String lineText = lines[i].toString();
+          final cleanLineText = _removeDiacritics(lineText.toLowerCase());
+          if (cleanLineText.contains(cleanQuery)) {
+            _matchIndexes.add(i);
+          }
+        }
+        if (_matchIndexes.isNotEmpty) {
+          _currentMatchIndex = 0;
+          WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToMatch(_matchIndexes[0]));
+        }
+      }
+    });
+  }
+
+  void _goToNextMatch() {
+    if (_matchIndexes.isEmpty) return;
+    setState(() {
+      _currentMatchIndex = (_currentMatchIndex + 1) % _matchIndexes.length;
+    });
+    _scrollToMatch(_matchIndexes[_currentMatchIndex]);
+  }
+
+  void _goToPreviousMatch() {
+    if (_matchIndexes.isEmpty) return;
+    setState(() {
+      _currentMatchIndex = (_currentMatchIndex - 1 + _matchIndexes.length) % _matchIndexes.length;
+    });
+    _scrollToMatch(_matchIndexes[_currentMatchIndex]);
+  }
+
+  void _scrollToMatch(int index) {
+    final key = _textKeys[index];
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(context,
+          duration: Duration(milliseconds: 300), alignment: 0.5);
+    }
+  }
+
 
   List<Widget> _bulidPrefixList(){
     var prefixLine = [
@@ -271,11 +356,9 @@ class DetailsState extends State<Details> {
                     Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(top: 10),
-                          child: Text(
+                          child: _highlightText(
                             entry.value[0],
-                            softWrap: true,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
+                             TextStyle(
                                 fontSize: fontSize,
                                 color: Color(0xff111111)
                             ),
@@ -290,11 +373,9 @@ class DetailsState extends State<Details> {
                     Expanded(
                         child: Container(
                           margin: const EdgeInsets.only(top: 25, bottom: 10),
-                          child: Text(
+                          child: _highlightText(
                             entry.value[1],
-                            softWrap: true,
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
+                            TextStyle(
                                 fontSize: fontSize,
                                 color: Color(0xff444444)
                             ),
@@ -325,6 +406,7 @@ class DetailsState extends State<Details> {
   List<Widget> _buildList() {
     return lines.asMap().entries.map((entry){
       return Container(
+          key: _textKeys.isNotEmpty ? _textKeys[entry.key] : null,
           decoration: const BoxDecoration(
               // color: Color(0xffe1ffe1),
               borderRadius: BorderRadius.all(Radius.circular(15))),
@@ -334,6 +416,75 @@ class DetailsState extends State<Details> {
             );
     }).toList();
   }
+  
+  RichText _highlightText(String text, TextStyle style) {
+    if (_searchText.isEmpty) {
+      return RichText(text: TextSpan(text: text, style: style));
+    }
+
+    String cleanSearchText = _removeDiacritics(_searchText.toLowerCase());
+    if (cleanSearchText.isEmpty) {
+      return RichText(text: TextSpan(text: text, style: style));
+    }
+    
+    List<TextSpan> spans = [];
+    
+    List<int> originalIndices = [];
+    String cleanText = "";
+    for (int i = 0; i < text.length; i++) {
+        String originalChar = text[i];
+        String cleanChar = _removeDiacritics(originalChar);
+        if (cleanChar.isNotEmpty) {
+            for(int j=0; j < cleanChar.length; j++){
+              originalIndices.add(i);
+            }
+            cleanText += cleanChar;
+        }
+    }
+
+    int startInOriginal = 0;
+    int startInClean = 0;
+
+    while (startInClean < cleanText.length) {
+        int matchIndexInClean = cleanText.toLowerCase().indexOf(cleanSearchText, startInClean);
+
+        if (matchIndexInClean == -1) {
+            if (startInOriginal < text.length) {
+                spans.add(TextSpan(text: text.substring(startInOriginal)));
+            }
+            break;
+        }
+
+        int originalMatchStart = originalIndices[matchIndexInClean];
+        int matchEndInClean = matchIndexInClean + cleanSearchText.length;
+        int originalMatchEnd;
+
+        if (matchEndInClean < originalIndices.length) {
+            originalMatchEnd = originalIndices[matchEndInClean];
+        } else {
+            originalMatchEnd = text.length;
+        }
+
+        if (originalMatchStart > startInOriginal) {
+            spans.add(TextSpan(text: text.substring(startInOriginal, originalMatchStart)));
+        }
+
+        spans.add(TextSpan(
+            text: text.substring(originalMatchStart, originalMatchEnd),
+            style: TextStyle(backgroundColor: Colors.yellow, color: Colors.black, fontSize: style.fontSize, fontWeight: FontWeight.bold),
+        ));
+
+        startInOriginal = originalMatchEnd;
+        startInClean = matchEndInClean;
+    }
+    
+    if (spans.isEmpty && startInOriginal == 0) {
+        return RichText(text: TextSpan(text: text, style: style));
+    }
+
+    return RichText(text: TextSpan(style: style, children: spans));
+  }
+
   Widget _buildRigtSideText(text){
     return Row(
       textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
@@ -341,11 +492,9 @@ class DetailsState extends State<Details> {
         Expanded(
             child: Container(
               margin: const EdgeInsets.only(top: 10),
-              child: Text(
+              child: _highlightText(
                 text,
-                softWrap: true,
-                textAlign: TextAlign.right,
-                style: TextStyle(
+                TextStyle(
                     fontSize: fontSize,
                     color: Color(0xff444444)
                 ),
@@ -362,11 +511,9 @@ class DetailsState extends State<Details> {
         Expanded(
             child: Container(
               margin: const EdgeInsets.only(top: 25, bottom: 10),
-              child: Text(
+              child: _highlightText(
                 text,
-                softWrap: true,
-                textAlign: TextAlign.left,
-                style: TextStyle(
+                TextStyle(
                     fontSize: fontSize,
                     color: Color(0xff444444)
                 ),
@@ -383,11 +530,9 @@ class DetailsState extends State<Details> {
         Expanded(
             child: Container(
               margin: const EdgeInsets.only(top: 5, bottom: 5),
-              child: Text(
+              child: _highlightText(
                 text,
-                softWrap: true,
-                textAlign: TextAlign.center,
-                style: TextStyle(
+                TextStyle(
                     fontSize: fontSize,
                     height: 2.5,
                     color: Color(0xff444444)
@@ -468,6 +613,50 @@ class DetailsState extends State<Details> {
 
     return finalPageDetails;
   }
+  
+  List<Widget> _buildActions() {
+    if (_isSearching) {
+      return <Widget>[
+        IconButton(
+          icon: Icon(Icons.clear),
+          onPressed: _stopSearch,
+        ),
+        if (_matchIndexes.isNotEmpty) ...[
+          Text('${_currentMatchIndex + 1}/${_matchIndexes.length}', style: TextStyle(color: Colors.white)),
+          IconButton(
+            icon: Icon(Icons.arrow_upward),
+            onPressed: _goToPreviousMatch,
+          ),
+          IconButton(
+            icon: Icon(Icons.arrow_downward),
+            onPressed: _goToNextMatch,
+          ),
+        ],
+      ];
+    }
+
+    return <Widget>[
+      IconButton(
+        icon: Icon(Icons.search),
+        onPressed: _startSearch,
+      ),
+    ];
+  }
+
+  Widget _buildSearchField() {
+    return TextField(
+      controller: _searchController,
+      autofocus: true,
+      decoration: InputDecoration(
+        hintText: 'Search...',
+        border: InputBorder.none,
+        hintStyle: TextStyle(color: Colors.white70),
+      ),
+      style: TextStyle(color: Colors.white, fontSize: 18.0),
+      onChanged: _updateSearchQuery,
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -475,9 +664,10 @@ class DetailsState extends State<Details> {
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
         appBar: AppBar(
-            title: Text(widget.name),
+            title: _isSearching ? _buildSearchField() : Text(widget.name),
             backgroundColor: Colors.green,
-            titleTextStyle: const TextStyle(color: Colors.white)
+            titleTextStyle: const TextStyle(color: Colors.white),
+            actions: _buildActions(),
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,
