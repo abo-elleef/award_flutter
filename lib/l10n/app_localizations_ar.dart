@@ -15,6 +15,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get main_page_settings => 'الإعدادات';
 
   @override
+  String get main_page_share => 'مشاركة';
+
+  @override
   String get settings_page_font_size => 'حجم الخط';
 
   @override
