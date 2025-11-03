@@ -46,24 +46,11 @@ class _MyAppState extends State<MyApp> {
 
   void _fetchUserPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? languageCode = prefs.getString('language_code');
     double? fontSize = prefs.getDouble('fontSize');
-    if (languageCode != null) {
-      if (!mounted) return;
-      setState(() {
-        _locale = Locale(languageCode);
-        _fontSize = fontSize ?? 24;
-      });
-    }
-  }
-
-  void setLocale(Locale value) async {
     if (!mounted) return;
     setState(() {
-      _locale = value;
+      _fontSize = fontSize ?? 24;
     });
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language_code', value.languageCode);
   }
 
   @override
@@ -214,19 +201,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                     ),
-                    // PopupMenuButton<String>(
-                    //   icon: const Icon(Icons.language_outlined), // -> Specify the Icon
-                    //   onSelected: (String newValue) {
-                    //     if (newValue != AppLocalizations.of(context)!.localeName) {
-                    //       MyApp.of(context)?.setLocale(Locale(newValue));
-                    //     }
-                    //   },
-                    //   itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                    //     buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
-                    //     buildPopupMenuItem('en', '🇺🇸', 'English'),
-                    //     buildPopupMenuItem('fr', '🇫🇷', 'Français'),
-                    //   ],
-                    // ),
                   ]
             ),
             body: DecoratedBox(

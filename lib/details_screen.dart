@@ -358,10 +358,7 @@ class DetailsState extends State<Details> {
                           margin: const EdgeInsets.only(top: 10),
                           child: _highlightText(
                             entry.value[0],
-                             TextStyle(
-                                fontSize: fontSize,
-                                color: Color(0xff111111)
-                            ),
+                            TextAlign.right
                           ),
                         )
                     )
@@ -375,10 +372,7 @@ class DetailsState extends State<Details> {
                           margin: const EdgeInsets.only(top: 25, bottom: 10),
                           child: _highlightText(
                             entry.value[1],
-                            TextStyle(
-                                fontSize: fontSize,
-                                color: Color(0xff444444)
-                            ),
+                            TextAlign.left
                           ),
                         )
                     )
@@ -417,9 +411,14 @@ class DetailsState extends State<Details> {
     }).toList();
   }
   
-  RichText _highlightText(String text, TextStyle style) {
+  RichText _highlightText(String text, TextAlign textAlign) {
+    var style = TextStyle(
+        fontFamily: 'Amiri',
+        fontSize: fontSize,
+        color: Color(0xff444444)
+    );
     if (_searchText.isEmpty) {
-      return RichText(text: TextSpan(text: text, style: style));
+      return RichText(text: TextSpan(text: text, style: style), textAlign: textAlign);
     }
 
     String cleanSearchText = _removeDiacritics(_searchText.toLowerCase());
@@ -494,10 +493,7 @@ class DetailsState extends State<Details> {
               margin: const EdgeInsets.only(top: 10),
               child: _highlightText(
                 text,
-                TextStyle(
-                    fontSize: fontSize,
-                    color: Color(0xff444444)
-                ),
+                TextAlign.right
               ),
             )
         )
@@ -513,10 +509,7 @@ class DetailsState extends State<Details> {
               margin: const EdgeInsets.only(top: 25, bottom: 10),
               child: _highlightText(
                 text,
-                TextStyle(
-                    fontSize: fontSize,
-                    color: Color(0xff444444)
-                ),
+                TextAlign.left
               ),
             )
         )
@@ -532,11 +525,7 @@ class DetailsState extends State<Details> {
               margin: const EdgeInsets.only(top: 5, bottom: 5),
               child: _highlightText(
                 text,
-                TextStyle(
-                    fontSize: fontSize,
-                    height: 2.5,
-                    color: Color(0xff444444)
-                ),
+                TextAlign.center
               ),
             )
         )

@@ -209,6 +209,7 @@ class ListPageState extends State<ListPage> {
         text: TextSpan(
           text: text,
           style: TextStyle(
+            fontFamily: 'Amiri',
             fontSize: fontSize,
             color: Color(textColor),
           ),
