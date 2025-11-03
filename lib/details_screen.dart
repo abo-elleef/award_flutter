@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 import 'dart:io' show Platform;
@@ -43,11 +43,13 @@ class DetailsState extends State<Details> {
 
   // Search state variables
   bool _isSearching = false;
+  bool _readingMode = false;
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
   List<GlobalKey> _textKeys = [];
   List<int> _matchIndexes = [];
   int _currentMatchIndex = -1;
+  int _counter = 0;
 
 
   List range (int start, int size){
@@ -112,6 +114,33 @@ class DetailsState extends State<Details> {
         });
       }
     }
+  }
+
+  void _scrollPage() {
+    final currentOffset = _scrollController.offset;
+    final pageHeight = _scrollController.position.viewportDimension - 30;
+    final maxOffset = _scrollController.position.maxScrollExtent;
+
+    // Calculate the target offset, but don't exceed the max scroll extent.
+    final targetOffset = (currentOffset + pageHeight).clamp(0.0, maxOffset);
+
+    _scrollController.animateTo(
+      targetOffset,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _incrementCounter() {
+    setState(() { _counter++; });
+  }
+
+  void _resetCounter() {
+    setState(() {
+      _counter = 0;
+    });
+    _scrollController.animateTo(0,
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
   void fetchUserPreferences () async {
@@ -327,7 +356,7 @@ class DetailsState extends State<Details> {
     final context = key.currentContext;
     if (context != null) {
       Scrollable.ensureVisible(context,
-          duration: Duration(milliseconds: 300), alignment: 0.5);
+          duration: Duration(milliseconds: 500), alignment: 0.5);
     }
   }
 
@@ -500,6 +529,7 @@ class DetailsState extends State<Details> {
       ],
     );
   }
+
   Widget _buildLeftSideText(text){
     return Row(
       textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
@@ -629,6 +659,14 @@ class DetailsState extends State<Details> {
         icon: Icon(Icons.search),
         onPressed: _startSearch,
       ),
+      IconButton(
+        icon: Icon(Icons.remove_red_eye),
+        onPressed: () => {
+          setState(() {
+            _readingMode = !_readingMode;
+          })
+        },
+      ),
     ];
   }
 
@@ -645,6 +683,68 @@ class DetailsState extends State<Details> {
       onChanged: _updateSearchQuery,
     );
   }
+  Widget _buildCounterRow(){
+    if (!_readingMode) {
+      return SizedBox.shrink();
+    }
+    return Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Color(0xffcccccc), // Customize color
+                  width: 1.0, // Customize thickness
+                  style: BorderStyle
+                      .solid, // Customize style (solid, none)
+                ),
+              ),
+              color: Color(0xfffffcf5),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distributes space evenly between children
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  child:ElevatedButton(
+                      onPressed: _scrollPage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                      ),
+                      child: Icon(Icons.arrow_downward, color: Colors.white)
+                  ),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Distributes space evenly between children
+                  children: [
+                    ElevatedButton(
+                        onPressed: _incrementCounter,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        child: Icon(Icons.add, color: Colors.white)
+                    ),
+                    SizedBox(width: 16.0),
+                    Text(_counter.toString(),
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: fontSize
+                        )
+
+                    ),
+                    SizedBox(width: 16.0),
+                    ElevatedButton(
+                        onPressed: _resetCounter,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        child: Icon(Icons.replay, color: Colors.white)
+                    )
+                  ],
+                )
+              ],
+            )
+          );
+  }
 
 
   @override
@@ -652,35 +752,36 @@ class DetailsState extends State<Details> {
     return Directionality(
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
-        appBar: AppBar(
-            title: _isSearching ? _buildSearchField() : Text(widget.name),
-            backgroundColor: Colors.green,
-            titleTextStyle: const TextStyle(color: Colors.white),
-            actions: _buildActions(),
-        ),
-        body:DecoratedBox(
-        position: DecorationPosition.background,
-        decoration: const BoxDecoration(
-            color: Color(0xfffffcf5),
-        ),
-        child: Center(
-          child: Column(
-            children: [
-              Expanded(
-                  child: SingleChildScrollView(
-                    controller: _scrollController,
-                    padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
-                    child: Column(
-                      children: buildPageDetails(),
-                      ),
-                    )
-              ),
-              _buildBottomBannerAdWidget() // Bottom banner remains at the very bottom
-            ],
+          appBar: AppBar(
+              title: _isSearching ? _buildSearchField() : Text(widget.name),
+              backgroundColor: Colors.green,
+              titleTextStyle: const TextStyle(color: Colors.white, fontSize: 18),
+              actions: _buildActions(),
           ),
+          body:DecoratedBox(
+          position: DecorationPosition.background,
+          decoration: const BoxDecoration(
+              color: Color(0xfffffcf5),
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                _buildCounterRow(),
+                Expanded(
+                    child: SingleChildScrollView(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.only(bottom: 8.0, right: 8.0, left: 8.0),
+                      child: Column(
+                        children: buildPageDetails(),
+                        ),
+                      )
+                ),
+                _buildBottomBannerAdWidget() // Bottom banner remains at the very bottom
+              ],
+            ),
+          )
         )
       )
-         )
     );
   }
 }
