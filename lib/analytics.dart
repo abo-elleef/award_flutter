@@ -18,7 +18,7 @@ class Analytics {
     await _analytics.logEvent(
       name: 'user_action',
       parameters: <String, Object>{
-        'user_action': action,
+        'action_type': action,
       },
     );
   }
