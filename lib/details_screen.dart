@@ -127,7 +127,7 @@ class DetailsState extends State<Details> {
     final targetOffset = (currentOffset + pageHeight).clamp(0.0, maxOffset);
 
     _scrollController.animateTo(
-      targetOffset,
+      targetOffset - 40,
       duration: Duration(milliseconds: 500),
       curve: Curves.easeInOut,
     );
@@ -212,13 +212,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+      return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      // return 'ca-app-pub-2772630944180636/8443670141'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    // return 'ca-app-pub-2772630944180636/8443670141'; // Award
   }
 
   void _loadNativeAd() {
@@ -248,13 +248,13 @@ class DetailsState extends State<Details> {
 
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-3940256099942544/2247696110'; // Test
+      // return 'ca-app-pub-2772630944180636/2469070370'; // Award
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-3940256099942544/2247696110'; // Test
+    // return 'ca-app-pub-2772630944180636/2469070370'; // Award
   }
 
   @override
@@ -517,7 +517,7 @@ class DetailsState extends State<Details> {
     return RichText(text: TextSpan(style: style, children: spans));
   }
 
-  Widget _buildRigtSideText(text){
+  Widget _buildRightSideText(text){
     return Row(
       textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
       children: <Widget>[
@@ -571,12 +571,12 @@ class DetailsState extends State<Details> {
     var rowContent = <Widget>[];
     // TODO: temp solution till we return complete lines for werds
     if(widget.name == "منظومة أسماء الله الحسنى"){
-      rowContent.add(_buildRigtSideText(entry.value.first[0]));
+      rowContent.add(_buildRightSideText(entry.value.first[0]));
       rowContent.add(_buildLeftSideText(entry.value.first[1]));
 
     }else{
       if (entry?.value.length > 1){
-        rowContent.add(_buildRigtSideText(entry.value[0]));
+        rowContent.add(_buildRightSideText(entry.value[0]));
         rowContent.add(_buildLeftSideText(entry.value[1]));
       }else{
         rowContent.add(_buildCenterText(entry.value[0]));
