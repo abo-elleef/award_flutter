@@ -6,9 +6,19 @@ class Analytics {
   // Log a screen view event
   Future<void> logScreenView(String screenName) async {
     await _analytics.logEvent(
-      name: 'screen_view',
+      name: 'page_open',
       parameters: <String, Object>{
-        'firebase_screen': screenName,
+        'screen_name': screenName,
+      },
+    );
+  }
+
+  // Log a custom user action
+  Future<void> logUserAction(String action) async {
+    await _analytics.logEvent(
+      name: 'user_action',
+      parameters: <String, Object>{
+        'action_name': action,
       },
     );
   }

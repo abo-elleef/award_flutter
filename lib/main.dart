@@ -10,7 +10,6 @@ import './home_grid_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'l10n/app_localizations.dart';
-import 'analytics.dart'; // Import the analytics class
 import 'package:share_plus/share_plus.dart';
 // import 'dart:io' show Platform; // Potentially remove if not used elsewhere
 
@@ -110,7 +109,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late double fontSize = 24;
-  final Analytics analytics = Analytics(); // Instantiate the analytics class
 
   @override
   void initState() {
@@ -142,7 +140,6 @@ class _MyHomePageState extends State<MyHomePage> {
           final displayDesc = (localizedDesc != null && localizedDesc.isNotEmpty) ? localizedDesc : (store['desc'] as String?)?.trim() ?? '';
           return GestureDetector(
               onTap: () {
-                analytics.logScreenView(displayTitle); // Log the screen view event
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => ListPage(store["key"].toString(), displayTitle, entry.key)),

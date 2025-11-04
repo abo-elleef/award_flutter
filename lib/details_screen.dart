@@ -12,6 +12,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'l10n/app_localizations.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
+import 'analytics.dart'; // Import the analytics class
 
 class Details extends StatefulWidget {
   final String name;
@@ -37,6 +38,7 @@ class DetailsState extends State<Details> {
   NativeAd? _nativeAd;
   bool _isNativeAdReady = false;
   bool _hasInternet = false; // Track internet connectivity
+  final Analytics analytics = Analytics(); // Instantiate the analytics class
   final ScrollController _scrollController = ScrollController();
   final InAppReview _inAppReview = InAppReview.instance;
   WebViewController? _webViewController;
@@ -244,6 +246,7 @@ class DetailsState extends State<Details> {
         }
       }
     });
+    analytics.logScreenView(widget.department + "_" + widget.name); // Log the screen view event
   }
 
   @override
@@ -262,6 +265,7 @@ class DetailsState extends State<Details> {
     setState(() {
       _isSearching = true;
     });
+    analytics.logUserAction("start_search");
   }
 
   void _stopSearch() {

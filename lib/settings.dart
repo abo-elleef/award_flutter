@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart'; // Added import
 import 'l10n/app_localizations.dart';
+import 'analytics.dart'; // Import the analytics class
 
 class Settings extends StatefulWidget {
   late double fontSize;
@@ -21,7 +22,7 @@ class Settings extends StatefulWidget {
 class SettingsState extends State<Settings> {
   late double fontSize = 24;
   late int textColor = 0xFF000000;
-
+  final Analytics analytics = Analytics(); // Instantiate the analytics class
   SettingsState();
 
   void fetchUserPreferences () async {
@@ -95,6 +96,7 @@ class SettingsState extends State<Settings> {
   void initState() {
     super.initState();
     fetchUserPreferences();
+    analytics.logScreenView("Settings_Page");
   }
 
   @override

@@ -77,6 +77,7 @@ class ListPageState extends State<ListPage> {
     _searchController.addListener(() {
       _updateSearchQuery(_searchController.text);
     });
+    analytics.logScreenView(title); // Log the screen view event
   }
 
   @override
@@ -297,7 +298,6 @@ class ListPageState extends State<ListPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) {
-                              analytics.logScreenView(storeKey + ":" + poem['name']); // Log the screen view event
                               if ([
                                 "الأوراد",
                                 "دلائل الخيرات",
