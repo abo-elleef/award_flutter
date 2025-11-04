@@ -26,6 +26,14 @@ class Details extends StatefulWidget {
   }
 }
 
+class Match {
+  final int lineIndex;
+  final GlobalKey key;
+
+  Match({required this.lineIndex, required this.key});
+}
+
+
 class DetailsState extends State<Details> {
   late double fontSize = 24;
   late int textColor = 0xFF000000;
@@ -49,8 +57,9 @@ class DetailsState extends State<Details> {
   final TextEditingController _searchController = TextEditingController();
   String _searchText = '';
   List<GlobalKey> _textKeys = [];
-  List<int> _matchIndexes = [];
+  List<Match> _matches = [];
   int _currentMatchIndex = -1;
+  int _matchRenderIndex = 0;
   int _counter = 0;
 
 
@@ -302,7 +311,7 @@ class DetailsState extends State<Details> {
       _isSearching = false;
       _searchController.clear();
       _searchText = '';
-      _matchIndexes.clear();
+      _matches.clear();
       _currentMatchIndex = -1;
     });
   }
@@ -320,44 +329,57 @@ class DetailsState extends State<Details> {
   void _updateSearchQuery(String query) {
     setState(() {
       _searchText = query;
-      _matchIndexes.clear();
+      _matches.clear();
       _currentMatchIndex = -1;
+
       if (query.isNotEmpty) {
         final cleanQuery = _removeDiacritics(query.toLowerCase());
         for (int i = 0; i < lines.length; i++) {
           String lineText = lines[i].toString();
           final cleanLineText = _removeDiacritics(lineText.toLowerCase());
-          if (cleanLineText.contains(cleanQuery)) {
-            _matchIndexes.add(i);
+
+          int startIndex = 0;
+          while (startIndex < cleanLineText.length) {
+            final matchIndex = cleanLineText.indexOf(cleanQuery, startIndex);
+            if (matchIndex == -1) break;
+
+            _matches.add(Match(lineIndex: i, key: GlobalKey()));
+            startIndex = matchIndex + cleanQuery.length;
           }
         }
-        if (_matchIndexes.isNotEmpty) {
-          _currentMatchIndex = 0;
-          WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToMatch(_matchIndexes[0]));
-        }
+      }
+
+      if (_matches.isNotEmpty) {
+        _currentMatchIndex = 0;
       }
     });
+
+    if (_matches.isNotEmpty) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToCurrentMatch());
+    }
   }
 
+
   void _goToNextMatch() {
-    if (_matchIndexes.isEmpty) return;
+    if (_matches.isEmpty) return;
     setState(() {
-      _currentMatchIndex = (_currentMatchIndex + 1) % _matchIndexes.length;
+      _currentMatchIndex = (_currentMatchIndex + 1) % _matches.length;
     });
-    _scrollToMatch(_matchIndexes[_currentMatchIndex]);
+    _scrollToCurrentMatch();
   }
 
   void _goToPreviousMatch() {
-    if (_matchIndexes.isEmpty) return;
+    if (_matches.isEmpty) return;
     setState(() {
-      _currentMatchIndex = (_currentMatchIndex - 1 + _matchIndexes.length) % _matchIndexes.length;
+      _currentMatchIndex = (_currentMatchIndex - 1 + _matches.length) % _matches.length;
     });
-    _scrollToMatch(_matchIndexes[_currentMatchIndex]);
+    _scrollToCurrentMatch();
   }
 
-  void _scrollToMatch(int index) {
-    final key = _textKeys[index];
-    final context = key.currentContext;
+  void _scrollToCurrentMatch() {
+    if (_currentMatchIndex < 0 || _currentMatchIndex >= _matches.length) return;
+    final match = _matches[_currentMatchIndex];
+    final context = match.key.currentContext;
     if (context != null) {
       Scrollable.ensureVisible(context,
           duration: Duration(milliseconds: 500), alignment: 0.5);
@@ -459,7 +481,7 @@ class DetailsState extends State<Details> {
       return RichText(text: TextSpan(text: text, style: style));
     }
     
-    List<TextSpan> spans = [];
+    List<InlineSpan> spans = [];
     
     List<int> originalIndices = [];
     String cleanText = "";
@@ -501,10 +523,28 @@ class DetailsState extends State<Details> {
             spans.add(TextSpan(text: text.substring(startInOriginal, originalMatchStart)));
         }
 
-        spans.add(TextSpan(
-            text: text.substring(originalMatchStart, originalMatchEnd),
-            style: TextStyle(backgroundColor: Colors.yellow, color: Colors.black, fontSize: style.fontSize, fontWeight: FontWeight.bold),
-        ));
+        if (_matchRenderIndex < _matches.length) {
+          spans.add(
+            WidgetSpan(
+              alignment: PlaceholderAlignment.middle,
+              child: Container(
+                key: _matches[_matchRenderIndex].key,
+                color: Colors.yellow,
+                child: Text(
+                  text.substring(originalMatchStart, originalMatchEnd),
+                  style: style.copyWith(color: Colors.black, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          );
+          _matchRenderIndex++;
+        } else {
+           spans.add(TextSpan(
+              text: text.substring(originalMatchStart, originalMatchEnd),
+              style: TextStyle(backgroundColor: Colors.yellow, color: Colors.black, fontSize: style.fontSize, fontWeight: FontWeight.bold),
+          ));
+        }
+
 
         startInOriginal = originalMatchEnd;
         startInClean = matchEndInClean;
@@ -514,7 +554,10 @@ class DetailsState extends State<Details> {
         return RichText(text: TextSpan(text: text, style: style));
     }
 
-    return RichText(text: TextSpan(style: style, children: spans));
+    return RichText(
+      textAlign: textAlign,
+      text: TextSpan(style: style, children: spans)
+    );
   }
 
   Widget _buildRightSideText(text){
@@ -644,8 +687,8 @@ class DetailsState extends State<Details> {
           icon: Icon(Icons.clear),
           onPressed: _stopSearch,
         ),
-        if (_matchIndexes.isNotEmpty) ...[
-          Text('${_currentMatchIndex + 1}/${_matchIndexes.length}', style: TextStyle(color: Colors.white)),
+        if (_matches.isNotEmpty) ...[
+          Center(child: Text('${_currentMatchIndex + 1}/${_matches.length}', style: TextStyle(color: Colors.white))),
           IconButton(
             icon: Icon(Icons.arrow_upward),
             onPressed: _goToPreviousMatch,
@@ -753,6 +796,7 @@ class DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
+    _matchRenderIndex = 0;
     return Directionality(
         textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
