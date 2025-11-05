@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'award.dart';
-import './details_screen.dart';
 import './list_screen.dart';
 import './home_grid_card.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -45,11 +44,24 @@ class _MyAppState extends State<MyApp> {
 
   void _fetchUserPref() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? languageCode = prefs.getString('language_code');
     double? fontSize = prefs.getDouble('fontSize');
+    if (languageCode != null) {
+      if (!mounted) return;
+      setState(() {
+        _locale = Locale(languageCode);
+        _fontSize = fontSize ?? 24;
+      });
+    }
+  }
+
+  void setLocale(Locale value) async {
     if (!mounted) return;
     setState(() {
-      _fontSize = fontSize ?? 24;
+      _locale = value;
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('language_code', value.languageCode);
   }
 
   @override
@@ -152,18 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     return pageDetails;
   }
-
-  PopupMenuItem<String> buildPopupMenuItem(String value, String flag, String name) {
-  return PopupMenuItem<String>(
-    value: value,
-    child: Row(
-      children: [
-        Text(flag),
-        SizedBox(width: 10),
-        Text(name),
-      ],
-    ),
-  );
 }
 
   @override
