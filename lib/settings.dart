@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart'; // Added import
 import 'l10n/app_localizations.dart';
 import 'analytics.dart'; // Import the analytics class
+import 'package:awrad3/main.dart'; // Import main.dart to access MyAppState
 
 class Settings extends StatefulWidget {
   late double fontSize;
@@ -23,14 +24,20 @@ class SettingsState extends State<Settings> {
   late double fontSize = 24;
   late int textColor = 0xFF000000;
   final Analytics analytics = Analytics(); // Instantiate the analytics class
+  Locale _locale = const Locale('ar');
+
   SettingsState();
 
   void fetchUserPreferences () async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
+    String? languageCode = _pref.getString('language_code');
     if (!mounted) return;
     setState(() {
       this.fontSize = _pref.getDouble('fontSize') ?? this.fontSize;
       this.textColor = _pref.getInt('textColor') ?? this.textColor;
+      if (languageCode != null) {
+        this._locale = Locale(languageCode);
+      }
     });
   }
 
@@ -92,6 +99,19 @@ class SettingsState extends State<Settings> {
     );
   }
 
+  PopupMenuItem<String> buildPopupMenuItem(String value, String flag, String name) {
+    return PopupMenuItem<String>(
+      value: value,
+      child: Row(
+        children: [
+          Text(flag),
+          SizedBox(width: 10),
+          Text(name),
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -112,7 +132,22 @@ class SettingsState extends State<Settings> {
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.main_page_settings),
           backgroundColor: Colors.green,
-          titleTextStyle: TextStyle(color: Colors.white)
+          titleTextStyle: TextStyle(color: Colors.white),
+          actions: <Widget>[
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.language_outlined), // -> Specify the Icon
+              onSelected: (String newValue) {
+                if (newValue != AppLocalizations.of(context)!.localeName) {
+                  MyApp.of(context)?.setLocale(Locale(newValue));
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                buildPopupMenuItem('ar', '🇪🇬', 'العربية'),
+                buildPopupMenuItem('en', '🇺🇸', 'English'),
+                buildPopupMenuItem('fr', '🇫🇷', 'Français'),
+              ],
+            ),
+          ],
         ),
         body:DecoratedBox(
         position: DecorationPosition.background,
