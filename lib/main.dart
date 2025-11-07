@@ -164,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     return pageDetails;
   }
-}
 
   @override
   Widget build(BuildContext context) {
