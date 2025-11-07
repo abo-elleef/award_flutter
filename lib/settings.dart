@@ -28,7 +28,7 @@ class SettingsState extends State<Settings> {
 
   SettingsState();
 
-  void fetchUserPreferences () async {
+  void fetchUserPreferences() async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     String? languageCode = _pref.getString('language_code');
     if (!mounted) return;
@@ -41,12 +41,12 @@ class SettingsState extends State<Settings> {
     });
   }
 
-  void setFontSize (value) async {
+  void setFontSize(value) async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setDouble('fontSize', value);
   }
 
-  void setTextColor (value) async {
+  void setTextColor(value) async {
     SharedPreferences _pref = await SharedPreferences.getInstance();
     _pref.setInt('textColor', value);
   }
@@ -62,7 +62,11 @@ class SettingsState extends State<Settings> {
           } else {
             if (mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('تعذر فتح الرابط. يرجى التحقق من اتصالك بالإنترنت.')),
+                SnackBar(
+                  content: Text(
+                    'تعذر فتح الرابط. يرجى التحقق من اتصالك بالإنترنت.',
+                  ),
+                ),
               );
             }
             print('Could not launch $socialUrl');
@@ -86,29 +90,28 @@ class SettingsState extends State<Settings> {
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: Text(
-                    text,
-                    style: TextStyle(
-                      fontSize: this.fontSize,
-                      color: Color(this.textColor),
-                      fontWeight: FontWeight.bold,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+              text,
+              style: TextStyle(
+                fontSize: this.fontSize,
+                color: Color(this.textColor),
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
           ),
-      ),)
+        ),
+      ),
     );
   }
 
-  PopupMenuItem<String> buildPopupMenuItem(String value, String flag, String name) {
+  PopupMenuItem<String> buildPopupMenuItem(
+    String value,
+    String flag,
+    String name,
+  ) {
     return PopupMenuItem<String>(
       value: value,
-      child: Row(
-        children: [
-          Text(flag),
-          SizedBox(width: 10),
-          Text(name),
-        ],
-      ),
+      child: Row(children: [Text(flag), SizedBox(width: 10), Text(name)]),
     );
   }
 
@@ -127,8 +130,10 @@ class SettingsState extends State<Settings> {
   @override
   Widget build(BuildContext context) {
     return Directionality(
-        textDirection: AppLocalizations.of(context)!.localeName == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-        child: Scaffold(
+      textDirection: AppLocalizations.of(context)!.localeName == 'ar'
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      child: Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.main_page_settings),
           backgroundColor: Colors.green,
@@ -149,57 +154,79 @@ class SettingsState extends State<Settings> {
             ),
           ],
         ),
-        body:DecoratedBox(
-        position: DecorationPosition.background,
-        decoration: const BoxDecoration(
-            color: Color(0xfffffcf5)
-        ),
-        child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(16.0),
-                alignment: Alignment.topCenter,
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Row(
-                        children:[
-                          Expanded( // Added Expanded for better layout
-                            child: Text(AppLocalizations.of(context)!.settings_page_font_size,
-                              style: TextStyle(
-                                fontSize: 20, // Consider making this dynamic or a fixed larger size for a label
-                                color:  Color(this.textColor),
-                              )
+        body: DecoratedBox(
+          position: DecorationPosition.background,
+          decoration: const BoxDecoration(color: Color(0xfffffcf5)),
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          // Added Expanded for better layout
+                          child: Text(
+                            AppLocalizations.of(
+                              context,
+                            )!.settings_page_font_size,
+                            style: TextStyle(
+                              fontSize:
+                                  20, // Consider making this dynamic or a fixed larger size for a label
+                              color: Color(this.textColor),
                             ),
                           ),
-                          Expanded( // Added Expanded for Slider
-                            flex: 2, // Give more space to slider
-                            child: Slider(
-                              value: this.fontSize,
-                              max: 36,
-                              min: 14,
-                              divisions: 11,
-                              activeColor: Color(0xff3a863d),
-                              label: this.fontSize.round().toString(), // Use round() for cleaner label
-                              onChanged: (double value) {
-                                setState(() {
-                                  this.fontSize = value;
-                                  setFontSize(value);
-                                });
-                              },
-                            ),
-                          )
-                        ]
-                      ),
-                      PartCard(title: AppLocalizations.of(context)!.settings_page_font_example, index: 0, listSize: 6, fontSize: this.fontSize, textColor: this.textColor),
-                      _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_facebook, 'https://www.facebook.com/bordaelmadyh/'),
-                      _buildSocialButton(context, AppLocalizations.of(context)!.settings_page_twitter, 'https://x.com/bordaelmadyh'),
-                    ]
-                  ),
-                )
-            )
-          )
-        )
-      )
+                        ),
+                        Expanded(
+                          // Added Expanded for Slider
+                          flex: 2, // Give more space to slider
+                          child: Slider(
+                            value: this.fontSize,
+                            max: 72,
+                            min: 12,
+                            divisions: 60,
+                            activeColor: Color(0xff3a863d),
+                            label: this.fontSize
+                                .round()
+                                .toString(), // Use round() for cleaner label
+                            onChanged: (double value) {
+                              setState(() {
+                                this.fontSize = value;
+                                setFontSize(value);
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    PartCard(
+                      title: AppLocalizations.of(
+                        context,
+                      )!.settings_page_font_example,
+                      index: 0,
+                      listSize: 6,
+                      fontSize: this.fontSize,
+                      textColor: this.textColor,
+                    ),
+                    _buildSocialButton(
+                      context,
+                      AppLocalizations.of(context)!.settings_page_facebook,
+                      'https://www.facebook.com/bordaelmadyh/',
+                    ),
+                    _buildSocialButton(
+                      context,
+                      AppLocalizations.of(context)!.settings_page_twitter,
+                      'https://x.com/bordaelmadyh',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
