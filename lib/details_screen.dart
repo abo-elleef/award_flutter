@@ -683,34 +683,13 @@ class DetailsState extends State<Details> {
   }
 
   Widget _buildCommotText(String text, TextAlign align) {
-    return GestureDetector(
-      onScaleStart: (details) {
-        _baseFontSize = fontSize;
-        _currentScale = 1.0;
-      },
-      onScaleUpdate: (details) {
-        setState(() {
-          _currentScale = details.scale;
-          // Calculate new font size based on scale
-          // Clamp between 12 and 72 for reasonable font sizes
-          fontSize = (_baseFontSize * _currentScale).clamp(12.0, 72.0).roundToDouble();
-        });
-        print(fontSize);
-      },
-      onScaleEnd: (details) {
-        // Save the font size preference when gesture ends
-        _saveFontSize();
-        _baseFontSize = fontSize;
-        _currentScale = 1.0;
-      },
-      child: Row(
-        textDirection: AppLocalizations.of(context)!.localeName == 'ar'
-            ? TextDirection.rtl
-            : TextDirection.ltr,
-        children: <Widget>[
-          Expanded(child: Container(child: _highlightText(text, align))),
-        ],
-      ),
+    return Row(
+      textDirection: AppLocalizations.of(context)!.localeName == 'ar'
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      children: <Widget>[
+        Expanded(child: Container(child: _highlightText(text, align))),
+      ],
     );
   }
 
@@ -934,7 +913,30 @@ class DetailsState extends State<Details> {
                       right: 8.0,
                       left: 8.0,
                     ),
-                    child: Column(children: buildPageDetails()),
+                    child: GestureDetector(
+                      onScaleStart: (details) {
+                        _baseFontSize = fontSize;
+                        _currentScale = 1.0;
+                      },
+                      onScaleUpdate: (details) {
+                        setState(() {
+                          _currentScale = details.scale;
+                          // Calculate new font size based on scale
+                          // Clamp between 12 and 72 for reasonable font sizes
+                          fontSize = (_baseFontSize * _currentScale)
+                              .clamp(12.0, 72.0)
+                              .roundToDouble();
+                        });
+                        print(fontSize);
+                      },
+                      onScaleEnd: (details) {
+                        // Save the font size preference when gesture ends
+                        _saveFontSize();
+                        _baseFontSize = fontSize;
+                        _currentScale = 1.0;
+                      },
+                      child: Column(children: buildPageDetails()),
+                    ),
                   ),
                 ),
                 _buildBottomBannerAdWidget(), // Bottom banner remains at the very bottom
