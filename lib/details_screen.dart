@@ -365,7 +365,7 @@ class DetailsState extends State<Details> {
         if (await _inAppReview.isAvailable()) {
           _inAppReview.requestReview();
         } else {
-          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
+          _inAppReview.openStoreListing(appStoreId: 'com.ionicframework.borda215096');
         }
       }
     });
