@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'أوراد البرهامية',
+      title: 'المديح',
       locale: _locale,
       theme: ThemeData(
         fontFamily: 'Amiri',
