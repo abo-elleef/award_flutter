@@ -70,6 +70,7 @@ class DetailsState extends State<Details> {
   // Pinch gesture variables
   double _baseFontSize = 24;
   double _currentScale = 1.0;
+  String? desc;
 
   List range(int start, int size) {
     return List<int>.generate(size, (int index) => start + index);
@@ -100,6 +101,14 @@ class DetailsState extends State<Details> {
     return (links.isNotEmpty && _hasInternet)
         ? soundCloudPlayerWebView()
         : Container();
+  }
+
+  List<Widget> _addDescLine(String? desc){
+    if(desc != null && desc.isNotEmpty){
+      return [Text(desc.toString()), SizedBox(height: 8.0)];
+    }else{
+      return [Container()];
+    }
   }
 
   Future<void> _checkInternetConnectivity() async {
@@ -185,6 +194,7 @@ class DetailsState extends State<Details> {
   void fetchData() async {
     var temp;
     var tempLinks;
+    var tempDesc;
     if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
       print("details path 1");
       var content =
@@ -212,6 +222,10 @@ class DetailsState extends State<Details> {
                 .toList()[0]['links']
             as List),
       ];
+      tempDesc = content.where(
+            (item) => item['id'].toString() == widget.index.toString(),
+      )
+          .toList()[0]['desc'];
     } else {
       if (widget.chapterIndex >= 0) {
         print("details path 2");
@@ -241,6 +255,10 @@ class DetailsState extends State<Details> {
                   return chapter["links"];
                 })
                 .toList();
+        tempDesc = content.where(
+              (item) => item['id'].toString() == widget.index.toString(),
+        )
+            .toList()[0]['desc'];
       } else {
         print("details path 3");
         var content =
@@ -270,9 +288,14 @@ class DetailsState extends State<Details> {
                   [])
               as List),
         ];
+        tempDesc = content.where(
+              (item) => item['id'].toString() == widget.index.toString(),
+        )
+            .toList()[0]['desc'];
       }
     }
     setState(() {
+      desc = tempDesc;
       temp.forEach((e) => lines.addAll(e));
       _textKeys = List.generate(lines.length, (_) => GlobalKey());
       if (!tempLinks.isEmpty) {
@@ -764,6 +787,7 @@ class DetailsState extends State<Details> {
   List<Widget> buildPageDetails() {
     List<Widget> finalPageDetails = [];
     finalPageDetails.add(SizedBox(height: 8.0));
+    finalPageDetails.addAll(_addDescLine(desc));
     finalPageDetails.add(_buildMediaPlayer());
     if (["بردة المديح للامام البوصيري"].contains(widget.department)) {
       finalPageDetails.addAll(_bulidPrefixList());
