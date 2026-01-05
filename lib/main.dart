@@ -67,7 +67,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'أوراد البرهامية',
+      title: 'البردة',
       locale: _locale,
       theme: ThemeData(
         fontFamily: 'Amiri',
@@ -183,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       color: Colors.white,
                       tooltip: AppLocalizations.of(context)!.main_page_share,
                       onPressed: () {
-                        Share.share('Check out this amazing app! https://play.google.com/store/apps/details?id=com.leef.awrad');
+                        Share.share('Check out this amazing app! https://play.google.com/store/apps/details?id=com.ionicframework.borda215096');
                       },
                     ),
                     IconButton(

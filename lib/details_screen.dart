@@ -328,13 +328,13 @@ class DetailsState extends State<Details> {
 
   String _getBottomBannerAdUnitId() {
     if (Platform.isAndroid) {
-      // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-      return 'ca-app-pub-2772630944180636/8443670141'; // Award
+    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+      return 'ca-app-pub-2772630944180636/3185523871'; //  Elburda
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/2934735716'; // Test ad unit ID for iOS
     }
-    // return 'ca-app-pub-3940256099942544/6300978111'; // Test
-    return 'ca-app-pub-2772630944180636/8443670141'; // Award
+  // return 'ca-app-pub-3940256099942544/6300978111'; // Test
+    return 'ca-app-pub-2772630944180636/3185523871'; // Elburda
   }
 
   void _loadNativeAd() {
@@ -365,12 +365,12 @@ class DetailsState extends State<Details> {
   String _getNativeAdUnitId() {
     if (Platform.isAndroid) {
       // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-      return 'ca-app-pub-2772630944180636/2469070370'; // Award
+      return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
     } else if (Platform.isIOS) {
       return 'ca-app-pub-3940256099942544/3986624511'; // Test ad unit ID for iOS
     }
     // return 'ca-app-pub-3940256099942544/2247696110'; // Test
-    return 'ca-app-pub-2772630944180636/2469070370'; // Award
+    return 'ca-app-pub-2772630944180636/2577699828'; // Elburda
   }
 
   @override
@@ -388,7 +388,7 @@ class DetailsState extends State<Details> {
         if (await _inAppReview.isAvailable()) {
           _inAppReview.requestReview();
         } else {
-          _inAppReview.openStoreListing(appStoreId: 'com.leef.awrad');
+          _inAppReview.openStoreListing(appStoreId: 'com.ionicframework.borda215096');
         }
       }
     });
